@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Khóa thành viên - Thư viện nội bộ</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "sidebar-navy": "#17233A",
+            "sidebar-active-bg": "#24365A",
+            "sidebar-text": "#E8E4D6",
+            "sidebar-muted": "#9AA3B5",
+            "paper": "#FCFBF7",
+            "parchment": "#F4F1E8",
+            "linen": "#EBE6D8",
+            "slate-bg": "#E9E6DC",
+            "slate-border": "#CFC9B8",
+            "slate-text": "#4A5262",
+            "ink": "#1B2230",
+            "ink-muted": "#555C6B",
+            "ink-faint": "#8A8F9C",
+            "rule": "#D8D2C2",
+            "rule-strong": "#A89F8A",
+            "row-hover": "#F7F4EA",
+            "primary": "#00376f",
+            "primary-container": "#1f4e8c",
+            "on-primary": "#ffffff",
+            "brass": "#C9A24A",
+            "oxblood-text": "#9B2C2C",
+            "oxblood-bg": "#F5DEDC",
+            "oxblood-border": "#E2B4B0",
+            "moss-text": "#2F6B4F",
+            "moss-bg": "#E3EFE7",
+            "moss-border": "#B7D3C1",
+            "ochre-text": "#7A4F00",
+            "ochre-bg": "#F8EBC8",
+            "ochre-border": "#E3CC8F"
+          },
+          fontFamily: {
+            sans: ['"IBM Plex Sans"', 'sans-serif'],
+            serif: ['"Source Serif 4"', 'serif'],
+            mono: ['"IBM Plex Mono"', 'monospace'],
+            "headline-h1": ['"Source Serif 4"', 'serif'],
+            "headline-h2": ['"Source Serif 4"', 'serif'],
+            "headline-h3": ['"Source Serif 4"', 'serif'],
+            "body-default": ['"IBM Plex Sans"', 'sans-serif'],
+            "body-table-cell": ['"IBM Plex Sans"', 'sans-serif'],
+            "label-button": ['"IBM Plex Sans"', 'sans-serif'],
+            "label-badge": ['"IBM Plex Sans"', 'sans-serif'],
+            "label-table-header": ['"IBM Plex Sans"', 'sans-serif'],
+            "label-helper": ['"IBM Plex Sans"', 'sans-serif'],
+            "mono-code": ['"IBM Plex Mono"', 'monospace']
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg: "0.25rem",
+            xl: "0.5rem"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem",
+            "space-lg": "1rem",
+            "space-xl": "1.5rem",
+            "margin": "2rem"
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body { font-family: 'IBM Plex Sans', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body class="bg-parchment text-ink antialiased">
+<!-- Left Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-sidebar-navy z-30 flex flex-col justify-between select-none">
+<div class="flex flex-col">
+<!-- Library Brand -->
+<div class="h-14 px-space-lg flex flex-col justify-center border-b border-sidebar-active-bg">
+<div class="font-serif font-semibold text-[17px] text-sidebar-text leading-tight tracking-normal">Thư viện nội bộ</div>
+<div class="text-[12px] text-sidebar-muted leading-tight mt-0.5">Quản lý mượn trả</div>
+</div>
+<!-- Navigation Links -->
+<div class="py-space-md flex flex-col gap-space-md">
+<!-- Group: Danh mục -->
+<div class="flex flex-col">
+<div class="px-space-lg py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Danh mục</div>
+<nav class="flex flex-col mt-1">
+<a class="flex items-center gap-space-sm px-space-lg py-2 text-[13px] text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+<span>Sách</span>
+</a>
+<a class="flex items-center gap-space-sm px-space-lg py-2 text-[13px] text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">category</span>
+<span>Thể loại</span>
+</a>
+<!-- Active item: Thành viên -->
+<a class="flex items-center gap-space-sm px-space-lg py-2 text-[13px] bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">group</span>
+<span>Thành viên</span>
+</a>
+</nav>
+</div>
+<!-- Group: Nghiệp vụ -->
+<div class="flex flex-col">
+<div class="px-space-lg py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Nghiệp vụ</div>
+<nav class="flex flex-col mt-1">
+<a class="flex items-center gap-space-sm px-space-lg py-2 text-[13px] text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+<span>Phiếu mượn</span>
+</a>
+</nav>
+</div>
+<!-- Group: Báo cáo -->
+<div class="flex flex-col">
+<div class="px-space-lg py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Báo cáo</div>
+<nav class="flex flex-col mt-1">
+<a class="flex items-center gap-space-sm px-space-lg py-2 text-[13px] text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">event_busy</span>
+<span>Quá hạn</span>
+</a>
+<a class="flex items-center gap-space-sm px-space-lg py-2 text-[13px] text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span>Sách mượn nhiều</span>
+</a>
+<a class="flex items-center gap-space-sm px-space-lg py-2 text-[13px] text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">leaderboard</span>
+<span>Lượt mượn theo thành viên</span>
+</a>
+</nav>
+</div>
+</div>
+</div>
+<!-- User Profile Footer -->
+<div class="p-space-lg border-t border-sidebar-active-bg flex items-center justify-between">
+<div class="flex flex-col">
+<div class="text-[13px] font-medium text-sidebar-text leading-tight">Nguyễn Thu Hà</div>
+<div class="text-[12px] text-sidebar-muted leading-tight mt-0.5">Thủ thư</div>
+</div>
+<button class="text-[12px] text-sidebar-muted hover:text-sidebar-text transition-colors underline cursor-pointer bg-transparent border-none p-0" type="button">Đăng xuất</button>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="pl-[240px]">
+<!-- Top Header Bar -->
+<header class="fixed top-0 left-[240px] right-0 h-14 bg-paper border-b border-rule z-20 flex items-center justify-end px-margin">
+<div class="text-[13px] text-ink select-none font-mono">Thứ Năm, 01/10/2026</div>
+</header>
+<!-- Page Content (Background Members List S3.1) -->
+<main class="pt-14 min-h-screen bg-parchment">
+<div class="max-w-[1200px] mx-auto p-margin">
+<!-- Breadcrumb & Header Bar -->
+<div class="flex flex-col gap-space-xs mb-space-xl">
+<div class="flex items-center gap-space-xs text-[12px] text-ink-muted">
+<span>Quản lý hệ thống</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-ink font-medium">Danh sách thành viên</span>
+</div>
+<div class="flex items-baseline justify-between mt-1">
+<div>
+<h1 class="font-serif text-[28px] font-semibold text-ink tracking-tight">Thành viên</h1>
+<p class="text-[14px] text-ink-muted mt-space-xs">Danh mục độc giả và tài khoản mượn ấn phẩm lưu trữ</p>
+</div>
+<button class="h-[38px] px-space-lg bg-primary-container text-on-primary rounded-[3px] text-[13px] font-medium flex items-center gap-space-xs shadow-sm hover:opacity-95" type="button">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>Thêm thành viên</span>
+</button>
+</div>
+</div>
+<!-- Filter & Search Toolbar -->
+<div class="w-full bg-paper border border-rule rounded-[3px] p-space-md mb-space-lg flex items-center justify-between gap-space-lg shadow-xs">
+<div class="flex items-center gap-space-md flex-1 max-w-[500px]">
+<div class="relative w-full">
+<span class="material-symbols-outlined text-[18px] text-ink-muted absolute left-3 top-1/2 -translate-y-1/2">search</span>
+<input class="w-full h-[36px] pl-9 pr-3 bg-paper border border-rule-strong rounded-[2px] text-[13px] text-ink focus:outline-none" readonly="" type="text" value="Phạm Quốc Huy"/>
+</div>
+<div class="relative min-w-[170px]">
+<select class="w-full h-[36px] px-3 bg-paper border border-rule-strong rounded-[2px] text-[13px] text-ink appearance-none cursor-default" disabled="">
+<option>Tất cả trạng thái</option>
+</select>
+<span class="material-symbols-outlined text-[18px] text-ink-muted absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="font-mono text-[13px] text-ink-muted">
+            Tổng số: <strong class="text-ink font-semibold">148</strong> độc giả
+          </div>
+</div>
+<!-- Ledger Table Frame -->
+<div class="w-full bg-paper border border-rule rounded-[3px] overflow-hidden shadow-xs">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-linen border-b border-rule h-10">
+<th class="px-space-md text-[12px] font-semibold text-ink-muted tracking-wide w-[90px]">Mã TV</th>
+<th class="px-space-md text-[12px] font-semibold text-ink-muted tracking-wide">Họ và tên</th>
+<th class="px-space-md text-[12px] font-semibold text-ink-muted tracking-wide">Liên hệ</th>
+<th class="px-space-md text-[12px] font-semibold text-ink-muted tracking-wide w-[130px]">Ngày đăng ký</th>
+<th class="px-space-md text-[12px] font-semibold text-ink-muted tracking-wide text-center w-[110px]">Đang mượn</th>
+<th class="px-space-md text-[12px] font-semibold text-ink-muted tracking-wide w-[130px]">Trạng thái</th>
+<th class="px-space-md text-[12px] font-semibold text-ink-muted tracking-wide text-right w-[80px]">Thao tác</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-rule text-[13px] text-ink">
+<!-- Row 1: Target Member -->
+<tr class="h-[44px] bg-row-hover">
+<td class="px-space-md font-mono text-primary font-medium">TV-0082</td>
+<td class="px-space-md font-semibold text-ink">Phạm Quốc Huy</td>
+<td class="px-space-md text-ink-muted">huy.pham@example.com · 0987 654 321</td>
+<td class="px-space-md font-mono text-ink-muted">14/03/2024</td>
+<td class="px-space-md text-center font-mono font-medium">1</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-[6px] px-2 py-[2px] rounded-[2px] bg-moss-bg border border-moss-border text-moss-text text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Hoạt động</span>
+</span>
+</td>
+<td class="px-space-md text-right">
+<span class="material-symbols-outlined text-[18px] text-ink-muted">more_horiz</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="h-[44px]">
+<td class="px-space-md font-mono text-primary font-medium">TV-0081</td>
+<td class="px-space-md font-medium text-ink">Đỗ Thị Bích Trâm</td>
+<td class="px-space-md text-ink-muted">tram.do@example.com · 0912 345 678</td>
+<td class="px-space-md font-mono text-ink-muted">12/03/2024</td>
+<td class="px-space-md text-center font-mono font-medium">0</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-[6px] px-2 py-[2px] rounded-[2px] bg-moss-bg border border-moss-border text-moss-text text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Hoạt động</span>
+</span>
+</td>
+<td class="px-space-md text-right">
+<span class="material-symbols-outlined text-[18px] text-ink-muted">more_horiz</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="h-[44px]">
+<td class="px-space-md font-mono text-primary font-medium">TV-0080</td>
+<td class="px-space-md font-medium text-ink">Lê Hoàng Nam</td>
+<td class="px-space-md text-ink-muted">nam.lh@example.com · 0903 889 112</td>
+<td class="px-space-md font-mono text-ink-muted">10/03/2024</td>
+<td class="px-space-md text-center font-mono font-medium">3</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-[6px] px-2 py-[2px] rounded-[2px] bg-ochre-bg border border-ochre-border text-ochre-text text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-ochre-text"></span>
+<span>Đang khóa tạm</span>
+</span>
+</td>
+<td class="px-space-md text-right">
+<span class="material-symbols-outlined text-[18px] text-ink-muted">more_horiz</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="h-[44px]">
+<td class="px-space-md font-mono text-primary font-medium">TV-0079</td>
+<td class="px-space-md font-medium text-ink">Vũ Minh Châu</td>
+<td class="px-space-md text-ink-muted">chau.vu@example.com · 0976 112 233</td>
+<td class="px-space-md font-mono text-ink-muted">05/03/2024</td>
+<td class="px-space-md text-center font-mono font-medium">0</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-[6px] px-2 py-[2px] rounded-[2px] bg-moss-bg border border-moss-border text-moss-text text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Hoạt động</span>
+</span>
+</td>
+<td class="px-space-md text-right">
+<span class="material-symbols-outlined text-[18px] text-ink-muted">more_horiz</span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="h-[44px]">
+<td class="px-space-md font-mono text-primary font-medium">TV-0078</td>
+<td class="px-space-md font-medium text-ink">Trần Kim Ngân</td>
+<td class="px-space-md text-ink-muted">ngan.tran@example.com · 0945 990 011</td>
+<td class="px-space-md font-mono text-ink-muted">28/02/2024</td>
+<td class="px-space-md text-center font-mono font-medium">2</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-[6px] px-2 py-[2px] rounded-[2px] bg-moss-bg border border-moss-border text-moss-text text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Hoạt động</span>
+</span>
+</td>
+<td class="px-space-md text-right">
+<span class="material-symbols-outlined text-[18px] text-ink-muted">more_horiz</span>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Table Footer -->
+<div class="h-11 px-space-md bg-paper border-t border-rule flex items-center justify-between">
+<div class="text-[12px] text-ink-muted">
+              Hiển thị 1–5 trong 148 thành viên
+            </div>
+<div class="flex items-center gap-1">
+<button class="w-7 h-7 flex items-center justify-center border border-rule rounded-[2px] text-ink-muted bg-paper text-[12px]" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<span class="w-7 h-7 flex items-center justify-center bg-primary text-on-primary font-mono text-[12px] rounded-[2px]">1</span>
+<span class="w-7 h-7 flex items-center justify-center border border-rule text-ink font-mono text-[12px] rounded-[2px] bg-paper">2</span>
+<span class="w-7 h-7 flex items-center justify-center border border-rule text-ink font-mono text-[12px] rounded-[2px] bg-paper">3</span>
+<button class="w-7 h-7 flex items-center justify-center border border-rule rounded-[2px] text-ink bg-paper text-[12px]" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Semi-Transparent Scrim (rgba(23, 35, 58, 0.45)) -->
+<div aria-labelledby="modal-title" aria-modal="true" class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" style="background-color: rgba(23, 35, 58, 0.45);">
+<!-- Centered ConfirmDialog Modal -->
+<div class="w-full max-w-[480px] bg-paper border border-rule rounded-lg shadow-xl p-6 flex flex-col gap-5 text-left animate-in fade-in zoom-in-95 duration-150">
+<!-- Modal Header -->
+<div class="flex items-start gap-3.5">
+<div class="w-10 h-10 rounded bg-oxblood-bg border border-oxblood-border flex items-center justify-center shrink-0 text-oxblood-text">
+<span class="material-symbols-outlined text-[22px]">lock</span>
+</div>
+<div class="flex flex-col">
+<h2 class="font-serif text-[20px] font-semibold text-ink leading-snug" id="modal-title">
+            Khóa thành viên “Phạm Quốc Huy”?
+          </h2>
+<span class="text-[12px] text-ink-muted font-mono mt-0.5">Mã thẻ: TV-0082</span>
+</div>
+</div>
+<!-- Modal Body Text -->
+<div class="text-[14px] text-ink leading-relaxed">
+        Thành viên sẽ không thể mượn sách mới. Các phiếu đang mượn vẫn được giữ nguyên và vẫn có thể trả sách.
+      </div>
+<!-- Member Summary Card -->
+<div class="bg-linen border border-slate-border rounded p-3.5 flex flex-col gap-2">
+<div class="grid grid-cols-2 gap-y-2 text-[13px]">
+<div>
+<span class="text-ink-muted text-[12px] block">Mã thẻ</span>
+<span class="font-mono font-medium text-ink">TV-0082</span>
+</div>
+<div>
+<span class="text-ink-muted text-[12px] block">Đang mượn</span>
+<span class="font-mono font-semibold text-oxblood-text">1 phiếu <span class="font-normal text-ink-muted">(PM-2026-0419)</span></span>
+</div>
+<div>
+<span class="text-ink-muted text-[12px] block">Email</span>
+<span class="font-mono text-ink text-[12px] break-all">huy.pham@example.com</span>
+</div>
+<div>
+<span class="text-ink-muted text-[12px] block">Điện thoại</span>
+<span class="font-mono text-ink text-[12px]">0987 654 321</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons Footer -->
+<div class="flex items-center justify-end gap-3 pt-1">
+<button class="h-10 px-5 bg-paper hover:bg-linen border border-rule-strong rounded text-[14px] font-medium text-ink transition-colors cursor-pointer focus:outline-none" type="button">
+          Hủy
+        </button>
+<button class="h-10 px-5 bg-[#9B2C2C] hover:bg-[#852525] text-white rounded text-[14px] font-medium flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm focus:outline-none" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span>Khóa thành viên</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Chi tiết phiếu mượn</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <a th:href="@{/borrowings}" class="font-label-helper text-label-helper text-ink-muted hover:text-ink">Phiếu mượn</a>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium" th:text="'#' + ${borrowing.id}">#1</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full">
+    <div class="flex flex-col gap-6 w-full">
+        <!-- Header -->
+        <div class="flex flex-col gap-2">
+            <nav class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted">
+                <span>Nghiệp vụ</span>
+                <span class="text-ink-faint">/</span>
+                <a th:href="@{/borrowings}" class="hover:text-ink transition-colors">Phiếu mượn</a>
+                <span class="text-ink-faint">/</span>
+                <span class="text-ink" th:text="'#' + ${borrowing.id}">#1</span>
+            </nav>
+            <div class="flex flex-wrap items-baseline justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <h1 class="font-headline-h1 text-headline-h1 text-ink"
+                        th:text="'Phiếu mượn #' + ${borrowing.id}">Phiếu mượn #1</h1>
+                    <span th:if="${borrowing.status?.name() == 'OVERDUE'}"
+                          class="font-label-stamp text-label-stamp text-oxblood-text uppercase tracking-[0.06em] border border-oxblood-text bg-transparent px-1.5 py-0.5 rounded-[2px] select-none">
+                        QUÁ HẠN
+                    </span>
+                    <span th:if="${borrowing.status?.name() == 'BORROWING'}"
+                          class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-moss-border bg-moss-bg font-label-badge text-label-badge text-moss-text">
+                        <span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+                        Đang mượn
+                    </span>
+                    <span th:if="${borrowing.status?.name() == 'RETURNED'}"
+                          class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-border bg-slate-bg font-label-badge text-label-badge text-slate-text">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-text"></span>
+                        Đã trả
+                    </span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a th:if="${borrowing.status?.name() != 'RETURNED'}"
+                       th:href="@{/borrowings/{id}/return(id=${borrowing.id})}"
+                       class="h-10 px-4 bg-primary-container text-on-primary font-label-button text-label-button rounded-[4px] hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper transition-all cursor-pointer inline-flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">assignment_return</span>
+                        Trả sách
+                    </a>
+                    <a th:if="${borrowing.unpaidFineAmount != null && borrowing.unpaidFineAmount > 0}"
+                       th:href="@{/borrowings/{id}/fines/pay(id=${borrowing.id})}"
+                       class="h-10 px-4 bg-moss-bg border border-moss-border text-moss-text font-label-button text-label-button rounded-[4px] hover:bg-moss-border focus:outline-none focus:ring-2 focus:ring-moss-border focus:ring-offset-2 focus:ring-offset-paper transition-all cursor-pointer inline-flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">payments</span>
+                        Thanh toán phạt
+                    </a>
+                    <a th:if="${borrowing.unpaidFineAmount != null && borrowing.unpaidFineAmount > 0}"
+                       th:href="@{/borrowings/{id}/fines/waive(id=${borrowing.id})}"
+                       class="h-10 px-4 bg-ochre-bg border border-ochre-border text-ochre-text font-label-button text-label-button rounded-[4px] hover:bg-ochre-border/30 focus:outline-none focus:ring-2 focus:ring-ochre-border focus:ring-offset-2 focus:ring-offset-paper transition-all cursor-pointer inline-flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">cancel</span>
+                        Miễn/giảm phạt
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <section class="bg-paper border border-rule rounded-[6px] p-6">
+            <div class="border-b border-rule pb-3 mb-1">
+                <h2 class="font-headline-h2 text-headline-h2 text-ink">Thông tin mượn trả</h2>
+            </div>
+            <div class="flex flex-col divide-y divide-rule/70">
+                <div class="flex items-baseline py-3">
+                    <span class="w-40 shrink-0 font-label-field text-label-field text-ink-muted">Thành viên</span>
+                    <div class="font-body-default text-body-default text-ink flex items-center gap-1.5">
+                        <span class="font-medium" th:text="${borrowing.member?.fullName}">Thành viên</span>
+                        <span class="text-ink-faint">·</span>
+                        <span class="text-ink-muted" th:text="${borrowing.member?.email}">email@example.com</span>
+                    </div>
+                </div>
+                <div class="flex items-baseline py-3">
+                    <span class="w-40 shrink-0 font-label-field text-label-field text-ink-muted">Ngày mượn</span>
+                    <span class="font-body-default text-body-default text-ink font-mono-code text-mono-code"
+                          th:text="${#temporals.format(borrowing.borrowDate, 'dd/MM/yyyy')}">01/01/2026</span>
+                </div>
+                <div class="flex items-baseline py-3">
+                    <span class="w-40 shrink-0 font-label-field text-label-field text-ink-muted">Hạn trả</span>
+                    <span class="font-body-default text-body-default font-mono-code text-mono-code"
+                          th:classappend="${borrowing.status?.name() == 'OVERDUE'} ? 'text-oxblood-text font-semibold' : 'text-ink'"
+                          th:text="${#temporals.format(borrowing.dueDate, 'dd/MM/yyyy')}">15/01/2026</span>
+                </div>
+                <div class="flex items-baseline py-3">
+                    <span class="w-40 shrink-0 font-label-field text-label-field text-ink-muted">Ngày trả</span>
+                    <span th:if="${borrowing.returnedDate != null}"
+                          class="font-body-default text-body-default text-ink font-mono-code text-mono-code"
+                          th:text="${#temporals.format(borrowing.returnedDate, 'dd/MM/yyyy')}">01/01/2026</span>
+                    <span th:unless="${borrowing.returnedDate != null}"
+                          class="font-body-default text-body-default text-ink-muted italic">Chưa trả hết</span>
+                </div>
+                <div class="flex items-baseline py-3">
+                    <span class="w-40 shrink-0 font-label-field text-label-field text-ink-muted">Tổng phạt</span>
+                    <span class="font-body-default text-body-default text-ink font-semibold"
+                          th:text="${borrowing.totalFineAmount != null && borrowing.totalFineAmount > 0 ? #numbers.formatDecimal(borrowing.totalFineAmount, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</span>
+                </div>
+                <div class="flex items-baseline py-3" th:if="${borrowing.totalFineAmount != null && borrowing.totalFineAmount > 0}">
+                    <span class="w-40 shrink-0 font-label-field text-label-field text-ink-muted">Đã thanh toán</span>
+                    <span class="font-body-default text-body-default text-moss-text font-semibold"
+                          th:text="${#numbers.formatDecimal(borrowing.paidFineAmount ?: 0, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</span>
+                </div>
+                <div class="flex items-baseline py-3" th:if="${borrowing.waivedFineAmount != null && borrowing.waivedFineAmount > 0}">
+                    <span class="w-40 shrink-0 font-label-field text-label-field text-ink-muted">Đã miễn/giảm</span>
+                    <span class="font-body-default text-body-default text-ochre-text font-semibold"
+                          th:text="${#numbers.formatDecimal(borrowing.waivedFineAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</span>
+                </div>
+                <div class="flex items-baseline py-3" th:if="${borrowing.unpaidFineAmount != null && borrowing.unpaidFineAmount > 0}">
+                    <span class="w-40 shrink-0 font-label-field text-label-field text-ink-muted">Còn nợ</span>
+                    <span class="font-body-default text-body-default text-oxblood-text font-bold"
+                          th:text="${#numbers.formatDecimal(borrowing.unpaidFineAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Books Table -->
+        <section class="bg-paper border border-rule rounded-[6px] p-6 flex flex-col gap-4">
+            <h3 class="font-headline-h3 text-headline-h3 text-ink">Sách trong phiếu</h3>
+            <div class="border border-rule rounded-[2px] overflow-hidden bg-paper">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                    <tr class="bg-linen border-b border-rule h-9">
+                        <th class="px-4 font-label-table-header text-label-table-header text-ink-muted" scope="col">Sách</th>
+                        <th class="px-4 font-label-table-header text-label-table-header text-ink-muted text-right" scope="col">SL mượn</th>
+                        <th class="px-4 font-label-table-header text-label-table-header text-ink-muted text-right" scope="col">Đã trả</th>
+                        <th class="px-4 font-label-table-header text-label-table-header text-ink-muted text-right" scope="col">Còn nợ</th>
+                        <th class="px-4 font-label-table-header text-label-table-header text-ink-muted text-right" scope="col">Tiền phạt</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-rule/60">
+                    <tr th:if="${borrowing.details == null || borrowing.details.empty}">
+                        <td colspan="5" class="px-4 py-4 text-center text-ink-muted font-body-default">Không có sách trong phiếu</td>
+                    </tr>
+                    <tr th:each="d : ${borrowing.details}" class="h-11 hover:bg-row-hover transition-colors">
+                        <td class="px-4 font-body-table-cell text-body-table-cell text-ink font-medium" th:text="${d.book?.title}">Tên sách</td>
+                        <td class="px-4 font-body-table-cell text-body-table-cell text-ink text-right font-mono-code text-mono-code" th:text="${d.quantity}">1</td>
+                        <td class="px-4 font-body-table-cell text-body-table-cell text-ink text-right font-mono-code text-mono-code"
+                            th:text="${d.quantity - d.remainingQuantity}">0</td>
+                        <td class="px-4 font-body-table-cell text-body-table-cell text-right font-mono-code text-mono-code"
+                            th:classappend="${d.remainingQuantity > 0} ? 'text-oxblood-text font-semibold' : 'text-ink'"
+                            th:text="${d.remainingQuantity}">0</td>
+                        <td class="px-4 font-body-table-cell text-body-table-cell text-ink text-right font-mono-code text-mono-code"
+                            th:text="${d.fineAmount != null && d.fineAmount > 0 ? #numbers.formatDecimal(d.fineAmount, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Estimated Fine Warning -->
+            <div class="bg-ochre-bg border border-ochre-border text-ochre-text rounded-[4px] p-3 flex items-start gap-2.5"
+                 th:if="${estimatedFine != null && estimatedFine > 0}">
+                <span class="material-symbols-outlined text-[18px] shrink-0 mt-0.5 select-none">warning</span>
+                <div class="font-body-default text-body-default text-ochre-text">
+                    Tiền phạt tạm tính nếu trả hôm nay: <span class="font-semibold" th:text="${#numbers.formatDecimal(estimatedFine, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Back Link -->
+        <div class="pt-2">
+            <a th:href="@{/borrowings}"
+               class="inline-flex items-center gap-1.5 font-label-button text-label-button text-primary-container hover:underline underline-offset-2 transition-colors">
+                <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                <span>Quay lại danh sách phiếu mượn</span>
+            </a>
+        </div>
+    </div>
+</div>
+</th:block>
+</body>
+</html>

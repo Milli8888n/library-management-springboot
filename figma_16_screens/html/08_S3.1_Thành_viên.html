@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>Thành viên - Thư viện nội bộ</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "sidebar-navy": "#17233A",
+            "sidebar-text": "#E8E4D6",
+            "sidebar-muted": "#9AA3B5",
+            "sidebar-active-bg": "#24365A",
+            "parchment": "#F4F1E8",
+            "paper": "#FCFBF7",
+            "linen": "#EBE6D8",
+            "row-hover": "#F7F4EA",
+            "rule": "#D8D2C2",
+            "rule-strong": "#A89F8A",
+            "ink": "#182230",
+            "ink-muted": "#555C6B",
+            "ink-faint": "#8A8F9C",
+            "primary": "#00376F",
+            "primary-container": "#1F4E8C",
+            "brass": "#C9A24A",
+            "moss-bg": "#E3EFE7",
+            "moss-border": "#B7D3C1",
+            "moss-text": "#2F6B4F",
+            "oxblood-bg": "#F5DEDC",
+            "oxblood-border": "#E2B4B0",
+            "oxblood-text": "#9B2C2C",
+            "blue-tint-bg": "#E2EAF4"
+          },
+          fontFamily: {
+            "body-default": ["IBM Plex Sans", "sans-serif"],
+            "headline-h1": ["\"Source Serif 4\"", "serif"],
+            "headline-h2": ["\"Source Serif 4\"", "serif"],
+            "headline-h3": ["\"Source Serif 4\"", "serif"],
+            "mono-code": ["IBM Plex Mono", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #F4F1E8;
+        color: #182230;
+      }
+    }
+  </style>
+</head>
+<body class="bg-parchment font-body-default text-[14px] text-ink antialiased">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-sidebar-navy z-50 flex flex-col justify-between select-none">
+<div class="flex flex-col">
+<div class="h-14 px-4 flex flex-col justify-center border-b border-[#22314E]">
+<div class="font-headline-h3 text-[16px] font-semibold text-sidebar-text leading-tight">Thư viện nội bộ</div>
+<div class="text-[12px] text-sidebar-muted leading-tight">Quản lý mượn trả</div>
+</div>
+<div class="py-3 flex flex-col gap-3">
+<!-- Danh mục -->
+<div class="flex flex-col">
+<div class="px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Danh mục</div>
+<nav class="flex flex-col mt-0.5">
+<a class="flex items-center gap-2 px-4 py-2 text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors text-[13px] border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+<span>Sách</span>
+</a>
+<a class="flex items-center gap-2 px-4 py-2 text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors text-[13px] border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">category</span>
+<span>Thể loại</span>
+</a>
+<!-- Active Tab: Thành viên -->
+<a class="flex items-center gap-2 px-[13px] py-2 bg-sidebar-active-bg text-sidebar-text font-medium text-[13px] border-l-[3px] border-brass transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">group</span>
+<span>Thành viên</span>
+</a>
+</nav>
+</div>
+<!-- Nghiệp vụ -->
+<div class="flex flex-col">
+<div class="px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Nghiệp vụ</div>
+<nav class="flex flex-col mt-0.5">
+<a class="flex items-center gap-2 px-4 py-2 text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors text-[13px] border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+<span>Phiếu mượn</span>
+</a>
+</nav>
+</div>
+<!-- Báo cáo -->
+<div class="flex flex-col">
+<div class="px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Báo cáo</div>
+<nav class="flex flex-col mt-0.5">
+<a class="flex items-center gap-2 px-4 py-2 text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors text-[13px] border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">event_busy</span>
+<span>Quá hạn</span>
+</a>
+<a class="flex items-center gap-2 px-4 py-2 text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors text-[13px] border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span>Sách mượn nhiều</span>
+</a>
+<a class="flex items-center gap-2 px-4 py-2 text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg transition-colors text-[13px] border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[18px]">leaderboard</span>
+<span>Lượt mượn theo thành viên</span>
+</a>
+</nav>
+</div>
+</div>
+</div>
+<!-- User Profile Footer -->
+<div class="p-4 border-t border-[#22314E] flex items-center justify-between">
+<div class="flex flex-col">
+<div class="text-[13px] font-medium text-sidebar-text leading-tight">Nguyễn Thu Hà</div>
+<div class="text-[12px] text-sidebar-muted leading-tight">Thủ thư</div>
+</div>
+<button class="text-[12px] text-sidebar-muted hover:text-sidebar-text transition-colors underline cursor-pointer bg-transparent border-none p-0" type="button">
+        Đăng xuất
+      </button>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="pl-[240px]">
+<!-- Top Header -->
+<header class="fixed top-0 left-[240px] right-0 h-14 bg-paper border-b border-rule z-40 flex items-center justify-end px-8">
+<div class="text-[13px] text-ink select-none font-medium">Thứ Năm, 01/10/2026</div>
+</header>
+<!-- Page Body -->
+<main class="relative pt-14 bg-parchment min-h-screen">
+<div class="max-w-[1200px] mx-auto p-8">
+<div class="flex flex-col w-full">
+<!-- Page Header -->
+<div class="flex flex-col gap-1 mb-6">
+<div class="text-[12px] text-ink-muted">Danh mục / Thành viên</div>
+<div class="flex items-center justify-between">
+<div class="flex items-baseline gap-3">
+<h1 class="font-headline-h1 text-[28px] font-semibold text-ink leading-tight">Thành viên</h1>
+<span class="text-[14px] text-ink-muted">6 thành viên</span>
+</div>
+<button class="h-10 px-4 bg-primary-container hover:bg-primary text-white text-[14px] font-medium rounded-[4px] transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Thêm thành viên</span>
+</button>
+</div>
+</div>
+<!-- Filter & Search Toolbar -->
+<section class="bg-linen border border-rule rounded-[4px] p-4 mb-6 shadow-sm">
+<form class="flex flex-wrap items-end justify-between gap-4" onsubmit="event.preventDefault();">
+<div class="flex flex-wrap items-end gap-6 flex-1 min-w-[320px]">
+<div class="flex flex-col gap-1 w-72">
+<label class="text-[13px] font-medium text-ink" for="search-input">Từ khóa</label>
+<input class="h-10 px-3 bg-paper border border-rule-strong rounded-[4px] text-[14px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-primary-container" id="search-input" placeholder="Họ tên hoặc email" type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[13px] font-medium text-ink">Trạng thái</span>
+<div class="inline-flex h-10 p-0.5 bg-paper border border-rule rounded-[4px]" role="tablist">
+<button class="px-3 h-full rounded-[3px] text-[13px] font-medium bg-primary-container text-white cursor-pointer transition-colors shadow-sm" type="button">
+                      Tất cả (6)
+                    </button>
+<button class="px-3 h-full rounded-[3px] text-[13px] font-medium text-ink-muted hover:text-ink cursor-pointer transition-colors" type="button">
+                      Đang hoạt động (5)
+                    </button>
+<button class="px-3 h-full rounded-[3px] text-[13px] font-medium text-ink-muted hover:text-ink cursor-pointer transition-colors" type="button">
+                      Bị khóa (1)
+                    </button>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 h-10">
+<button class="h-10 px-4 bg-primary-container hover:bg-primary text-white text-[14px] font-medium rounded-[4px] transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">search</span>
+<span>Tìm kiếm</span>
+</button>
+<button class="h-10 px-3 bg-transparent text-primary-container text-[14px] font-medium hover:underline cursor-pointer" type="button">
+                  Đặt lại
+                </button>
+</div>
+</form>
+</section>
+<!-- Table Container -->
+<section class="bg-paper border border-rule rounded-[4px] overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-linen border-b border-rule h-11 select-none">
+<th class="px-4 text-[12px] font-medium uppercase tracking-wider text-ink-muted">Họ tên</th>
+<th class="px-4 text-[12px] font-medium uppercase tracking-wider text-ink-muted">Email</th>
+<th class="px-4 text-[12px] font-medium uppercase tracking-wider text-ink-muted">Điện thoại</th>
+<th class="px-4 text-[12px] font-medium uppercase tracking-wider text-ink-muted">Trạng thái</th>
+<th class="px-4 text-[12px] font-medium uppercase tracking-wider text-ink-muted">Ngày tạo</th>
+<th class="px-4 text-[12px] font-medium uppercase tracking-wider text-ink-muted text-right">Thao tác</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-rule text-[13px]">
+<!-- Row 1 -->
+<tr class="h-12 hover:bg-row-hover transition-colors">
+<td class="px-4 text-ink font-medium">Nguyễn Văn An</td>
+<td class="px-4 text-ink">an.nguyen@example.com</td>
+<td class="px-4 text-ink">0901 234 567</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[3px] bg-moss-bg border border-moss-border text-moss-text text-[12px] font-medium leading-normal">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+                        Đang hoạt động
+                      </span>
+</td>
+<td class="px-4 text-ink-muted">05/01/2026</td>
+<td class="px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-ink hover:bg-linen rounded-[3px] transition-colors cursor-pointer" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-oxblood-text hover:bg-oxblood-bg rounded-[3px] transition-colors cursor-pointer" title="Khóa" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="h-12 hover:bg-row-hover transition-colors">
+<td class="px-4 text-ink font-medium">Trần Thị Bình</td>
+<td class="px-4 text-ink">binh.tran@example.com</td>
+<td class="px-4 text-ink">0912 345 678</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[3px] bg-moss-bg border border-moss-border text-moss-text text-[12px] font-medium leading-normal">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+                        Đang hoạt động
+                      </span>
+</td>
+<td class="px-4 text-ink-muted">12/01/2026</td>
+<td class="px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-ink hover:bg-linen rounded-[3px] transition-colors cursor-pointer" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-oxblood-text hover:bg-oxblood-bg rounded-[3px] transition-colors cursor-pointer" title="Khóa" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="h-12 hover:bg-row-hover transition-colors">
+<td class="px-4 text-ink font-medium">Lê Minh Cường</td>
+<td class="px-4 text-ink">cuong.le@example.com</td>
+<td class="px-4 text-ink-muted">—</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[3px] bg-oxblood-bg border border-oxblood-border text-oxblood-text text-[12px] font-medium leading-normal">
+<span class="w-1.5 h-1.5 rounded-full bg-oxblood-text"></span>
+                        Bị khóa
+                      </span>
+</td>
+<td class="px-4 text-ink-muted">20/02/2026</td>
+<td class="px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1.5">
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-ink hover:bg-linen rounded-[3px] transition-colors cursor-pointer" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="h-8 px-2 font-medium text-[12px] text-primary-container hover:underline hover:bg-blue-tint-bg rounded-[3px] transition-colors cursor-pointer flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">lock_open</span>
+<span>Mở khóa</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="h-12 hover:bg-row-hover transition-colors">
+<td class="px-4 text-ink font-medium">Phạm Quốc Huy</td>
+<td class="px-4 text-ink">huy.pham@example.com</td>
+<td class="px-4 text-ink">0987 654 321</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[3px] bg-moss-bg border border-moss-border text-moss-text text-[12px] font-medium leading-normal">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+                        Đang hoạt động
+                      </span>
+</td>
+<td class="px-4 text-ink-muted">03/03/2026</td>
+<td class="px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-ink hover:bg-linen rounded-[3px] transition-colors cursor-pointer" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-oxblood-text hover:bg-oxblood-bg rounded-[3px] transition-colors cursor-pointer" title="Khóa" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="h-12 hover:bg-row-hover transition-colors">
+<td class="px-4 text-ink font-medium">Hoàng Thị Mai</td>
+<td class="px-4 text-ink">mai.hoang@example.com</td>
+<td class="px-4 text-ink">0933 112 233</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[3px] bg-moss-bg border border-moss-border text-moss-text text-[12px] font-medium leading-normal">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+                        Đang hoạt động
+                      </span>
+</td>
+<td class="px-4 text-ink-muted">18/04/2026</td>
+<td class="px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-ink hover:bg-linen rounded-[3px] transition-colors cursor-pointer" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-oxblood-text hover:bg-oxblood-bg rounded-[3px] transition-colors cursor-pointer" title="Khóa" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="h-12 hover:bg-row-hover transition-colors">
+<td class="px-4 text-ink font-medium">Võ Thanh Tùng</td>
+<td class="px-4 text-ink">tung.vo@example.com</td>
+<td class="px-4 text-ink">0977 888 999</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[3px] bg-moss-bg border border-moss-border text-moss-text text-[12px] font-medium leading-normal">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+                        Đang hoạt động
+                      </span>
+</td>
+<td class="px-4 text-ink-muted">02/06/2026</td>
+<td class="px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-ink hover:bg-linen rounded-[3px] transition-colors cursor-pointer" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-ink-muted hover:text-oxblood-text hover:bg-oxblood-bg rounded-[3px] transition-colors cursor-pointer" title="Khóa" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination -->
+<div class="px-4 py-3 bg-paper border-t border-rule flex items-center justify-between select-none">
+<div class="text-[13px] text-ink-muted">
+                Hiển thị 1–6 trong 6 thành viên
+              </div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-[13px] text-ink-muted">
+<span>Hàng:</span>
+<select class="bg-paper border border-rule-strong rounded-[3px] px-2 py-1 text-[13px] text-ink focus:outline-none focus:border-primary-container">
+<option selected="" value="10">10 / trang</option>
+<option value="20">20 / trang</option>
+<option value="50">50 / trang</option>
+</select>
+</div>
+<nav aria-label="Pagination" class="inline-flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center text-ink-faint rounded-[3px] cursor-not-allowed opacity-50" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]">first_page</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-ink-faint rounded-[3px] cursor-not-allowed opacity-50" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-primary-container text-white text-[13px] font-medium rounded-[3px]" type="button">
+                    1
+                  </button>
+<button class="w-8 h-8 flex items-center justify-center text-ink-faint rounded-[3px] cursor-not-allowed opacity-50" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-ink-faint rounded-[3px] cursor-not-allowed opacity-50" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]">last_page</span>
+</button>
+</nav>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</body></html>

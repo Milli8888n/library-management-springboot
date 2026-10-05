@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16 Màn hình Catalogue Ledger — Figma Import Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #F4F1E8;
+            --paper: #FCFBF7;
+            --linen: #EBE6D8;
+            --rule: #D8D2C2;
+            --rule-strong: #A89F8A;
+            --ink: #1B2230;
+            --ink-muted: #555C6B;
+            --ink-blue: #1F4E8C;
+            --ink-blue-hover: #183F73;
+            --sidebar-navy: #17233A;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--parchment);
+            color: var(--ink);
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            padding: 32px 24px;
+        }
+        .header {
+            max-width: 1400px;
+            margin: 0 auto 32px auto;
+            border-bottom: 2px solid var(--rule);
+            padding-bottom: 24px;
+        }
+        .header h1 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: var(--ink-muted);
+            font-size: 15px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--paper);
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 6px rgba(27, 34, 48, 0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(27, 34, 48, 0.08);
+            border-color: var(--rule-strong);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .badge {
+            background: var(--sidebar-navy);
+            color: #E8E4D6;
+            font-weight: 600;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .card-header h3 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .desc {
+            color: var(--ink-muted);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            flex-grow: 1;
+        }
+        .preview-box {
+            width: 100%;
+            height: 240px;
+            background: var(--linen);
+            border: 1px solid var(--rule);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 4px;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+        .btn-primary {
+            background: var(--ink-blue);
+            color: #fff;
+            flex: 1;
+        }
+        .btn-primary:hover {
+            background: var(--ink-blue-hover);
+        }
+        .btn-secondary {
+            background: var(--paper);
+            color: var(--ink);
+            border: 1px solid var(--rule-strong);
+            flex: 1;
+        }
+        .btn-secondary:hover {
+            background: var(--linen);
+        }
+        .btn-ghost {
+            color: var(--ink-muted);
+            border: 1px solid var(--rule);
+        }
+        .btn-ghost:hover {
+            color: var(--ink);
+            background: var(--linen);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Catalogue Ledger — 16 Màn Hình Điển Hình Figma Import</h1>
+        <p>Hệ thống Thư viện nội bộ | Dự án Google Stitch <code>16602095200249856334</code> | Sẵn sàng dùng cho plugin <strong>html.to.design</strong> hoặc copy HTML</p>
+    </div>
+    <div class="grid">
+        
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">01</span>
+            <h3>S0.1 — Bảng thành phần</h3>
+        </div>
+        <p class="desc">Chứa toàn bộ Button tokens, Input states, StatusBadges, StampBadge, FlashBanner, ConfirmDialog, DataTable Preview, Typography scale và Bảng mã màu Swatches.</p>
+        <div class="preview-box">
+            <img src="screenshots/01_S0.1_Bảng_thành_phần.png" alt="S0.1" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/01_S0.1_Bảng_thành_phần.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/01_S0.1_Bảng_thành_phần.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/c16cb7b22c8d4d5288c483e6ccb95b9d" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">02</span>
+            <h3>S7.1 — Đăng nhập</h3>
+        </div>
+        <p class="desc">Màn hình đăng nhập tối giản (centered layout), không sidebar, chân trang có copyright hệ thống.</p>
+        <div class="preview-box">
+            <img src="screenshots/02_S7.1_Đăng_nhập.png" alt="S7.1" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/02_S7.1_Đăng_nhập.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/02_S7.1_Đăng_nhập.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/757e156079a947d48fa7b62b68b04364" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">03</span>
+            <h3>S7.1-V1 — Đăng nhập — Sai thông tin</h3>
+        </div>
+        <p class="desc">Trạng thái hiển thị FlashBanner cảnh báo lỗi sai thông tin đăng nhập và viền đỏ trường nhập liệu.</p>
+        <div class="preview-box">
+            <img src="screenshots/03_S7.1-V1_Đăng_nhập_—_Sai_thông_tin.png" alt="S7.1-V1" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/03_S7.1-V1_Đăng_nhập_—_Sai_thông_tin.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/03_S7.1-V1_Đăng_nhập_—_Sai_thông_tin.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/b61c1b032f4745ab94dea599e1dd9d2d" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">04</span>
+            <h3>S0.2 — Sách (Bảng Master Data)</h3>
+        </div>
+        <p class="desc">DataTable hoàn chỉnh với bộ lọc tìm kiếm theo từ khóa/thể loại/trạng thái, phân trang, hiển thị tồn kho và hành động thao tác.</p>
+        <div class="preview-box">
+            <img src="screenshots/04_S0.2_Sách_(Bảng_Master_Data).png" alt="S0.2" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/04_S0.2_Sách_(Bảng_Master_Data).html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/04_S0.2_Sách_(Bảng_Master_Data).png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/8c76d5be3e4c47f2b36389e00b1ca887" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">05</span>
+            <h3>S1.1 — Thể loại</h3>
+        </div>
+        <p class="desc">Danh sách bảng thể loại chuẩn chỉnh, phân trang và nút thêm mới.</p>
+        <div class="preview-box">
+            <img src="screenshots/05_S1.1_Thể_loại.png" alt="S1.1" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/05_S1.1_Thể_loại.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/05_S1.1_Thể_loại.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/eac79d0ad2d8424ebee4af5e52303c7f" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">06</span>
+            <h3>S2.1 — Thêm sách</h3>
+        </div>
+        <p class="desc">Form tạo mới sách đầy đủ các trường (ISBN, Tên sách, Tác giả, Thể loại, Số lượng, Mô tả tóm tắt).</p>
+        <div class="preview-box">
+            <img src="screenshots/06_S2.1_Thêm_sách.png" alt="S2.1" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/06_S2.1_Thêm_sách.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/06_S2.1_Thêm_sách.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/5f092ba175544717b6fda1dc5087e836" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">07</span>
+            <h3>S1.4-R — Xác nhận khôi phục thể loại</h3>
+        </div>
+        <p class="desc">Hộp thoại ConfirmDialog trên nền Scrim mờ, nút hành động Ink Blue 'Khôi phục'.</p>
+        <div class="preview-box">
+            <img src="screenshots/07_S1.4-R_Xác_nhận_khôi_phục_thể_loại.png" alt="S1.4-R" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/07_S1.4-R_Xác_nhận_khôi_phục_thể_loại.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/07_S1.4-R_Xác_nhận_khôi_phục_thể_loại.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/6eb0f0983e6e4d009b3ad060e13681ac" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">08</span>
+            <h3>S3.1 — Thành viên</h3>
+        </div>
+        <p class="desc">Bảng quản lý độc giả với các huy hiệu trạng thái (Đang hoạt động, Bị khóa), bộ lọc và nút thêm mới.</p>
+        <div class="preview-box">
+            <img src="screenshots/08_S3.1_Thành_viên.png" alt="S3.1" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/08_S3.1_Thành_viên.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/08_S3.1_Thành_viên.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/21384270091a4541919bf60a0357519b" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">09</span>
+            <h3>S3.4 — Xác nhận khóa thành viên</h3>
+        </div>
+        <p class="desc">Hộp thoại xác nhận chặn tài khoản độc giả kèm thông báo cảnh báo.</p>
+        <div class="preview-box">
+            <img src="screenshots/09_S3.4_Xác_nhận_khóa_thành_viên.png" alt="S3.4" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/09_S3.4_Xác_nhận_khóa_thành_viên.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/09_S3.4_Xác_nhận_khóa_thành_viên.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/da1ef79e42bc463ab288dbbc3c2b46fd" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">10</span>
+            <h3>S4.1 — Tạo phiếu mượn</h3>
+        </div>
+        <p class="desc">Form lập phiếu mượn sách: chọn thành viên, bảng danh sách sách mượn thêm động, kiểm tra hạn trả và tồn kho.</p>
+        <div class="preview-box">
+            <img src="screenshots/10_S4.1_Tạo_phiếu_mượn.png" alt="S4.1" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/10_S4.1_Tạo_phiếu_mượn.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/10_S4.1_Tạo_phiếu_mượn.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/62dbe8b34a904f768a387c1ee603f049" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">11</span>
+            <h3>S4.4 — Chi tiết phiếu mượn</h3>
+        </div>
+        <p class="desc">Trang chi tiết phiếu mượn gồm thông tin độc giả, bảng các đầu sách mượn, trạng thái hạn và tiền phạt tạm tính.</p>
+        <div class="preview-box">
+            <img src="screenshots/11_S4.4_Chi_tiết_phiếu_mượn.png" alt="S4.4" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/11_S4.4_Chi_tiết_phiếu_mượn.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/11_S4.4_Chi_tiết_phiếu_mượn.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/27ec8823c2a241679e02e326a0c3e7fb" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">12</span>
+            <h3>S5.1 — Trả sách</h3>
+        </div>
+        <p class="desc">Giao diện nhập số lượng sách trả thực tế, hiển thị số nợ còn lại và tính phạt trễ hạn tự động.</p>
+        <div class="preview-box">
+            <img src="screenshots/12_S5.1_Trả_sách.png" alt="S5.1" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/12_S5.1_Trả_sách.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/12_S5.1_Trả_sách.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/42437841cd36493ebdbac73cafb593b9" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">13</span>
+            <h3>S5.3 — Phiếu mượn #1044 đã trả hết</h3>
+        </div>
+        <p class="desc">Trạng thái hoàn tất quy trình mượn trả khi toàn bộ sách đã được thu hồi đầy đủ.</p>
+        <div class="preview-box">
+            <img src="screenshots/13_S5.3_Phiếu_mượn_#1044_đã_trả_hết.png" alt="S5.3" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/13_S5.3_Phiếu_mượn_#1044_đã_trả_hết.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/13_S5.3_Phiếu_mượn_#1044_đã_trả_hết.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/874f7cc84f2a48b0a484abd6fa026d43" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">14</span>
+            <h3>S6.1 — Báo cáo sách quá hạn</h3>
+        </div>
+        <p class="desc">Danh sách theo dõi vi phạm với StampBadge đỏ Oxblood (QUÁ HẠN X NGÀY) và số tiền phạt tích lũy.</p>
+        <div class="preview-box">
+            <img src="screenshots/14_S6.1_Báo_cáo_sách_quá_hạn.png" alt="S6.1" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/14_S6.1_Báo_cáo_sách_quá_hạn.html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/14_S6.1_Báo_cáo_sách_quá_hạn.png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/10235271b4004ab98b0602854932ff1f" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">15</span>
+            <h3>S6.2 — Báo cáo sách mượn nhiều (Top 5)</h3>
+        </div>
+        <p class="desc">Bảng xếp hạng các đầu sách phổ biến nhất kèm thanh đo tỉ lệ mượn trực quan.</p>
+        <div class="preview-box">
+            <img src="screenshots/15_S6.2_Báo_cáo_sách_mượn_nhiều_(Top_5).png" alt="S6.2" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/15_S6.2_Báo_cáo_sách_mượn_nhiều_(Top_5).html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/15_S6.2_Báo_cáo_sách_mượn_nhiều_(Top_5).png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/5558d5723a4041fea84d1415fc0fa88c" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="badge">16</span>
+            <h3>S7.2b — Lỗi 403 (Truy cập bị từ chối)</h3>
+        </div>
+        <p class="desc">Trang thông báo chặn phân quyền bên trong App Shell chuẩn của thư viện.</p>
+        <div class="preview-box">
+            <img src="screenshots/16_S7.2b_Lỗi_403_(Truy_cập_bị_từ_chối).png" alt="S7.2b" loading="lazy"/>
+        </div>
+        <div class="actions">
+            <a href="html/16_S7.2b_Lỗi_403_(Truy_cập_bị_từ_chối).html" target="_blank" class="btn btn-primary">Mở HTML</a>
+            <a href="screenshots/16_S7.2b_Lỗi_403_(Truy_cập_bị_từ_chối).png" target="_blank" class="btn btn-secondary">Xem Ảnh</a>
+            <a href="https://stitch.withgoogle.com/projects/16602095200249856334/screens/9b31be10c8994dff9b007efb420ac943" target="_blank" class="btn btn-ghost">Stitch ↗</a>
+        </div>
+    </div>
+    
+    </div>
+</body>
+</html>

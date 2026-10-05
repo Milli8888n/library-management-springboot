@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"ink":"#1B2230","secondary":"#535e78","inverse-primary":"#a9c7ff","on-background":"#151c29","surface-container":"#e8eeff","on-error-container":"#93000a","surface-container-low":"#f1f3ff","surface-tint":"#335f9d","row-hover":"#F7F4EA","tertiary-container":"#644a00","tertiary-fixed-dim":"#ebc165","surface-bright":"#f9f9ff","sidebar-text":"#E8E4D6","moss-text":"#2F6B4F","error":"#ba1a1a","primary-container":"#1f4e8c","ink-faint":"#8A8F9C","linen":"#EBE6D8","blue-tint-bg":"#E2EAF4","error-container":"#ffdad6","on-secondary-fixed-variant":"#3b4760","surface-dim":"#d3daed","slate-text":"#4A5262","primary-fixed-dim":"#a9c7ff","on-surface-variant":"#434750","on-primary-container":"#9ec1ff","on-surface":"#151c29","outline-variant":"#c3c6d2","rule":"#D8D2C2","on-secondary-container":"#57637d","slate-bg":"#E9E6DC","surface-container-lowest":"#ffffff","ink-muted":"#555C6B","oxblood-bg":"#F5DEDC","tertiary-fixed":"#ffdf9e","primary-fixed":"#d6e3ff","oxblood-text":"#9B2C2C","moss-bg":"#E3EFE7","inverse-on-surface":"#ecf0ff","paper":"#FCFBF7","on-secondary-fixed":"#0f1b32","on-error":"#ffffff","on-primary":"#ffffff","on-secondary":"#ffffff","sidebar-active-bg":"#24365A","on-primary-fixed-variant":"#144684","outline":"#737781","parchment":"#F4F1E8","surface-variant":"#dce2f6","on-tertiary":"#ffffff","sidebar-navy":"#17233A","ochre-border":"#E3CC8F","surface-container-highest":"#dce2f6","on-tertiary-fixed":"#261a00","surface":"#f9f9ff","secondary-fixed-dim":"#bbc6e4","background":"#f9f9ff","on-primary-fixed":"#001b3d","sidebar-muted":"#9AA3B5","slate-border":"#CFC9B8","surface-container-high":"#e1e8fb","ochre-bg":"#F8EBC8","inverse-surface":"#29303f","secondary-container":"#d4dffe","tertiary":"#483400","oxblood-border":"#E2B4B0","ochre-text":"#7A4F00","on-tertiary-fixed-variant":"#5b4300","on-tertiary-container":"#e3ba5f","brass":"#C9A24A","moss-border":"#B7D3C1","primary":"#00376f","secondary-fixed":"#d8e2ff","rule-strong":"#A89F8A"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin":"2rem","gutter":"1rem","space-xs":"0.25rem","space-xl":"1.5rem","space-md":"0.75rem","space-lg":"1rem","space-sm":"0.5rem"},"fontFamily":{"body-table-cell":["IBM Plex Sans"],"label-button":["IBM Plex Sans"],"label-helper":["IBM Plex Sans"],"label-table-header":["IBM Plex Sans"],"headline-h2":["\"Source Serif 4\""],"headline-h1-mobile":["\"Source Serif 4\""],"body-default":["IBM Plex Sans"],"label-stamp":["IBM Plex Sans"],"headline-h3":["\"Source Serif 4\""],"label-badge":["IBM Plex Sans"],"mono-code":["IBM Plex Mono"],"label-field":["IBM Plex Sans"],"headline-h1":["\"Source Serif 4\""]},"fontSize":{"body-table-cell":["13px",{"lineHeight":"20px","fontWeight":"400"}],"label-button":["14px",{"lineHeight":"20px","fontWeight":"500"}],"label-helper":["12px",{"lineHeight":"16px","fontWeight":"400"}],"label-table-header":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"500"}],"headline-h2":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-h1-mobile":["24px",{"lineHeight":"32px","fontWeight":"600"}],"body-default":["14px",{"lineHeight":"22px","fontWeight":"400"}],"label-stamp":["11px",{"lineHeight":"14px","letterSpacing":"0.06em","fontWeight":"600"}],"headline-h3":["16px",{"lineHeight":"24px","fontWeight":"600"}],"label-badge":["12px",{"lineHeight":"16px","fontWeight":"500"}],"mono-code":["13px",{"lineHeight":"20px","fontWeight":"400"}],"label-field":["13px",{"lineHeight":"18px","fontWeight":"500"}],"headline-h1":["28px",{"lineHeight":"36px","fontWeight":"600"}]}}}};</script></head><body class="bg-parchment font-body-default text-ink antialiased"><aside class="fixed left-0 top-0 h-full w-[240px] bg-sidebar-navy z-50 flex flex-col justify-between border-r border-sidebar-active-bg"><div class="flex flex-col flex-1"><div class="h-14 px-4 flex flex-col justify-center border-b border-sidebar-active-bg"><div class="font-headline-h3 text-headline-h3 text-sidebar-text leading-tight">Thư viện nội bộ</div><div class="font-label-helper text-label-helper text-sidebar-muted">Quản lý mượn trả</div></div><nav class="flex-1 px-0 py-3 space-y-4 overflow-y-auto" data-active-classes="bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium"><div class="space-y-1"><div class="px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Danh mục</div><a aria-current="page" class="flex items-center h-10 px-4 gap-3 transition-colors bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium" data-path="books" href="#"><span class="material-symbols-outlined text-[18px]">menu_book</span><span class="font-body-default text-body-default">Sách</span></a><a class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors border-l-[3px] border-transparent" data-path="categories" href="#"><span class="material-symbols-outlined text-[18px]">category</span><span class="font-body-default text-body-default">Thể loại</span></a><a class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors border-l-[3px] border-transparent" data-path="members" href="#"><span class="material-symbols-outlined text-[18px]">group</span><span class="font-body-default text-body-default">Thành viên</span></a></div><div class="space-y-1"><div class="px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Nghiệp vụ</div><a class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors border-l-[3px] border-transparent" data-path="borrowings" href="#"><span class="material-symbols-outlined text-[18px]">receipt_long</span><span class="font-body-default text-body-default">Phiếu mượn</span></a></div><div class="space-y-1"><div class="px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Báo cáo</div><a class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors border-l-[3px] border-transparent" data-path="overdue-report" href="#"><span class="material-symbols-outlined text-[18px]">event_busy</span><span class="font-body-default text-body-default">Quá hạn</span></a><a class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors border-l-[3px] border-transparent" data-path="top-books-report" href="#"><span class="material-symbols-outlined text-[18px]">trending_up</span><span class="font-body-default text-body-default">Sách mượn nhiều</span></a><a class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors border-l-[3px] border-transparent" data-path="member-borrowings-report" href="#"><span class="material-symbols-outlined text-[18px]">leaderboard</span><span class="font-body-default text-body-default">Lượt mượn theo thành viên</span></a></div></nav></div><div class="p-4 border-t border-sidebar-active-bg flex items-center justify-between"><div class="flex flex-col"><span class="font-label-button text-label-button text-sidebar-text">Nguyễn Thu Hà</span><span class="font-label-helper text-label-helper text-sidebar-muted">Thủ thư</span></div><a class="font-label-helper text-label-helper text-sidebar-muted hover:text-sidebar-text transition-colors" data-path="login" href="#">Đăng xuất</a></div></aside><div class="pl-[240px]"><header class="fixed top-0 left-[240px] right-0 h-14 bg-paper border-b border-rule z-40 flex items-center justify-end px-8"><div class="font-body-table-cell text-body-table-cell text-ink-muted select-none">Thứ Năm, 01/10/2026</div></header><main class="pt-14 bg-parchment min-h-screen"><div class="max-w-[1200px] p-8 text-left"><div class="flex flex-col w-full">
+<div class="flex items-end justify-between mb-6">
+<div class="flex flex-col">
+<nav aria-label="Đường dẫn" class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted mb-1.5">
+<span>Danh mục</span>
+<span class="text-ink-faint">/</span>
+<span class="text-ink font-medium">Sách</span>
+</nav>
+<h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Sách</h1>
+<p class="font-body-default text-body-default text-ink-muted mt-0.5">20 đầu sách trong thư viện</p>
+</div>
+<div>
+<button class="inline-flex items-center justify-center gap-2 h-10 px-4 bg-primary-container text-on-primary font-label-button text-label-button rounded hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper shadow-sm" type="button">
+<span class="material-symbols-outlined text-[20px] leading-none">add</span>
+<span>Thêm sách</span>
+</button>
+</div>
+</div>
+<section aria-label="Bộ lọc tìm kiếm" class="bg-linen border border-rule rounded p-3 mb-6">
+<form class="flex flex-wrap items-center gap-3" onsubmit="event.preventDefault();">
+<div class="flex-1 min-w-[240px]">
+<label class="sr-only" for="filter-keyword">Từ khóa</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted text-[18px] pointer-events-none">search</span>
+<input class="w-full h-9 pl-9 pr-3 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink placeholder:text-ink-faint focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" id="filter-keyword" placeholder="Tên sách, tác giả hoặc ISBN" type="text"/>
+</div>
+</div>
+<div class="w-[180px]">
+<label class="sr-only" for="filter-category">Thể loại</label>
+<div class="relative">
+<select class="w-full h-9 pl-3 pr-8 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors cursor-pointer" id="filter-category">
+<option value="">Tất cả thể loại</option>
+<option value="cntt">Công nghệ thông tin</option>
+<option value="kt">Kinh tế</option>
+<option value="vh">Văn học</option>
+<option value="kh">Khoa học</option>
+<option value="kns">Kỹ năng sống</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="w-[160px]">
+<label class="sr-only" for="filter-status">Trạng thái</label>
+<div class="relative">
+<select class="w-full h-9 pl-3 pr-8 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors cursor-pointer" id="filter-status">
+<option value="">Tất cả</option>
+<option value="active">Đang hoạt động</option>
+<option value="inactive">Ngừng cho mượn</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="h-9 px-4 bg-primary-container text-on-primary font-label-button text-label-button rounded hover:bg-primary transition-colors focus:outline-none focus:ring-1 focus:ring-primary-container" type="submit">
+          Tìm kiếm
+        </button>
+<button class="h-9 px-3 text-primary-container font-label-button text-label-button rounded hover:bg-paper/60 transition-colors focus:outline-none" type="reset">
+          Đặt lại
+        </button>
+</div>
+</form>
+</section>
+<div class="bg-paper border border-rule rounded overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-linen h-10 border-b border-rule font-label-table-header text-label-table-header text-ink-muted">
+<th class="py-2 px-4 font-medium w-[145px]" scope="col">ISBN</th>
+<th class="py-2 px-4 font-medium min-w-[220px]" scope="col">
+<button class="inline-flex items-center gap-1 text-ink-muted hover:text-ink font-medium tracking-[0.01em] transition-colors group" type="button">
+<span>Tên sách</span>
+<span class="material-symbols-outlined text-[16px] text-ink-faint group-hover:text-ink">arrow_upward</span>
+</button>
+</th>
+<th class="py-2 px-4 font-medium min-w-[160px]" scope="col">Tác giả</th>
+<th class="py-2 px-4 font-medium min-w-[160px]" scope="col">Thể loại</th>
+<th class="py-2 px-4 font-medium text-right w-[90px]" scope="col">Tổng SL</th>
+<th class="py-2 px-4 font-medium text-right w-[110px]" scope="col">Đang có</th>
+<th class="py-2 px-4 font-medium min-w-[150px]" scope="col">Trạng thái</th>
+<th class="py-2 px-4 font-medium text-right w-[95px]" scope="col">Thao tác</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-rule font-body-table-cell text-body-table-cell text-ink">
+<tr class="h-11 hover:bg-row-hover transition-colors">
+<td class="py-2 px-4 font-mono-code text-mono-code text-ink-muted">9780132350884</td>
+<td class="py-2 px-4">
+<a class="font-medium text-primary-container hover:underline" href="#">Clean Code</a>
+</td>
+<td class="py-2 px-4 text-ink-muted">Robert C. Martin</td>
+<td class="py-2 px-4 text-ink">Công nghệ thông tin</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code">5</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code font-medium">4</td>
+<td class="py-2 px-4">
+<span class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded-[2px] bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Đang hoạt động</span>
+</span>
+</td>
+<td class="py-2 px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-primary-container rounded hover:bg-linen/60 transition-colors" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="sr-only">Sửa Clean Code</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="sr-only">Xóa Clean Code</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="h-11 hover:bg-row-hover transition-colors">
+<td class="py-2 px-4 font-mono-code text-mono-code text-ink-muted">9780134685991</td>
+<td class="py-2 px-4">
+<a class="font-medium text-primary-container hover:underline" href="#">Effective Java</a>
+</td>
+<td class="py-2 px-4 text-ink-muted">Joshua Bloch</td>
+<td class="py-2 px-4 text-ink">Công nghệ thông tin</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code">3</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code font-medium">2</td>
+<td class="py-2 px-4">
+<span class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded-[2px] bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Đang hoạt động</span>
+</span>
+</td>
+<td class="py-2 px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-primary-container rounded hover:bg-linen/60 transition-colors" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="sr-only">Sửa Effective Java</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="sr-only">Xóa Effective Java</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="h-11 hover:bg-row-hover transition-colors">
+<td class="py-2 px-4 font-mono-code text-mono-code text-ink-muted">9781617294945</td>
+<td class="py-2 px-4">
+<a class="font-medium text-primary-container hover:underline" href="#">Spring in Action</a>
+</td>
+<td class="py-2 px-4 text-ink-muted">Craig Walls</td>
+<td class="py-2 px-4 text-ink">Công nghệ thông tin</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code">4</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code font-medium">4</td>
+<td class="py-2 px-4">
+<span class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded-[2px] bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Đang hoạt động</span>
+</span>
+</td>
+<td class="py-2 px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-primary-container rounded hover:bg-linen/60 transition-colors" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="sr-only">Sửa Spring in Action</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="sr-only">Xóa Spring in Action</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="h-11 hover:bg-row-hover transition-colors">
+<td class="py-2 px-4 font-mono-code text-mono-code text-ink-muted">9780062316110</td>
+<td class="py-2 px-4">
+<a class="font-medium text-primary-container hover:underline" href="#">Sapiens: Lược sử loài người</a>
+</td>
+<td class="py-2 px-4 text-ink-muted">Yuval Noah Harari</td>
+<td class="py-2 px-4 text-ink">Khoa học</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code">2</td>
+<td class="py-2 px-4 text-right">
+<span class="font-mono-code text-mono-code font-semibold text-oxblood-text">0</span>
+<span class="font-label-helper text-[11px] text-oxblood-text ml-1">(Hết sách)</span>
+</td>
+<td class="py-2 px-4">
+<span class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded-[2px] bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Đang hoạt động</span>
+</span>
+</td>
+<td class="py-2 px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-primary-container rounded hover:bg-linen/60 transition-colors" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="sr-only">Sửa Sapiens</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="sr-only">Xóa Sapiens</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="h-11 hover:bg-row-hover transition-colors">
+<td class="py-2 px-4 font-mono-code text-mono-code text-ink-muted">9780743273565</td>
+<td class="py-2 px-4">
+<a class="font-medium text-primary-container hover:underline" href="#">The Great Gatsby</a>
+</td>
+<td class="py-2 px-4 text-ink-muted">F. Scott Fitzgerald</td>
+<td class="py-2 px-4 text-ink">Văn học</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code">1</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code font-semibold text-ochre-text">1</td>
+<td class="py-2 px-4">
+<span class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded-[2px] bg-slate-bg border border-slate-border text-slate-text font-label-badge text-label-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-text"></span>
+<span>Ngừng cho mượn</span>
+</span>
+</td>
+<td class="py-2 px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-primary-container rounded hover:bg-linen/60 transition-colors" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="sr-only">Sửa The Great Gatsby</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="sr-only">Xóa The Great Gatsby</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="h-11 hover:bg-row-hover transition-colors">
+<td class="py-2 px-4 font-mono-code text-mono-code text-ink-muted">9786042156066</td>
+<td class="py-2 px-4">
+<a class="font-medium text-primary-container hover:underline" href="#">Dế Mèn phiêu lưu ký</a>
+</td>
+<td class="py-2 px-4 text-ink-muted">Tô Hoài</td>
+<td class="py-2 px-4 text-ink">Văn học</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code">6</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code font-medium">6</td>
+<td class="py-2 px-4">
+<span class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded-[2px] bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Đang hoạt động</span>
+</span>
+</td>
+<td class="py-2 px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-primary-container rounded hover:bg-linen/60 transition-colors" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="sr-only">Sửa Dế Mèn phiêu lưu ký</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="sr-only">Xóa Dế Mèn phiêu lưu ký</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="h-11 hover:bg-row-hover transition-colors">
+<td class="py-2 px-4 font-mono-code text-mono-code text-ink-muted">9780061122415</td>
+<td class="py-2 px-4">
+<a class="font-medium text-primary-container hover:underline" href="#">Nhà giả kim</a>
+</td>
+<td class="py-2 px-4 text-ink-muted">Paulo Coelho</td>
+<td class="py-2 px-4 text-ink">Văn học</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code">4</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code font-medium">3</td>
+<td class="py-2 px-4">
+<span class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded-[2px] bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Đang hoạt động</span>
+</span>
+</td>
+<td class="py-2 px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-primary-container rounded hover:bg-linen/60 transition-colors" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="sr-only">Sửa Nhà giả kim</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="sr-only">Xóa Nhà giả kim</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="h-11 hover:bg-row-hover transition-colors">
+<td class="py-2 px-4 font-mono-code text-mono-code text-ink-muted">9780671027032</td>
+<td class="py-2 px-4">
+<a class="font-medium text-primary-container hover:underline" href="#">Đắc nhân tâm</a>
+</td>
+<td class="py-2 px-4 text-ink-muted">Dale Carnegie</td>
+<td class="py-2 px-4 text-ink">Kỹ năng sống</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code">5</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code font-medium">5</td>
+<td class="py-2 px-4">
+<span class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded-[2px] bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Đang hoạt động</span>
+</span>
+</td>
+<td class="py-2 px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-primary-container rounded hover:bg-linen/60 transition-colors" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="sr-only">Sửa Đắc nhân tâm</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="sr-only">Xóa Đắc nhân tâm</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="h-11 hover:bg-row-hover transition-colors">
+<td class="py-2 px-4 font-mono-code text-mono-code text-ink-muted">9781612680194</td>
+<td class="py-2 px-4">
+<a class="font-medium text-primary-container hover:underline" href="#">Cha giàu cha nghèo</a>
+</td>
+<td class="py-2 px-4 text-ink-muted">Robert T. Kiyosaki</td>
+<td class="py-2 px-4 text-ink">Kinh tế</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code">3</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code font-medium">2</td>
+<td class="py-2 px-4">
+<span class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded-[2px] bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Đang hoạt động</span>
+</span>
+</td>
+<td class="py-2 px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-primary-container rounded hover:bg-linen/60 transition-colors" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="sr-only">Sửa Cha giàu cha nghèo</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="sr-only">Xóa Cha giàu cha nghèo</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="h-11 hover:bg-row-hover transition-colors">
+<td class="py-2 px-4 font-mono-code text-mono-code text-ink-muted">9780374533557</td>
+<td class="py-2 px-4">
+<a class="font-medium text-primary-container hover:underline" href="#">Tư duy nhanh và chậm</a>
+</td>
+<td class="py-2 px-4 text-ink-muted">Daniel Kahneman</td>
+<td class="py-2 px-4 text-ink">Kinh tế</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code">2</td>
+<td class="py-2 px-4 text-right font-mono-code text-mono-code font-medium">2</td>
+<td class="py-2 px-4">
+<span class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded-[2px] bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+<span>Đang hoạt động</span>
+</span>
+</td>
+<td class="py-2 px-4 text-right">
+<div class="inline-flex items-center justify-end gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-primary-container rounded hover:bg-linen/60 transition-colors" title="Sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="sr-only">Sửa Tư duy nhanh và chậm</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="sr-only">Xóa Tư duy nhanh và chậm</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex items-center justify-between px-4 py-2.5 border-t border-rule bg-paper">
+<div class="font-body-table-cell text-body-table-cell text-ink-muted">
+        Hiển thị <span class="font-medium text-ink">1–10</span> trong <span class="font-medium text-ink">20</span> sách
+      </div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5">
+<label class="sr-only" for="page-size-select">Số bản ghi mỗi trang</label>
+<div class="relative">
+<select class="h-7 pl-2 pr-6 bg-paper border border-rule-strong rounded font-body-table-cell text-body-table-cell text-ink appearance-none focus:outline-none focus:border-primary-container cursor-pointer" id="page-size-select">
+<option selected="" value="10">10 / trang</option>
+<option value="20">20 / trang</option>
+<option value="50">50 / trang</option>
+</select>
+<span class="material-symbols-outlined absolute right-1.5 top-1/2 -translate-y-1/2 text-ink-muted text-[14px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<nav aria-label="Phân trang" class="flex items-center gap-1">
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-ink disabled:opacity-35 disabled:hover:text-ink-muted rounded transition-colors" disabled="" title="Trang đầu" type="button">
+<span class="material-symbols-outlined text-[16px]">first_page</span>
+<span class="sr-only">Trang đầu</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-ink disabled:opacity-35 disabled:hover:text-ink-muted rounded transition-colors" disabled="" title="Trang trước" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+<span class="sr-only">Trang trước</span>
+</button>
+<span class="w-7 h-7 inline-flex items-center justify-center bg-primary-container text-on-primary font-label-badge text-label-badge rounded font-medium">
+            1
+          </span>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink hover:bg-linen/60 font-label-badge text-label-badge rounded transition-colors" type="button">
+            2
+          </button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-ink rounded transition-colors" title="Trang sau" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="sr-only">Trang sau</span>
+</button>
+<button class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-ink rounded transition-colors" title="Trang cuối" type="button">
+<span class="material-symbols-outlined text-[16px]">last_page</span>
+<span class="sr-only">Trang cuối</span>
+</button>
+</nav>
+</div>
+</div>
+</div>
+</div></div></main></div></body></html>

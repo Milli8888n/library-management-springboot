@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <title>Phiếu mượn</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <span class="font-label-helper text-label-helper text-ink-muted">Nghiệp vụ</span>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium">Phiếu mượn</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full">
+    <!-- Top Breadcrumb & Page Header -->
+    <div class="flex flex-col gap-2 mb-6">
+        <div class="flex items-center gap-1.5 font-label-table-header text-label-table-header text-ink-muted">
+            <span>Nghiệp vụ</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span class="text-ink font-medium">Phiếu mượn</span>
+        </div>
+        <div class="flex items-end justify-between border-b border-rule pb-4">
+            <div class="flex flex-col">
+                <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Phiếu mượn</h1>
+                <p class="font-body-default text-body-default text-ink-muted mt-1"
+                   th:text="${borrowingPage.totalElements + ' phiếu mượn lưu hành trong kỳ sổ sách'}">0 phiếu mượn</p>
+            </div>
+            <a th:href="@{/borrowings/create}"
+               class="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                <span>Tạo phiếu mượn</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Panel -->
+    <div class="bg-paper border border-rule rounded p-4 mb-6 shadow-sm">
+        <form th:action="@{/borrowings}" method="get">
+            <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-end">
+                <!-- Member Filter -->
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block font-label-field text-label-field text-ink mb-1.5" for="member-filter">Thành viên</label>
+                    <div class="relative">
+                        <select id="member-filter"
+                                name="memberId"
+                                class="w-full h-10 pl-3 pr-9 bg-surface-container-lowest border border-rule-strong rounded font-body-default text-body-default text-ink appearance-none focus:outline-none focus:border-primary-container transition-colors cursor-pointer">
+                            <option value="">Tất cả thành viên</option>
+                            <option th:each="m : ${members}"
+                                    th:value="${m.id}"
+                                    th:text="${m.fullName}"
+                                    th:selected="${m.id == selectedMemberId}">Thành viên</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted text-[18px] pointer-events-none">expand_more</span>
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div class="flex items-center gap-2 self-end">
+                    <a th:href="@{/borrowings}"
+                       class="h-10 px-4 inline-flex items-center justify-center font-label-button text-label-button bg-paper hover:bg-row-hover text-ink border border-rule-strong rounded transition-colors">
+                        Đặt lại
+                    </a>
+                    <button type="submit"
+                            class="h-10 px-5 inline-flex items-center justify-center font-label-button text-label-button bg-primary-container hover:bg-primary text-on-primary rounded transition-colors shadow-sm">
+                        Tìm kiếm
+                    </button>
+                </div>
+            </div>
+            <!-- Quick Status Tabs -->
+            <div class="mt-4 pt-3.5 border-t border-rule/60 flex items-center gap-2 overflow-x-auto flex-wrap">
+                <span class="font-label-stamp text-[11px] uppercase tracking-wider text-ink-muted mr-1">Bộ lọc:</span>
+                <a th:href="@{/borrowings(memberId=${selectedMemberId})}"
+                   th:classappend="${selectedStatus == null} ? 'bg-primary-container text-on-primary' : 'bg-paper hover:bg-linen text-ink border border-rule'"
+                   class="px-2.5 py-1 rounded font-label-badge text-label-badge font-medium transition-colors">
+                    Tất cả
+                </a>
+                <a th:href="@{/borrowings(status='BORROWING', memberId=${selectedMemberId})}"
+                   th:classappend="${selectedStatus?.name() == 'BORROWING'} ? 'bg-primary-container text-on-primary' : 'bg-paper hover:bg-linen text-ink border border-rule'"
+                   class="px-2.5 py-1 rounded font-label-badge text-label-badge font-medium transition-colors">
+                    Đang mượn
+                </a>
+                <a th:href="@{/borrowings(status='RETURNED', memberId=${selectedMemberId})}"
+                   th:classappend="${selectedStatus?.name() == 'RETURNED'} ? 'bg-primary-container text-on-primary' : 'bg-paper hover:bg-linen text-ink border border-rule'"
+                   class="px-2.5 py-1 rounded font-label-badge text-label-badge font-medium transition-colors">
+                    Đã trả
+                </a>
+                <a th:href="@{/borrowings(status='OVERDUE', memberId=${selectedMemberId})}"
+                   th:classappend="${selectedStatus?.name() == 'OVERDUE'} ? 'bg-oxblood-bg text-oxblood-text border-oxblood-border' : 'bg-paper hover:bg-linen text-oxblood-text border border-oxblood-border'"
+                   class="px-2.5 py-1 rounded font-label-badge text-label-badge font-medium transition-colors border">
+                    Quá hạn
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Primary Ledger Table -->
+    <div class="bg-paper border border-rule rounded overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-linen border-b border-rule text-ink-muted font-label-table-header text-label-table-header uppercase">
+                    <th class="py-3 px-4 font-medium tracking-wider">Mã phiếu</th>
+                    <th class="py-3 px-4 font-medium tracking-wider">Thành viên</th>
+                    <th class="py-3 px-4 font-medium tracking-wider">Sách mượn</th>
+                    <th class="py-3 px-4 font-medium tracking-wider">Ngày mượn</th>
+                    <th class="py-3 px-4 font-medium tracking-wider">Hạn trả</th>
+                    <th class="py-3 px-4 font-medium tracking-wider">Trạng thái</th>
+                    <th class="py-3 px-4 font-medium tracking-wider text-right">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-rule font-body-table-cell text-body-table-cell text-ink">
+                <!-- Empty State -->
+                <tr th:if="${borrowingPage.empty}">
+                    <td colspan="7" class="py-8 text-center text-ink-muted font-body-default">
+                        Không có phiếu mượn nào.
+                    </td>
+                </tr>
+
+                <!-- Rows -->
+                <tr th:each="b : ${borrowingPage.content}"
+                    class="hover:bg-row-hover transition-colors">
+                    <!-- ID -->
+                    <td class="py-3 px-4 font-mono-code text-mono-code text-primary-container font-semibold"
+                        th:text="'#' + ${b.id}">PM-0001</td>
+                    <td class="py-3 px-4">
+                        <div class="flex flex-col">
+                            <span class="font-medium text-ink" th:text="${b.member?.fullName}">Thành viên</span>
+                            <span class="font-mono-code text-[11px] text-ink-muted" th:text="'TV-' + ${b.member?.id}">TV-1</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="flex flex-col gap-0.5">
+                            <th:block th:if="${b.details != null && !b.details.empty}">
+                                <span class="truncate max-w-[220px] text-ink"
+                                      th:each="d, dStat : ${b.details}"
+                                      th:text="${dStat.first ? '' : ', '} + ${d.book.title}">Tên sách</span>
+                                <span class="font-mono-code text-[11px] text-ink-muted"
+                                      th:text="'Số lượng: ' + ${b.details.size()} + ' cuốn'">1 cuốn</span>
+                            </th:block>
+                            <span th:if="${b.details == null || b.details.empty}" class="text-ink-muted">—</span>
+                        </div>
+                    </td>
+                    <!-- Borrow Date -->
+                    <td class="py-3 px-4 font-mono-code text-mono-code text-ink-muted"
+                        th:text="${#temporals.format(b.borrowDate, 'dd/MM/yyyy')}">01/01/2026</td>
+                    <!-- Due Date -->
+                    <td class="py-3 px-4 font-mono-code text-mono-code"
+                        th:classappend="${b.status?.name() == 'OVERDUE'} ? 'text-oxblood-text font-medium' : 'text-ink'"
+                        th:text="${#temporals.format(b.dueDate, 'dd/MM/yyyy')}">15/01/2026</td>
+                    <!-- Status -->
+                    <td class="py-3 px-4">
+                        <span th:if="${b.status?.name() == 'BORROWING'}"
+                              class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-moss-border bg-moss-bg font-label-badge text-label-badge text-moss-text">
+                            <span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+                            Đang mượn
+                        </span>
+                        <span th:if="${b.status?.name() == 'OVERDUE'}"
+                              class="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-oxblood-border bg-oxblood-bg font-label-stamp text-label-stamp text-oxblood-text">
+                            <span class="material-symbols-outlined text-[13px]">warning</span>
+                            QUÁ HẠN
+                        </span>
+                        <div th:if="${b.status?.name() == 'RETURNED'}" class="flex flex-col">
+                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-border bg-slate-bg font-label-badge text-label-badge text-slate-text w-max">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-text"></span>
+                                Đã trả
+                            </span>
+                            <span class="font-mono-code text-[11px] text-ink-muted mt-0.5"
+                                  th:if="${b.returnedDate != null}"
+                                  th:text="'Trả: ' + ${#temporals.format(b.returnedDate, 'dd/MM/yyyy')}">Trả: 01/01/2026</span>
+                        </div>
+                    </td>
+                    <!-- Actions -->
+                    <td class="py-3 px-4 text-right">
+                        <div class="inline-flex items-center gap-2 justify-end">
+                            <a th:href="@{/borrowings/{id}(id=${b.id})}"
+                               class="font-label-button text-[13px] text-ink-muted hover:text-ink transition-colors">Chi tiết</a>
+                            <a th:if="${b.status?.name() != 'RETURNED'}"
+                               th:href="@{/borrowings/{id}/return(id=${b.id})}"
+                               class="px-2.5 py-1 text-[12px] font-label-button font-medium rounded border border-primary-container text-primary-container hover:bg-primary-container hover:text-on-primary transition-colors">
+                                Trả sách
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Footer -->
+        <div class="px-4 py-3 bg-linen border-t border-rule flex flex-col sm:flex-row items-center justify-between gap-3 text-ink-muted font-label-table-header text-label-table-header">
+            <span th:text="${borrowingPage.totalElements == 0 ? 'Hiển thị 0 phiếu mượn' : 'Hiển thị ' + (borrowingPage.number * borrowingPage.size + 1) + '–' + (borrowingPage.number * borrowingPage.size + borrowingPage.numberOfElements) + ' trong ' + borrowingPage.totalElements + ' phiếu mượn'}">
+                Hiển thị 1–6 trong 6 phiếu mượn
+            </span>
+            <div class="flex items-center gap-1" th:if="${borrowingPage.totalPages > 1}">
+                <a th:if="${borrowingPage.hasPrevious()}"
+                   th:href="@{/borrowings(page=${borrowingPage.number - 1}, size=${borrowingPage.size}, status=${selectedStatus}, memberId=${selectedMemberId})}"
+                   class="w-7 h-7 flex items-center justify-center rounded border border-rule bg-paper text-ink hover:bg-linen/60 transition-colors">
+                    <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+                </a>
+                <span th:unless="${borrowingPage.hasPrevious()}"
+                      class="w-7 h-7 flex items-center justify-center rounded border border-rule bg-paper text-ink-faint cursor-not-allowed">
+                    <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+                </span>
+
+                <th:block th:each="p : ${#numbers.sequence(0, borrowingPage.totalPages - 1)}">
+                    <a th:if="${p == borrowingPage.number}"
+                       class="w-7 h-7 flex items-center justify-center rounded bg-primary-container text-on-primary font-medium font-mono-code text-[12px]"
+                       th:text="${p + 1}">1</a>
+                    <a th:unless="${p == borrowingPage.number}"
+                       th:href="@{/borrowings(page=${p}, size=${borrowingPage.size}, status=${selectedStatus}, memberId=${selectedMemberId})}"
+                       class="w-7 h-7 flex items-center justify-center rounded border border-rule bg-paper text-ink hover:bg-linen/60 transition-colors font-mono-code text-[12px]"
+                       th:text="${p + 1}">2</a>
+                </th:block>
+
+                <a th:if="${borrowingPage.hasNext()}"
+                   th:href="@{/borrowings(page=${borrowingPage.number + 1}, size=${borrowingPage.size}, status=${selectedStatus}, memberId=${selectedMemberId})}"
+                   class="w-7 h-7 flex items-center justify-center rounded border border-rule bg-paper text-ink hover:bg-linen/60 transition-colors">
+                    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                </a>
+                <span th:unless="${borrowingPage.hasNext()}"
+                      class="w-7 h-7 flex items-center justify-center rounded border border-rule bg-paper text-ink-faint cursor-not-allowed">
+                    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+</th:block>
+</body>
+</html>

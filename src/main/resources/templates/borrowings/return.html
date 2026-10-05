@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Trả sách</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <a th:href="@{/borrowings}" class="font-label-helper text-label-helper text-ink-muted hover:text-ink">Phiếu mượn</a>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium"
+          th:text="'#' + ${borrowing.id}">Trả sách</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full gap-6">
+    <!-- Page Header -->
+    <div class="flex flex-col gap-2">
+        <nav class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted">
+            <span>Nghiệp vụ</span>
+            <span class="text-rule-strong">/</span>
+            <a th:href="@{/borrowings}" class="hover:text-ink transition-colors">Phiếu mượn</a>
+            <span class="text-rule-strong">/</span>
+            <span class="font-mono-code text-ink-muted" th:text="'#' + ${borrowing.id}">#1</span>
+            <span class="text-rule-strong">/</span>
+            <span class="text-ink font-medium">Trả sách</span>
+        </nav>
+        <div class="flex items-baseline justify-between flex-wrap gap-4 mt-1">
+            <div class="flex items-center gap-3">
+                <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight"
+                    th:text="'Trả sách — Phiếu mượn #' + ${borrowing.id}">Trả sách</h1>
+                <span th:if="${borrowing.status?.name() == 'OVERDUE'}"
+                      class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-transparent border border-oxblood-border text-oxblood-text font-label-stamp text-label-stamp uppercase select-none">
+                    QUÁ HẠN
+                </span>
+            </div>
+        </div>
+        <p class="font-body-default text-body-default text-ink-muted">
+            Thành viên: <span class="font-medium text-ink" th:text="${borrowing.member?.fullName}">Thành viên</span>
+            ·
+            Email: <span class="font-mono-code text-[13px] text-ink" th:text="${borrowing.member?.email}">email</span>
+            ·
+            Hạn trả: <span class="font-mono-code text-[13px]"
+                           th:classappend="${borrowing.status?.name() == 'OVERDUE'} ? 'text-oxblood-text font-medium' : 'text-ink'"
+                           th:text="${#temporals.format(borrowing.dueDate, 'dd/MM/yyyy')}">01/01/2026</span>
+        </p>
+    </div>
+
+    <!-- Overdue Warning -->
+    <div class="w-full rounded-[4px] bg-ochre-bg border-l-[3px] border-ochre-border p-3.5 flex items-start gap-3"
+         th:if="${borrowing.status?.name() == 'OVERDUE'}">
+        <span class="material-symbols-outlined text-[18px] text-ochre-text shrink-0 mt-0.5">warning</span>
+        <div class="flex-1 font-body-default text-[13px] leading-5 text-ochre-text">
+            Phiếu mượn đã quá hạn quy định. Phí trễ hạn tự động áp dụng
+            <strong>5.000 ₫ / cuốn / ngày</strong>. Vui lòng kiểm tra và xác nhận trước khi đóng sổ.
+        </div>
+    </div>
+
+    <!-- Fine Preview -->
+    <div class="w-full rounded-[4px] bg-moss-bg border-l-[3px] border-moss-border p-3.5 flex items-start gap-3"
+         th:if="${estimatedFine != null && estimatedFine > 0}">
+        <span class="material-symbols-outlined text-[18px] text-moss-text shrink-0 mt-0.5">calculate</span>
+        <div class="flex-1 font-body-default text-[13px] leading-5 text-moss-text">
+            Tiền phạt ước tính nếu trả hôm nay:
+            <span class="font-semibold text-ink"
+                  th:text="${#numbers.formatDecimal(estimatedFine, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</span>
+        </div>
+    </div>
+
+    <!-- Main Return Form -->
+    <form th:action="@{/borrowings/{id}/return(id=${borrowing.id})}"
+          th:object="${returnForm}"
+          method="post"
+          class="flex flex-col gap-6">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="hidden" name="borrowingId" th:value="${borrowing.id}"/>
+
+        <div class="bg-paper border border-rule rounded-[4px] p-6 flex flex-col gap-6">
+            <!-- Line Items Table -->
+            <div class="flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-headline-h3 text-headline-h3 text-ink">Danh mục sách hoàn trả</h2>
+                    <span class="font-label-helper text-label-helper text-ink-muted"
+                          th:text="${#lists.size(returnForm.items)} + ' tựa sách ghi nhận nợ'">0 tựa sách</span>
+                </div>
+                <div class="border border-rule rounded-[2px] overflow-hidden bg-paper">
+                    <table class="w-full border-collapse text-left">
+                        <thead>
+                        <tr class="bg-linen border-b border-rule font-label-table-header text-label-table-header text-ink-muted">
+                            <th class="py-2.5 px-4 font-medium min-w-[260px]">Sách</th>
+                            <th class="py-2.5 px-3 font-medium text-center w-24">Đang mượn</th>
+                            <th class="py-2.5 px-3 font-medium text-center w-20">Đã trả</th>
+                            <th class="py-2.5 px-3 font-medium text-center w-20">Còn nợ</th>
+                            <th class="py-2.5 px-4 font-medium w-40">Số lượng trả lần này</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-rule font-body-table-cell text-body-table-cell text-ink">
+                        <tr th:if="${returnForm.items.empty}">
+                            <td colspan="5" class="py-4 text-center text-ink-muted font-body-default">Không còn sách nào cần trả.</td>
+                        </tr>
+                        <tr th:each="item, iStat : *{items}" class="hover:bg-row-hover transition-colors">
+                            <!-- Hidden fields -->
+                            <input type="hidden" th:field="*{items[__${iStat.index}__].detailId}"/>
+                            <input type="hidden" th:field="*{items[__${iStat.index}__].bookId}"/>
+                            <input type="hidden" th:field="*{items[__${iStat.index}__].quantity}"/>
+                            <input type="hidden" th:field="*{items[__${iStat.index}__].remainingQuantity}"/>
+
+                            <td class="py-3 px-4 align-middle">
+                                <div class="font-medium text-ink" th:text="${item.bookTitle}">Tên sách</div>
+                                <div class="font-mono-code text-[11px] text-ink-muted" th:text="${item.isbn}">ISBN</div>
+                            </td>
+                            <td class="py-3 px-3 text-center font-mono-code text-mono-code" th:text="${item.quantity}">1</td>
+                            <td class="py-3 px-3 text-center font-mono-code text-mono-code text-ink-muted"
+                                th:text="${item.quantity - item.remainingQuantity}">0</td>
+                            <td class="py-3 px-3 text-center font-mono-code text-mono-code text-oxblood-text font-medium"
+                                th:text="${item.remainingQuantity}">1</td>
+                            <td class="py-3 px-4 align-middle">
+                                <div class="flex items-center h-9 border border-rule-strong rounded bg-paper w-32 select-none">
+                                    <button type="button"
+                                            onclick="changeQty(this, -1)"
+                                            class="w-8 h-full flex items-center justify-center text-ink hover:bg-linen active:bg-slate-bg transition-colors">
+                                        <span class="material-symbols-outlined text-[16px]">remove</span>
+                                    </button>
+                                    <input type="number"
+                                           th:field="*{items[__${iStat.index}__].returnQuantity}"
+                                           th:max="${item.remainingQuantity}"
+                                           min="0"
+                                           class="qty-input w-full h-full text-center font-mono-code text-mono-code text-ink bg-transparent focus:outline-none border-x border-rule [appearance:textfield]"/>
+                                    <button type="button"
+                                            onclick="changeQty(this, 1)"
+                                            th:attr="data-max=${item.remainingQuantity}"
+                                            class="w-8 h-full flex items-center justify-center text-ink hover:bg-linen active:bg-slate-bg transition-colors">
+                                        <span class="material-symbols-outlined text-[16px]">add</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Return Date -->
+            <div class="flex flex-col gap-1.5 max-w-[280px]">
+                <label class="font-label-field text-label-field text-ink" for="returnDate">
+                    Ngày trả thực tế <span class="text-oxblood-text">*</span>
+                </label>
+                <input th:field="*{returnDate}"
+                       id="returnDate"
+                       type="date"
+                       required
+                       class="h-10 px-3 bg-paper border border-rule-strong rounded font-mono-code text-mono-code text-ink focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
+            </div>
+
+            <!-- Actions -->
+            <div class="pt-4 border-t border-rule flex items-center gap-3">
+                <button type="submit"
+                        class="h-10 px-6 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2">
+                    Xác nhận trả sách
+                </button>
+                <a th:href="@{/borrowings/{id}(id=${borrowing.id})}"
+                   class="h-10 px-4 bg-paper border border-rule-strong text-ink font-label-button text-label-button rounded hover:bg-slate-bg transition-colors inline-flex items-center">
+                    Hủy
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function changeQty(btn, delta) {
+        const row = btn.closest('tr');
+        const input = row.querySelector('.qty-input');
+        const max = parseInt(input.max) || 0;
+        let val = parseInt(input.value) || 0;
+        val = Math.min(max, Math.max(0, val + delta));
+        input.value = val;
+    }
+</script>
+</th:block>
+</body>
+</html>

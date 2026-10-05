@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Thanh toán phí phạt</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <a th:href="@{/borrowings}" class="font-label-helper text-label-helper text-ink-muted hover:text-ink">Phiếu mượn</a>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <a th:href="@{/borrowings/{id}(id=${borrowing.id})}"
+       class="font-label-helper text-label-helper text-ink-muted hover:text-ink"
+       th:text="'#' + ${borrowing.id}">#1</a>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium">Thanh toán phạt</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full gap-6">
+    <!-- Page Header -->
+    <div class="flex flex-col gap-2">
+        <h1 class="font-headline-h1 text-headline-h1 text-ink">Thanh toán phí phạt</h1>
+        <p class="font-body-default text-body-default text-ink-muted"
+           th:text="'Phiếu mượn #' + ${borrowing.id} + ' — ' + ${borrowing.member?.fullName}"></p>
+    </div>
+
+    <!-- Fine Summary -->
+    <section class="bg-paper border border-rule rounded-[6px] p-6">
+        <div class="border-b border-rule pb-3 mb-3">
+            <h2 class="font-headline-h2 text-headline-h2 text-ink">Thông tin phí phạt</h2>
+        </div>
+        <div class="flex flex-col divide-y divide-rule/70">
+            <div class="flex items-baseline py-3">
+                <span class="w-48 shrink-0 font-label-field text-label-field text-ink-muted">Tổng phí phạt</span>
+                <span class="font-body-default text-body-default text-ink font-semibold"
+                      th:text="${#numbers.formatDecimal(borrowing.totalFineAmount ?: 0, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</span>
+            </div>
+            <div class="flex items-baseline py-3">
+                <span class="w-48 shrink-0 font-label-field text-label-field text-ink-muted">Đã thanh toán</span>
+                <span class="font-body-default text-body-default text-moss-text font-semibold"
+                      th:text="${#numbers.formatDecimal(borrowing.paidFineAmount ?: 0, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</span>
+            </div>
+            <div class="flex items-baseline py-3" th:if="${borrowing.waivedFineAmount != null && borrowing.waivedFineAmount > 0}">
+                <span class="w-48 shrink-0 font-label-field text-label-field text-ink-muted">Đã miễn/giảm</span>
+                <span class="font-body-default text-body-default text-ochre-text font-semibold"
+                      th:text="${#numbers.formatDecimal(borrowing.waivedFineAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</span>
+            </div>
+            <div class="flex items-baseline py-3">
+                <span class="w-48 shrink-0 font-label-field text-label-field text-ink-muted">Còn nợ</span>
+                <span class="font-body-default text-body-default text-oxblood-text font-bold text-lg"
+                      th:text="${#numbers.formatDecimal(borrowing.unpaidFineAmount ?: 0, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Form -->
+    <section class="bg-paper border border-rule rounded-[6px] p-6">
+        <div class="border-b border-rule pb-3 mb-4">
+            <h2 class="font-headline-h2 text-headline-h2 text-ink">Ghi nhận thanh toán</h2>
+        </div>
+        <form th:action="@{/borrowings/{id}/fines/pay(id=${borrowing.id})}"
+              th:object="${finePaymentForm}"
+              method="post"
+              class="flex flex-col gap-5" id="pay-fine-form">
+
+            <!-- Amount -->
+            <div class="flex flex-col gap-1.5">
+                <label for="pay-amount" class="font-label-field text-label-field text-ink-muted">
+                    Số tiền thanh toán (₫) <span class="text-oxblood-text">*</span>
+                </label>
+                <input type="number" id="pay-amount" th:field="*{amount}"
+                       min="1" step="1000"
+                       th:max="${borrowing.unpaidFineAmount}"
+                       class="h-10 px-3 bg-linen border border-rule rounded-[4px] font-body-default text-body-default text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-container/50 focus:border-primary-container transition-all w-full max-w-xs font-mono-code text-mono-code"
+                       placeholder="Ví dụ: 50000">
+                <span class="text-oxblood-text font-label-helper text-label-helper"
+                      th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
+            </div>
+
+            <!-- Method -->
+            <div class="flex flex-col gap-1.5">
+                <label for="pay-method" class="font-label-field text-label-field text-ink-muted">
+                    Hình thức thanh toán <span class="text-oxblood-text">*</span>
+                </label>
+                <select id="pay-method" th:field="*{method}"
+                        class="h-10 px-3 bg-linen border border-rule rounded-[4px] font-body-default text-body-default text-ink focus:outline-none focus:ring-2 focus:ring-primary-container/50 focus:border-primary-container transition-all w-full max-w-xs">
+                    <option value="CASH">Tiền mặt</option>
+                    <option value="TRANSFER">Chuyển khoản</option>
+                    <option value="CARD">Thẻ</option>
+                </select>
+                <span class="text-oxblood-text font-label-helper text-label-helper"
+                      th:if="${#fields.hasErrors('method')}" th:errors="*{method}"></span>
+            </div>
+
+            <!-- Note -->
+            <div class="flex flex-col gap-1.5">
+                <label for="pay-note" class="font-label-field text-label-field text-ink-muted">Ghi chú</label>
+                <textarea id="pay-note" th:field="*{note}" rows="2"
+                          class="px-3 py-2 bg-linen border border-rule rounded-[4px] font-body-default text-body-default text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-container/50 focus:border-primary-container transition-all w-full resize-none"
+                          placeholder="Ghi chú tuỳ chọn..."></textarea>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-3 pt-2">
+                <button type="submit" id="btn-confirm-payment"
+                        class="h-10 px-6 bg-primary-container text-on-primary font-label-button text-label-button rounded-[4px] hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper transition-all inline-flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">payments</span>
+                    Xác nhận thanh toán
+                </button>
+                <a th:href="@{/borrowings/{id}(id=${borrowing.id})}"
+                   class="h-10 px-4 border border-rule bg-paper text-ink-muted font-label-button text-label-button rounded-[4px] hover:bg-linen transition-all inline-flex items-center gap-2">
+                    Huỷ
+                </a>
+            </div>
+        </form>
+    </section>
+</div>
+</th:block>
+</body>
+</html>

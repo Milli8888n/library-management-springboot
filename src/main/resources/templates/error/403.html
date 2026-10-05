@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>403 — Không có quyền</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <span class="font-label-helper text-label-helper text-ink-muted">Lỗi 403</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="w-full max-w-[480px] bg-paper border border-rule rounded-lg p-8 text-center flex flex-col items-center"><div class="inline-flex items-center font-mono-code text-[13px] font-medium tracking-wide text-oxblood-text bg-oxblood-bg border border-oxblood-border rounded-sm px-2 py-0.5 mb-space-lg select-none">Mã lỗi 403</div><h1 class="font-headline-h1-mobile text-[24px] font-semibold text-ink tracking-tight mb-space-sm">Bạn không có quyền thực hiện thao tác này.</h1><p class="font-body-default text-[14px] text-ink-muted mb-8 leading-relaxed max-w-sm">Liên hệ quản trị viên nếu bạn cần quyền truy cập.</p><a class="h-10 px-6 bg-primary-container hover:opacity-95 text-on-primary rounded font-label-button text-label-button inline-flex items-center justify-center transition-opacity" data-path="sach" href="#">Về danh sách sách</a>
+</th:block>
+</body>
+</html>

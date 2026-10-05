@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>404 — Không tìm thấy</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <span class="font-label-helper text-label-helper text-ink-muted">Lỗi 404</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="w-full max-w-[560px] mx-auto px-6 py-16 flex flex-col items-center text-center"><div class="font-['Source_Serif_4'] text-[88px] leading-none font-bold text-[#1F4E8C] tracking-tight mb-2 select-none">404</div><h1 class="font-['Source_Serif_4'] text-[24px] font-semibold text-[#182230] leading-tight mb-3">Không tìm thấy trang</h1><p class="font-['IBM_Plex_Sans'] text-[15px] text-[#555C6B] leading-relaxed max-w-md mb-8">Trang bạn đang tìm kiếm không tồn tại hoặc đã được di chuyển.</p><a class="inline-flex items-center justify-center bg-[#1F4E8C] text-white font-['IBM_Plex_Sans'] font-medium text-[14px] px-5 py-2.5 rounded-[4px] hover:bg-[#163a69] transition-colors shadow-sm" href="#">Về danh sách sách</a></div>
+</th:block>
+</body>
+</html>

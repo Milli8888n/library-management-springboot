@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Sửa sách</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <a th:href="@{/books}" class="font-label-helper text-label-helper text-ink-muted hover:text-ink">Sách</a>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium">Sửa sách</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full">
+    <!-- Page Header -->
+    <header class="flex flex-col gap-1 mb-6">
+        <nav aria-label="Đường dẫn" class="flex items-center gap-1 font-label-helper text-label-helper text-ink-muted select-none">
+            <span>Danh mục</span>
+            <span class="text-ink-faint">/</span>
+            <a th:href="@{/books}" class="hover:text-ink transition-colors">Sách</a>
+            <span class="text-ink-faint">/</span>
+            <span class="text-ink font-medium">Sửa</span>
+        </nav>
+        <div class="flex items-baseline justify-between pt-1">
+            <div>
+                <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Sửa sách</h1>
+                <p class="font-body-table-cell text-body-table-cell text-ink-muted mt-0.5">
+                    <span class="font-mono-code" th:text="'Mã #' + ${bookId}">Mã #1</span>
+                    <span class="text-rule-strong">·</span>
+                    <span th:if="${book != null}"
+                          th:text="'Đang cho mượn ' + (${book.totalQuantity} - ${book.availableQuantity}) + ' cuốn'">Đang cho mượn 0 cuốn</span>
+                </p>
+            </div>
+            <div class="flex items-center gap-2" th:if="${book != null}">
+                <span th:if="${book.status?.name() == 'ACTIVE'}"
+                      class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+                    <span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+                    <span>Đang hoạt động</span>
+                </span>
+                <span th:if="${book.status?.name() == 'INACTIVE'}"
+                      class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-slate-bg border border-slate-border text-slate-text font-label-badge text-label-badge">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-text"></span>
+                    <span>Ngừng cho mượn</span>
+                </span>
+                <span th:if="${book.status?.name() == 'DELETED'}"
+                      class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-oxblood-bg border border-oxblood-border text-oxblood-text font-label-badge text-label-badge">
+                    <span class="w-1.5 h-1.5 rounded-full bg-oxblood-text"></span>
+                    <span>Đã xóa</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Form Panel -->
+    <div class="w-full">
+        <form th:action="@{/books/{id}/edit(id=${bookId})}"
+              th:object="${bookForm}"
+              method="post"
+              id="book-edit-form"
+              class="max-w-[760px] bg-paper border border-rule rounded-xl p-6 flex flex-col">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                <!-- Row 1, Col 1: ISBN -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="font-label-field text-label-field text-ink" for="isbn">
+                        ISBN <span class="text-oxblood-text">*</span>
+                    </label>
+                    <div class="relative">
+                        <input th:field="*{isbn}"
+                               id="isbn"
+                               type="text"
+                               required
+                               class="w-full h-10 px-3 bg-paper border border-rule-strong rounded-lg font-mono-code text-mono-code text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
+                    </div>
+                    <p th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                    <p class="font-label-helper text-label-helper text-ink-muted">ISBN-10 hoặc ISBN-13</p>
+                </div>
+
+                <!-- Row 1, Col 2: Status -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="font-label-field text-label-field text-ink" for="status">
+                        Trạng thái
+                    </label>
+                    <div class="relative">
+                        <select th:field="*{status}"
+                                id="status"
+                                class="w-full h-10 px-3 pr-9 bg-paper border border-rule-strong rounded-lg font-body-default text-body-default text-ink appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all cursor-pointer">
+                            <option th:each="st : ${statuses}"
+                                    th:value="${st.name()}"
+                                    th:text="${st.displayName}">Đang hoạt động</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-ink-muted">
+                            <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Title -->
+                <div class="flex flex-col gap-1.5 md:col-span-2">
+                    <label class="font-label-field text-label-field text-ink" for="title">
+                        Tên sách <span class="text-oxblood-text">*</span>
+                    </label>
+                    <input th:field="*{title}"
+                           id="title"
+                           type="text"
+                           required
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded-lg font-body-default text-body-default text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
+                    <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                </div>
+
+                <!-- Row 3, Col 1: Author -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="font-label-field text-label-field text-ink" for="author">
+                        Tác giả <span class="text-oxblood-text">*</span>
+                    </label>
+                    <input th:field="*{author}"
+                           id="author"
+                           type="text"
+                           required
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded-lg font-body-default text-body-default text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
+                    <p th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                </div>
+
+                <!-- Row 3, Col 2: Category -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="font-label-field text-label-field text-ink" for="categoryId">
+                        Thể loại <span class="text-oxblood-text">*</span>
+                    </label>
+                    <div class="relative">
+                        <select th:field="*{categoryId}"
+                                id="categoryId"
+                                required
+                                class="w-full h-10 px-3 pr-9 bg-paper border border-rule-strong rounded-lg font-body-default text-body-default text-ink appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all cursor-pointer">
+                            <option th:each="cat : ${categories}"
+                                    th:value="${cat.id}"
+                                    th:text="${cat.name}">Công nghệ thông tin</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-ink-muted">
+                            <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                        </div>
+                    </div>
+                    <p th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                </div>
+
+                <!-- Row 4, Col 1: Total Quantity -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="font-label-field text-label-field text-ink" for="totalQuantity">
+                        Tổng số lượng <span class="text-oxblood-text">*</span>
+                    </label>
+                    <input th:field="*{totalQuantity}"
+                           id="totalQuantity"
+                           type="number"
+                           min="1"
+                           required
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded-lg font-mono-code text-mono-code text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
+                    <p th:if="${#fields.hasErrors('totalQuantity')}" th:errors="*{totalQuantity}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                </div>
+
+                <!-- Row 4, Col 2: Available Quantity -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="font-label-field text-label-field text-ink" for="availableQuantity">
+                        Số lượng đang có <span class="text-oxblood-text">*</span>
+                    </label>
+                    <input th:field="*{availableQuantity}"
+                           id="availableQuantity"
+                           type="number"
+                           min="0"
+                           required
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded-lg font-mono-code text-mono-code text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
+                    <p th:if="${#fields.hasErrors('availableQuantity')}" th:errors="*{availableQuantity}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="mt-8 pt-5 border-t border-rule flex items-center justify-start gap-3">
+                <button type="submit"
+                        class="h-10 px-6 bg-primary-container text-on-primary font-label-button text-label-button rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper transition-all select-none">
+                    Lưu
+                </button>
+                <a th:href="@{/books}"
+                   class="h-10 px-5 bg-paper border border-rule-strong text-ink font-label-button text-label-button rounded-lg hover:bg-slate-bg focus:outline-none transition-colors select-none inline-flex items-center justify-center">
+                    Hủy
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+</th:block>
+</body>
+</html>

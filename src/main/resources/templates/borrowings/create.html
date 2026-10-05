@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Tạo phiếu mượn</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <a th:href="@{/borrowings}" class="font-label-helper text-label-helper text-ink-muted hover:text-ink">Phiếu mượn</a>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium">Tạo mới</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full">
+    <div class="flex flex-col gap-1 mb-6">
+        <div class="font-label-helper text-label-helper text-ink-muted">Nghiệp vụ / Phiếu mượn / Tạo mới</div>
+        <div class="flex items-baseline justify-between">
+            <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Tạo phiếu mượn</h1>
+        </div>
+    </div>
+
+    <form th:action="@{/borrowings/create}" th:object="${borrowingForm}" method="post" id="createBorrowingForm">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div class="grid grid-cols-12 gap-6 items-start">
+            <!-- Left: Main form -->
+            <div class="col-span-12 lg:col-span-8 flex flex-col gap-6">
+
+                <!-- Section 1: Member -->
+                <section class="bg-paper border border-rule rounded-xl p-6 flex flex-col gap-4">
+                    <div class="flex items-center justify-between border-b border-rule pb-3">
+                        <h2 class="font-headline-h2 text-headline-h2 text-ink">1. Thành viên</h2>
+                    </div>
+                    <div class="flex flex-col gap-1.5 max-w-[640px]">
+                        <label class="font-label-field text-label-field text-ink" for="memberId">
+                            Thành viên <span class="text-oxblood-text">*</span>
+                        </label>
+                        <div class="relative">
+                            <select th:field="*{memberId}"
+                                    id="memberId"
+                                    required
+                                    class="w-full h-10 px-3 bg-paper border border-rule-strong rounded text-body-default font-body-default text-ink appearance-none focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-paper cursor-pointer pr-10">
+                                <option value="">-- Chọn thành viên --</option>
+                                <option th:each="m : ${members}"
+                                        th:value="${m.id}"
+                                        th:text="${m.fullName + ' · ' + m.email}">Thành viên</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none text-[20px]">expand_more</span>
+                        </div>
+                        <p th:if="${#fields.hasErrors('memberId')}" th:errors="*{memberId}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                        <p class="font-label-helper text-label-helper text-ink-muted flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]">info</span>
+                            Chỉ hiển thị thành viên đang hoạt động.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Section 2: Books -->
+                <section class="bg-paper border border-rule rounded-xl p-6 flex flex-col gap-4">
+                    <div class="flex items-center justify-between border-b border-rule pb-3">
+                        <h2 class="font-headline-h2 text-headline-h2 text-ink">2. Sách mượn</h2>
+                        <span class="font-mono-code text-mono-code text-ink-muted">Tối đa 5 cuốn / lượt</span>
+                    </div>
+                    <div class="border border-rule rounded overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                            <tr class="bg-linen border-b border-rule font-label-table-header text-label-table-header text-ink-muted">
+                                <th class="py-2.5 px-3 font-medium">Sách</th>
+                                <th class="py-2.5 px-3 font-medium w-36">Số lượng</th>
+                                <th class="py-2.5 px-3 font-medium w-28">Còn lại</th>
+                                <th class="py-2.5 px-2 w-10 text-center"><span class="sr-only">Xóa</span></th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-rule font-body-table-cell text-body-table-cell text-ink" id="line-items-body">
+                            <tr th:each="item, iStat : *{items}"
+                                class="hover:bg-row-hover transition-colors line-item-row">
+                                <td class="py-3 px-3">
+                                    <div class="relative">
+                                        <select th:field="*{items[__${iStat.index}__].bookId}"
+                                                class="book-picker w-full h-9 px-2.5 bg-paper border border-rule-strong rounded text-body-table-cell font-body-table-cell text-ink appearance-none focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+                                            <option value="">-- Chọn sách --</option>
+                                            <option th:each="book : ${books}"
+                                                    th:value="${book.id}"
+                                                    th:text="${book.title + ' · ' + (book.isbn ?: '')}">Sách</option>
+                                        </select>
+                                        <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none text-[18px]">expand_more</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-3">
+                                    <input th:field="*{items[__${iStat.index}__].quantity}"
+                                           type="number"
+                                           min="1"
+                                           max="5"
+                                           class="qty-input w-24 h-9 px-3 text-center font-mono-code text-mono-code text-ink bg-paper border border-rule-strong rounded focus:outline-none focus:ring-1 focus:ring-primary"/>
+                                </td>
+                                <td class="py-3 px-3 font-mono-code text-mono-code text-ink-muted">—</td>
+                                <td class="py-3 px-2 text-center">
+                                    <button type="button"
+                                            onclick="removeRow(this)"
+                                            class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors"
+                                            th:if="${iStat.count > 1}">
+                                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button"
+                            onclick="addRow()"
+                            class="self-start inline-flex items-center gap-1.5 px-3 h-9 border border-dashed border-primary-container text-primary-container font-label-button text-label-button rounded hover:bg-blue-tint-bg transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        Thêm sách
+                    </button>
+                    <p class="text-error font-label-helper text-[12px]" th:if="${#fields.hasErrors('items')}">
+                        Phiếu mượn phải có ít nhất 1 cuốn sách.
+                    </p>
+                </section>
+            </div>
+
+            <!-- Right sidebar: Dates & Summary -->
+            <div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+                <section class="bg-paper border border-rule rounded-xl p-6 flex flex-col gap-4 sticky top-20">
+                    <h2 class="font-headline-h2 text-headline-h2 text-ink border-b border-rule pb-3">3. Thời hạn mượn</h2>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label class="font-label-field text-label-field text-ink" for="borrowDate">Ngày mượn</label>
+                        <input th:field="*{borrowDate}"
+                               id="borrowDate"
+                               type="date"
+                               class="h-10 px-3 bg-paper border border-rule-strong rounded font-mono-code text-mono-code text-ink focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label class="font-label-field text-label-field text-ink" for="dueDate">
+                            Hạn trả <span class="text-oxblood-text">*</span>
+                        </label>
+                        <input th:field="*{dueDate}"
+                               id="dueDate"
+                               type="date"
+                               required
+                               class="h-10 px-3 bg-paper border border-rule-strong rounded font-mono-code text-mono-code text-ink focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
+                    </div>
+
+                    <div class="pt-4 border-t border-rule mt-2 flex flex-col gap-2">
+                        <button type="submit"
+                                class="w-full h-10 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm">
+                            Xác nhận tạo phiếu
+                        </button>
+                        <a th:href="@{/borrowings}"
+                           class="w-full h-10 inline-flex items-center justify-center bg-paper border border-rule-strong text-ink font-label-button text-label-button rounded hover:bg-slate-bg transition-colors">
+                            Hủy
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script th:inline="javascript">
+    const books = /*[[${books}]]*/ [];
+
+    function addRow() {
+        const tbody = document.getElementById('line-items-body');
+        const rowCount = tbody.querySelectorAll('tr').length;
+        if (rowCount >= 5) {
+            alert('Tối đa 5 cuốn sách mỗi phiếu mượn.');
+            return;
+        }
+        const idx = rowCount;
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-row-hover transition-colors line-item-row';
+        let options = '<option value="">-- Chọn sách --</option>';
+        /*[# th:each="book : ${books}" th:with="bId=${book.id}, bTitle=${book.title}, bIsbn=${book.isbn}"]*/
+        options += `<option value="[[${book.id}]]">[[${book.title}]] · [[${book.isbn}]]</option>`;
+        /*[/]*/
+        tr.innerHTML = `
+            <td class="py-3 px-3">
+                <div class="relative">
+                    <select name="items[${idx}].bookId" class="book-picker w-full h-9 px-2.5 bg-paper border border-rule-strong rounded text-body-table-cell font-body-table-cell text-ink appearance-none focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+                        ${options}
+                    </select>
+                    <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none text-[18px]">expand_more</span>
+                </div>
+            </td>
+            <td class="py-3 px-3">
+                <input name="items[${idx}].quantity" type="number" min="1" max="5" value="1"
+                       class="qty-input w-24 h-9 px-3 text-center font-mono-code text-mono-code text-ink bg-paper border border-rule-strong rounded focus:outline-none focus:ring-1 focus:ring-primary"/>
+            </td>
+            <td class="py-3 px-3 font-mono-code text-mono-code text-ink-muted">—</td>
+            <td class="py-3 px-2 text-center">
+                <button type="button" onclick="removeRow(this)" class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+        renumberRows();
+    }
+
+    function removeRow(btn) {
+        const row = btn.closest('tr');
+        const tbody = row.parentElement;
+        if (tbody.querySelectorAll('tr').length <= 1) return;
+        row.remove();
+        renumberRows();
+    }
+
+    function renumberRows() {
+        const rows = document.querySelectorAll('#line-items-body tr');
+        rows.forEach((row, i) => {
+            row.querySelectorAll('[name]').forEach(el => {
+                el.name = el.name.replace(/items\[\d+\]/, `items[${i}]`);
+            });
+        });
+    }
+</script>
+</th:block>
+</body>
+</html>

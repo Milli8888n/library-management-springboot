@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <title>Thể loại</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <span class="font-label-helper text-label-helper text-ink-muted">Danh mục</span>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium">Thể loại</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full">
+    <!-- Page Header -->
+    <header class="flex flex-col gap-space-xs mb-space-xl">
+        <nav aria-label="Đường dẫn trang" class="flex items-center gap-space-xs">
+            <span class="font-label-helper text-label-helper text-ink-muted">Danh mục</span>
+            <span class="text-ink-faint font-body-default text-[11px]">/</span>
+            <span class="font-label-helper text-label-helper text-ink">Thể loại</span>
+        </nav>
+        <div class="flex items-baseline justify-between pt-space-xs">
+            <div class="flex items-baseline gap-space-md">
+                <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Thể loại</h1>
+                <span class="font-label-field text-label-field text-ink-muted"
+                      th:text="${categoryPage.totalElements + ' thể loại'}">0 thể loại</span>
+            </div>
+            <button sec:authorize="hasRole('ADMIN')"
+                    type="button"
+                    onclick="openCreateModal()"
+                    class="inline-flex items-center gap-space-sm h-[40px] px-space-lg bg-primary-container hover:bg-primary text-on-primary rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                <span class="font-label-button text-label-button font-medium">Thêm thể loại</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Ledger Data Table -->
+    <div class="bg-paper border border-rule rounded overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-left">
+                <thead>
+                <tr class="bg-linen border-b border-rule h-[44px]">
+                    <th class="w-[60px] px-space-lg text-right font-label-table-header text-label-table-header text-ink-muted" scope="col">STT</th>
+                    <th class="w-[220px] px-space-lg font-label-table-header text-label-table-header text-ink-muted" scope="col">Tên thể loại</th>
+                    <th class="px-space-lg font-label-table-header text-label-table-header text-ink-muted" scope="col">Mô tả</th>
+                    <th class="w-[100px] px-space-lg text-right font-label-table-header text-label-table-header text-ink-muted" scope="col">Số sách</th>
+                    <th class="w-[130px] px-space-lg font-label-table-header text-label-table-header text-ink-muted" scope="col">Trạng thái</th>
+                    <th sec:authorize="hasRole('ADMIN')" class="w-[110px] px-space-lg text-right font-label-table-header text-label-table-header text-ink-muted" scope="col">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-rule">
+                <!-- Empty state -->
+                <tr th:if="${categoryPage.empty}">
+                    <td colspan="6" class="px-space-lg py-8 text-center text-ink-muted font-body-default">
+                        Chưa có thể loại nào trong hệ thống.
+                    </td>
+                </tr>
+
+                <!-- Dynamic rows -->
+                <tr th:each="cat, stat : ${categoryPage.content}"
+                    class="h-[44px] hover:bg-row-hover transition-colors">
+                    <td class="px-space-lg text-right font-mono-code text-mono-code text-ink-muted"
+                        th:text="${categoryPage.number * categoryPage.size + stat.count}">1</td>
+                    <td class="px-space-lg font-body-table-cell text-body-table-cell font-medium text-ink"
+                        th:text="${cat.name}">Tên thể loại</td>
+                    <td class="px-space-lg font-body-table-cell text-body-table-cell text-ink-muted truncate max-w-[340px]"
+                        th:text="${cat.description != null && !cat.description.isEmpty() ? cat.description : '—'}">Mô tả</td>
+                    <td class="px-space-lg text-right font-mono-code text-mono-code text-ink"
+                        th:text="${cat.books != null ? #lists.size(cat.books) : 0}">0</td>
+                    <td class="px-space-lg">
+                        <span th:if="${cat.active}"
+                              class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded bg-moss-bg text-moss-text border border-moss-border font-label-badge text-label-badge select-none">
+                            <span class="w-[6px] h-[6px] rounded-full bg-moss-text"></span>
+                            Hoạt động
+                        </span>
+                        <span th:unless="${cat.active}"
+                              class="inline-flex items-center gap-1.5 h-[22px] px-2 rounded bg-slate-bg text-slate-text border border-slate-border font-label-badge text-label-badge select-none">
+                            <span class="w-[6px] h-[6px] rounded-full bg-slate-text"></span>
+                            Ngừng
+                        </span>
+                    </td>
+                    <td sec:authorize="hasRole('ADMIN')" class="px-space-lg text-right">
+                        <div class="inline-flex items-center justify-end gap-1">
+                            <a th:href="@{/categories/{id}/edit(id=${cat.id})}"
+                               class="p-1 text-ink-muted hover:text-ink transition-colors rounded inline-flex items-center justify-center"
+                               title="Sửa">
+                                <span class="material-symbols-outlined text-[18px] block">edit</span>
+                            </a>
+                            <button th:if="${cat.active}"
+                                    type="button"
+                                    th:attr="data-id=${cat.id},data-name=${cat.name}"
+                                    onclick="openDeleteModal(this.getAttribute('data-id'), this.getAttribute('data-name'))"
+                                    class="p-1 text-ink-muted hover:text-oxblood-text transition-colors rounded inline-flex items-center justify-center"
+                                    title="Ngừng hoạt động">
+                                <span class="material-symbols-outlined text-[18px] block">delete</span>
+                            </button>
+                            <form th:unless="${cat.active}"
+                                  th:action="@{/categories/{id}/restore(id=${cat.id})}"
+                                  method="post"
+                                  class="inline">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit"
+                                        class="font-body-table-cell text-body-table-cell font-medium text-primary-container hover:text-primary transition-colors focus:outline-none">
+                                    Khôi phục
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Ledger Footer (Pagination) -->
+        <footer class="h-[48px] px-space-lg border-t border-rule bg-paper flex items-center justify-between select-none">
+            <div class="font-body-table-cell text-body-table-cell text-ink-muted"
+                 th:text="${categoryPage.totalElements == 0 ? 'Hiển thị 0 thể loại' : 'Hiển thị ' + (categoryPage.number * categoryPage.size + 1) + '–' + (categoryPage.number * categoryPage.size + categoryPage.numberOfElements) + ' trong ' + categoryPage.totalElements + ' thể loại'}">
+                Hiển thị 1–6 trong 6 thể loại
+            </div>
+            <div class="flex items-center gap-space-lg" th:if="${categoryPage.totalPages > 1}">
+                <nav aria-label="Phân trang" class="flex items-center gap-1">
+                    <!-- First -->
+                    <a th:if="${!categoryPage.first}"
+                       th:href="@{/categories(page=0, size=${categoryPage.size})}"
+                       class="w-7 h-7 flex items-center justify-center rounded text-ink-muted hover:bg-linen/60 transition-colors"
+                       title="Trang đầu">«</a>
+                    <span th:if="${categoryPage.first}"
+                          class="w-7 h-7 flex items-center justify-center text-ink-faint cursor-not-allowed">«</span>
+
+                    <!-- Previous -->
+                    <a th:if="${categoryPage.hasPrevious()}"
+                       th:href="@{/categories(page=${categoryPage.number - 1}, size=${categoryPage.size})}"
+                       class="w-7 h-7 flex items-center justify-center rounded text-ink-muted hover:bg-linen/60 transition-colors"
+                       title="Trang trước">‹</a>
+                    <span th:unless="${categoryPage.hasPrevious()}"
+                          class="w-7 h-7 flex items-center justify-center text-ink-faint cursor-not-allowed">‹</span>
+
+                    <!-- Page Numbers -->
+                    <th:block th:each="p : ${#numbers.sequence(0, categoryPage.totalPages - 1)}">
+                        <a th:if="${p == categoryPage.number}"
+                           class="w-7 h-7 flex items-center justify-center bg-primary-container text-on-primary font-label-badge text-label-badge rounded font-medium"
+                           th:text="${p + 1}">1</a>
+                        <a th:unless="${p == categoryPage.number}"
+                           th:href="@{/categories(page=${p}, size=${categoryPage.size})}"
+                           class="w-7 h-7 flex items-center justify-center text-ink font-label-badge text-label-badge rounded hover:bg-linen/60 transition-colors"
+                           th:text="${p + 1}">2</a>
+                    </th:block>
+
+                    <!-- Next -->
+                    <a th:if="${categoryPage.hasNext()}"
+                       th:href="@{/categories(page=${categoryPage.number + 1}, size=${categoryPage.size})}"
+                       class="w-7 h-7 flex items-center justify-center rounded text-ink-muted hover:bg-linen/60 transition-colors"
+                       title="Trang sau">›</a>
+                    <span th:unless="${categoryPage.hasNext()}"
+                          class="w-7 h-7 flex items-center justify-center text-ink-faint cursor-not-allowed">›</span>
+
+                    <!-- Last -->
+                    <a th:if="${!categoryPage.last}"
+                       th:href="@{/categories(page=${categoryPage.totalPages - 1}, size=${categoryPage.size})}"
+                       class="w-7 h-7 flex items-center justify-center rounded text-ink-muted hover:bg-linen/60 transition-colors"
+                       title="Trang cuối">»</a>
+                    <span th:if="${categoryPage.last}"
+                          class="w-7 h-7 flex items-center justify-center text-ink-faint cursor-not-allowed">»</span>
+                </nav>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- Modal Thêm thể loại -->
+<div id="createCategoryModal"
+     th:classappend="${showCreateModal} ? 'flex' : 'hidden'"
+     class="fixed inset-0 z-50 items-center justify-center bg-ink/40 backdrop-blur-sm">
+    <div class="w-full max-w-[520px] bg-paper border border-rule rounded-xl p-6 shadow-xl relative animate-in fade-in duration-200">
+        <div class="flex items-center justify-between pb-4 border-b border-rule mb-5">
+            <h2 class="font-headline-h2 text-headline-h2 text-ink">Thêm thể loại mới</h2>
+            <button type="button" onclick="closeCreateModal()" class="p-1 text-ink-muted hover:text-ink rounded">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+        </div>
+        <form th:action="@{/categories/create}" th:object="${categoryForm}" method="post" class="flex flex-col gap-4">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            
+            <div class="flex flex-col gap-1.5">
+                <label for="createName" class="font-label-field text-label-field text-ink">
+                    Tên thể loại <span class="text-error">*</span>
+                </label>
+                <input type="text"
+                       id="createName"
+                       th:field="*{name}"
+                       required
+                       maxlength="100"
+                       placeholder="Ví dụ: Công nghệ thông tin"
+                       class="w-full h-10 px-3 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink placeholder:text-ink-faint focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
+                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                <div class="flex justify-between font-label-helper text-label-helper text-ink-muted">
+                    <span>Tối đa 100 ký tự.</span>
+                    <span id="createNameCounter" class="font-mono-code text-[12px]">0 / 100</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label for="createDescription" class="font-label-field text-label-field text-ink">Mô tả</label>
+                <textarea id="createDescription"
+                          th:field="*{description}"
+                          rows="3"
+                          maxlength="500"
+                          placeholder="Mô tả phạm vi, chủ đề của thể loại sách..."
+                          class="w-full p-3 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink placeholder:text-ink-faint focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors resize-y"></textarea>
+                <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                <div class="flex justify-end font-label-helper text-label-helper text-ink-muted">
+                    <span id="createDescCounter" class="font-mono-code text-[12px]">0 / 500</span>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-rule mt-2 flex items-center justify-end gap-3">
+                <button type="button"
+                        onclick="closeCreateModal()"
+                        class="h-10 px-4 bg-paper border border-rule-strong text-ink font-label-button text-label-button rounded hover:bg-linen/60 transition-colors">
+                    Hủy
+                </button>
+                <button type="submit"
+                        class="h-10 px-6 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm">
+                    Tạo thể loại
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa thể loại -->
+<div id="deleteCategoryModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-ink/40 backdrop-blur-sm">
+    <div class="w-full max-w-[440px] bg-paper border border-rule rounded-xl p-6 shadow-xl relative animate-in fade-in duration-200">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-oxblood-bg flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-oxblood-text text-[22px]">warning</span>
+            </div>
+            <div>
+                <h3 class="font-headline-h3 text-headline-h3 text-ink">Ngừng hoạt động thể loại</h3>
+                <p class="font-body-default text-body-default text-ink-muted mt-1">
+                    Bạn có chắc chắn muốn ngừng hoạt động thể loại <span id="deleteCategoryName" class="font-medium text-ink"></span> không?
+                </p>
+            </div>
+        </div>
+        <form id="deleteCategoryForm" method="post" class="flex items-center justify-end gap-3 pt-3 border-t border-rule">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="button" onclick="closeDeleteModal()" class="h-9 px-4 bg-paper border border-rule-strong text-ink font-label-button text-label-button rounded hover:bg-linen/60 transition-colors">
+                Hủy
+            </button>
+            <button type="submit" class="h-9 px-4 bg-oxblood-text hover:opacity-90 text-white font-label-button text-label-button rounded transition-colors">
+                Xác nhận ngừng
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openCreateModal() {
+        const modal = document.getElementById('createCategoryModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.getElementById('createName').focus();
+    }
+    function closeCreateModal() {
+        const modal = document.getElementById('createCategoryModal');
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
+
+    function openDeleteModal(id, name) {
+        document.getElementById('deleteCategoryName').textContent = '“' + name + '”';
+        document.getElementById('deleteCategoryForm').action = '/categories/' + id + '/delete';
+        const modal = document.getElementById('deleteCategoryModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteCategoryModal');
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
+
+    // Input character counters
+    const cName = document.getElementById('createName');
+    const cNameCounter = document.getElementById('createNameCounter');
+    if (cName && cNameCounter) {
+        cName.addEventListener('input', () => {
+            cNameCounter.textContent = `${cName.value.length} / 100`;
+        });
+    }
+    const cDesc = document.getElementById('createDescription');
+    const cDescCounter = document.getElementById('createDescCounter');
+    if (cDesc && cDescCounter) {
+        cDesc.addEventListener('input', () => {
+            cDescCounter.textContent = `${cDesc.value.length} / 500`;
+        });
+    }
+</script>
+</th:block>
+</body>
+</html>

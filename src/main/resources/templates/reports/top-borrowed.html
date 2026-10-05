@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Sách mượn nhiều nhất</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <span class="font-label-helper text-label-helper text-ink-muted">Báo cáo</span>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium">Sách mượn nhiều nhất</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full gap-6">
+    <!-- Header -->
+    <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 font-label-helper text-label-helper text-ink-muted">
+            <span>Báo cáo lưu thông</span>
+            <span class="text-ink-faint">/</span>
+            <span class="text-ink">Thống kê mượn sách</span>
+        </div>
+        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 mt-1">
+            <div class="flex items-baseline gap-3 flex-wrap">
+                <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Báo cáo sách mượn nhiều nhất</h1>
+            </div>
+            <div class="flex items-center gap-2">
+                <a th:href="@{/borrowings}"
+                   class="inline-flex items-center gap-1.5 h-9 px-3 bg-paper border border-rule-strong text-ink hover:bg-linen rounded transition-colors font-label-button text-label-button shadow-sm">
+                    <span class="material-symbols-outlined text-[16px] text-ink-muted">open_in_new</span>
+                    <span>Xem phiếu mượn</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Tổng lượt mượn ghi nhận</span>
+                <span class="material-symbols-outlined text-ink-muted text-[18px]">swap_horiz</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-ink"
+                     th:text="${totalBorrowed != null ? totalBorrowed + ' lượt luân chuyển' : '0 lượt luân chuyển'}">0 lượt luân chuyển</div>
+                <p class="font-label-helper text-label-helper text-ink-faint"
+                   th:text="${topBooks.empty ? 'Không có phát sinh' : 'Tổng hợp toàn hệ thống'}">Không có phát sinh</p>
+            </div>
+        </div>
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Sách dẫn đầu danh mục</span>
+                <span class="material-symbols-outlined text-ink-muted text-[18px]">auto_stories</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-ink truncate"
+                     th:text="${topBooks.empty ? 'Chưa có dữ liệu' : topBooks[0].title}">Chưa có dữ liệu</div>
+                <p class="font-label-helper text-label-helper text-ink-faint"
+                   th:text="${topBooks.empty ? 'Chưa xác định đầu sách lưu thông' : topBooks[0].totalBorrowed + ' lượt mượn'}">Chưa xác định</p>
+            </div>
+        </div>
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Số đầu sách thống kê</span>
+                <span class="material-symbols-outlined text-ink-muted text-[18px]">library_books</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-ink"
+                     th:text="${topBooks.size()}">0</div>
+                <p class="font-label-helper text-label-helper text-ink-faint">đầu sách trong bảng xếp hạng</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ranking Table -->
+    <div class="bg-paper border border-rule rounded flex flex-col">
+        <div class="bg-linen px-5 py-3 border-b border-rule flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-ink-muted">format_list_numbered</span>
+                <h2 class="font-label-table-header text-label-table-header text-ink uppercase tracking-wider font-semibold">
+                    BẢNG XẾP HẠNG LƯU THÔNG KHO SÁCH
+                </h2>
+            </div>
+            <span class="font-mono-code text-label-helper text-ink-muted"
+                  th:text="'Hiển thị Top ' + ${topBooks.size()} + ' danh mục'">Hiển thị Top 5 danh mục</span>
+        </div>
+
+        <!-- Empty state -->
+        <div th:if="${topBooks.empty}" class="py-24 px-6 flex flex-col items-center justify-center text-center">
+            <div class="w-12 h-12 rounded-full bg-parchment flex items-center justify-center border border-rule mb-4">
+                <span class="material-symbols-outlined text-ink-faint text-[28px]">library_books</span>
+            </div>
+            <h3 class="font-headline-h3 text-headline-h3 text-ink mb-1.5">Chưa có dữ liệu</h3>
+            <p class="font-body-default text-body-default text-ink-muted max-w-[420px]">
+                Top sách sẽ hiển thị khi có phiếu mượn đầu tiên được ghi nhận trong hệ thống.
+            </p>
+            <div class="mt-6">
+                <a th:href="@{/borrowings/create}"
+                   class="inline-flex items-center gap-2 h-9 px-4 bg-primary-container text-on-primary font-label-button text-label-button rounded hover:bg-primary transition-colors">
+                    <span class="material-symbols-outlined text-[16px]">add_circle</span>
+                    <span>Tạo phiếu mượn mới</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Table data -->
+        <div th:unless="${topBooks.empty}" class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-linen/50 border-b border-rule font-label-table-header text-label-table-header text-ink-muted">
+                    <th class="py-2.5 px-4 font-medium w-16">THỨ HẠNG</th>
+                    <th class="py-2.5 px-4 font-medium w-40">MÃ ẤN PHẨM</th>
+                    <th class="py-2.5 px-4 font-medium">TÊN ĐẦU SÁCH / TÁC GIẢ</th>
+                    <th class="py-2.5 px-4 font-medium text-right w-32">LƯỢT MƯỢN</th>
+                    <th class="py-2.5 px-4 font-medium w-32">THỂ LOẠI</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-rule font-body-table-cell text-body-table-cell text-ink">
+                <tr th:each="book, stat : ${topBooks}" class="hover:bg-row-hover transition-colors">
+                    <!-- Rank -->
+                    <td class="py-3.5 px-4 align-middle">
+                        <div class="w-8 h-8 flex items-center justify-center rounded"
+                             th:classappend="${stat.index == 0} ? 'bg-brass text-on-primary font-bold' : (${stat.index == 1} ? 'bg-slate-bg border border-slate-border text-slate-text font-bold' : 'bg-linen border border-rule text-ink-muted font-medium')">
+                            <span class="font-mono-code text-[13px]" th:text="${stat.count}">#1</span>
+                        </div>
+                    </td>
+                    <!-- ISBN -->
+                    <td class="py-3.5 px-4 align-middle">
+                        <span class="font-mono-code text-mono-code text-ink-muted" th:text="${book.isbn ?: '—'}">ISBN</span>
+                    </td>
+                    <!-- Title + Author -->
+                    <td class="py-3.5 px-4 align-middle">
+                        <div class="flex flex-col">
+                            <a th:href="@{/books/{id}(id=${book.bookId})}"
+                               class="font-medium text-primary-container hover:underline underline-offset-2"
+                               th:text="${book.title}">Tên sách</a>
+                            <span class="font-label-helper text-label-helper text-ink-muted" th:text="${book.author}">Tác giả</span>
+                        </div>
+                    </td>
+                    <!-- Total Borrowed -->
+                    <td class="py-3.5 px-4 align-middle text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <div class="h-1.5 rounded-full bg-primary-container/20 flex-1 max-w-[80px]" th:if="${topBooks[0].totalBorrowed > 0}">
+                                <div class="h-full rounded-full bg-primary-container transition-all"
+                                     th:style="'width:' + ${(book.totalBorrowed * 100 / topBooks[0].totalBorrowed)} + '%'"></div>
+                            </div>
+                            <span class="font-mono-code text-mono-code font-semibold text-ink"
+                                  th:text="${book.totalBorrowed}">0</span>
+                        </div>
+                    </td>
+                    <!-- Category -->
+                    <td class="py-3.5 px-4 align-middle">
+                        <span class="inline-flex px-2 py-0.5 rounded border border-rule bg-linen font-label-badge text-label-badge text-ink-muted"
+                              th:text="${book.categoryName ?: '—'}">Thể loại</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bg-linen/40 px-5 py-3 border-t border-rule flex flex-col sm:flex-row items-center justify-between gap-2 text-ink-muted font-label-helper text-label-helper">
+            <div th:text="'Hiển thị ' + ${topBooks.size()} + ' trong ' + ${topBooks.size()} + ' kết quả phù hợp'">Hiển thị 0 trong 0 kết quả</div>
+            <div class="font-mono-code">Khung thống kê: Tự động tổng hợp 24h/lần</div>
+        </div>
+    </div>
+
+    <!-- Note -->
+    <div class="p-4 bg-paper/60 border border-rule-strong/40 rounded flex items-start gap-3">
+        <span class="material-symbols-outlined text-ink-muted text-[18px] shrink-0 mt-0.5">info</span>
+        <p class="font-body-table-cell text-body-table-cell text-ink-muted">
+            <strong class="font-medium text-ink">Ghi chú:</strong>
+            Tỷ lệ xoay vòng = (Số lượt mượn trong kỳ ÷ Tổng kho) × 100. Dữ liệu chỉ áp dụng cho tài liệu có trạng thái "Sẵn sàng lưu thông".
+        </p>
+    </div>
+</div>
+</th:block>
+</body>
+</html>

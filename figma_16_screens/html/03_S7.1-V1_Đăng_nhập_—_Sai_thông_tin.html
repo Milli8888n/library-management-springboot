@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="vi"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>S7.1-V1 — Đăng nhập — sai thông tin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            parchment: '#F4F1E8',
+            paper: '#FCFBF7',
+            linen: '#EBE6D8',
+            rule: '#D8D2C2',
+            'rule-strong': '#A89F8A',
+            ink: '#182230',
+            'ink-muted': '#555C68',
+            'binding-navy': '#17233A',
+            'ink-blue': '#1F4E8C',
+            'ink-blue-hover': '#183F73',
+            brass: '#C9A24A',
+            moss: '#2F6B4F',
+            ochre: '#7A4F00',
+            oxblood: '#9B2C2C',
+            slate: '#4A5262'
+          },
+          fontFamily: {
+            serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+            sans: ['"IBM Plex Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+<meta content="web_standard" name="shell-type"></head>
+<body class="bg-parchment text-ink font-sans min-h-screen flex flex-col items-center pt-24 pb-12 px-4 selection:bg-linen selection:text-ink">
+<!-- Main Login Container (400px wide, upper third placement) -->
+<main class="w-full max-w-[400px]"><div class="flex flex-col w-full items-center">
+<div class="w-full bg-[#FCFBF7] rounded-[8px] border border-[#D8D2C2] p-8">
+<div class="text-center">
+<h1 class="font-['Source_Serif_4',Georgia,serif] text-[20px] font-semibold text-[#1B2230] leading-tight">Thư viện nội bộ</h1>
+<p class="font-['IBM_Plex_Sans',sans-serif] text-[13px] text-[#555C6B] mt-1">Quản lý mượn trả</p>
+</div>
+<div class="w-12 h-px bg-[#D8D2C2] mx-auto my-3"></div>
+<h2 class="font-['Source_Serif_4',Georgia,serif] text-[22px] font-semibold text-[#1B2230] text-center mb-5">Đăng nhập</h2>
+<div class="flex items-center gap-2.5 bg-[#FDF2F2] border border-[#9B2C2C] rounded-[4px] p-3 mb-5" role="alert">
+<span class="material-symbols-outlined text-[#9B2C2C] text-[18px] leading-none shrink-0 select-none" style="font-variation-settings: 'FILL' 1;">error</span>
+<p class="font-['IBM_Plex_Sans',sans-serif] text-[13px] font-medium text-[#9B2C2C] leading-snug">Tên đăng nhập hoặc mật khẩu không đúng.</p>
+</div>
+<form class="space-y-4" onsubmit="event.preventDefault();">
+<div class="space-y-1.5">
+<label class="block font-['IBM_Plex_Sans',sans-serif] text-[13px] font-medium text-[#1B2230]" for="username">
+          Tên đăng nhập <span class="text-[#9B2C2C]">*</span>
+</label>
+<input autocomplete="username" class="w-full h-[40px] px-3 bg-white border border-[#D8D2C2] rounded-[4px] text-[#1B2230] font-['IBM_Plex_Sans',sans-serif] text-[14px] focus:outline-none focus:border-[#A89F8A] transition-colors" id="username" name="username" required="" type="text" value="thuthu_nguyenthuha">
+</div>
+<div class="space-y-1.5">
+<label class="block font-['IBM_Plex_Sans',sans-serif] text-[13px] font-medium text-[#1B2230]" for="password">
+          Mật khẩu <span class="text-[#9B2C2C]">*</span>
+</label>
+<div class="relative">
+<input autocomplete="current-password" class="w-full h-[40px] pl-3 pr-10 bg-white border border-[#9B2C2C] rounded-[4px] text-[#1B2230] placeholder-[#8A8F9C] font-['IBM_Plex_Sans',sans-serif] text-[14px] focus:outline-none focus:border-[#9B2C2C] transition-colors" id="password" name="password" placeholder="Nhập mật khẩu" required="" type="password" value="">
+<button aria-label="Hiển thị mật khẩu" class="absolute right-0 top-0 h-[40px] w-10 flex items-center justify-center text-[#555C6B] hover:text-[#1B2230] focus:outline-none" id="togglePassword" type="button">
+<span class="material-symbols-outlined text-[20px] select-none" id="eyeIcon">visibility</span>
+</button>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full h-[40px] bg-[#1F4E8C] hover:bg-[#183F73] text-white font-['IBM_Plex_Sans',sans-serif] font-medium text-[14px] rounded-[4px] transition-colors duration-150 flex items-center justify-center" type="submit">
+          Đăng nhập
+        </button>
+</div>
+</form>
+</div>
+<div class="mt-6 text-center">
+<p class="font-['IBM_Plex_Mono',monospace] text-[12px] leading-[16px] text-[#555C6B]">Hệ thống thư viện nội bộ · v1.1</p>
+</div>
+<script>
+    (function() {
+      const toggleBtn = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      if (toggleBtn && passwordInput && eyeIcon) {
+        toggleBtn.addEventListener('click', function() {
+          const isPassword = passwordInput.getAttribute('type') === 'password';
+          passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+          eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+          toggleBtn.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu');
+        });
+      }
+    })();
+  </script>
+</div></main>
+
+
+</body></html>

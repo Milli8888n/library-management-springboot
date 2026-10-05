@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Thống kê thành viên</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <span class="font-label-helper text-label-helper text-ink-muted">Báo cáo</span>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium">Thành viên</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full gap-6">
+    <!-- Header -->
+    <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 font-label-helper text-label-helper text-ink-muted">
+            <span>Báo cáo</span>
+            <span class="text-ink-faint">/</span>
+            <span class="text-ink">Thành viên</span>
+        </div>
+        <div class="flex items-baseline justify-between gap-4 flex-wrap mt-1">
+            <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Thống kê hoạt động thành viên</h1>
+            <a th:href="@{/members}"
+               class="inline-flex items-center gap-1.5 h-9 px-3 bg-paper border border-rule-strong text-ink hover:bg-linen rounded transition-colors font-label-button text-label-button shadow-sm">
+                <span class="material-symbols-outlined text-[16px] text-ink-muted">open_in_new</span>
+                <span>Xem danh sách thành viên</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Tổng thành viên</span>
+                <span class="material-symbols-outlined text-ink-muted text-[18px]">group</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-ink"
+                     th:text="${memberStats.size()}">0</div>
+                <p class="font-label-helper text-label-helper text-ink-faint">thành viên trong hệ thống</p>
+            </div>
+        </div>
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Đang hoạt động</span>
+                <span class="material-symbols-outlined text-moss-text text-[18px]">person_check</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-moss-text"
+                     th:text="${activeMembers ?: 0}">0</div>
+                <p class="font-label-helper text-label-helper text-ink-faint">thành viên đang hoạt động</p>
+            </div>
+        </div>
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Đang mượn sách</span>
+                <span class="material-symbols-outlined text-ink-muted text-[18px]">auto_stories</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-ink"
+                     th:text="${membersWithActiveBorrowings ?: 0}">0</div>
+                <p class="font-label-helper text-label-helper text-ink-faint">thành viên có sách chưa trả</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Table -->
+    <div class="bg-paper border border-rule rounded flex flex-col">
+        <div class="bg-linen px-5 py-3 border-b border-rule flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-ink-muted">bar_chart</span>
+                <h2 class="font-label-table-header text-label-table-header text-ink uppercase tracking-wider font-semibold">
+                    THỐNG KÊ MƯỢN SÁCH THEO THÀNH VIÊN
+                </h2>
+            </div>
+            <span class="font-mono-code text-label-helper text-ink-muted"
+                  th:text="${memberStats.size()} + ' thành viên'">0 thành viên</span>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${memberStats.empty}" class="py-16 flex flex-col items-center justify-center gap-3 text-center">
+            <div class="w-12 h-12 rounded-full bg-parchment flex items-center justify-center border border-rule">
+                <span class="material-symbols-outlined text-ink-faint text-[28px]">group</span>
+            </div>
+            <p class="font-body-default text-body-default text-ink-muted">Chưa có dữ liệu thành viên.</p>
+        </div>
+
+        <!-- Table -->
+        <div th:unless="${memberStats.empty}" class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-linen/50 border-b border-rule font-label-table-header text-label-table-header text-ink-muted">
+                    <th class="py-2.5 px-4 font-medium">THÀNH VIÊN</th>
+                    <th class="py-2.5 px-4 font-medium text-center w-28">TRẠNG THÁI</th>
+                    <th class="py-2.5 px-4 font-medium text-right w-36">TỔNG LƯỢT MƯỢN</th>
+                    <th class="py-2.5 px-4 font-medium text-right w-36">ĐANG MƯỢN</th>
+                    <th class="py-2.5 px-4 font-medium text-right w-36">TỔNG PHẠT</th>
+                    <th class="py-2.5 px-4 font-medium text-right w-24">CHI TIẾT</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-rule font-body-table-cell text-body-table-cell text-ink">
+                <tr th:each="stat : ${memberStats}" class="hover:bg-row-hover transition-colors">
+                    <!-- Member Info -->
+                    <td class="py-3 px-4">
+                        <div class="flex flex-col">
+                            <span class="font-medium text-ink" th:text="${stat.fullName}">Tên</span>
+                            <span class="font-mono-code text-[11px] text-ink-muted" th:text="${stat.email}">email</span>
+                        </div>
+                    </td>
+                    <!-- Status -->
+                    <td class="py-3 px-4 text-center">
+                        <span th:if="${stat.status?.name() == 'ACTIVE'}"
+                              class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-moss-border bg-moss-bg font-label-badge text-label-badge text-moss-text">
+                            <span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+                            Hoạt động
+                        </span>
+                        <span th:unless="${stat.status?.name() == 'ACTIVE'}"
+                              class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-border bg-slate-bg font-label-badge text-label-badge text-slate-text">
+                            <span class="w-1.5 h-1.5 rounded-full bg-slate-text"></span>
+                            Tạm khóa
+                        </span>
+                    </td>
+                    <!-- Total Borrowings -->
+                    <td class="py-3 px-4 text-right font-mono-code text-mono-code"
+                        th:text="${stat.totalBorrowings}">0</td>
+                    <!-- Active Borrowings -->
+                    <td class="py-3 px-4 text-right">
+                        <span class="font-mono-code text-mono-code"
+                              th:classappend="${stat.activeBorrowings > 0} ? 'text-oxblood-text font-semibold' : 'text-ink-muted'"
+                              th:text="${stat.activeBorrowings}">0</span>
+                    </td>
+                    <!-- Total Fine -->
+                    <td class="py-3 px-4 text-right font-mono-code text-mono-code"
+                        th:classappend="${stat.totalFine != null && stat.totalFine > 0} ? 'text-oxblood-text font-semibold' : 'text-ink-muted'"
+                        th:text="${stat.totalFine != null && stat.totalFine > 0 ? #numbers.formatDecimal(stat.totalFine, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</td>
+                    <!-- Detail link -->
+                    <td class="py-3 px-4 text-right">
+                        <a th:href="@{/members/{id}/edit(id=${stat.memberId})}"
+                           class="font-label-button text-[13px] text-primary-container hover:underline underline-offset-2 transition-colors">
+                            Xem
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bg-linen/40 px-5 py-3 border-t border-rule text-ink-muted font-label-helper text-label-helper"
+             th:text="'Hiển thị ' + ${memberStats.size()} + ' thành viên'">Hiển thị 0 thành viên</div>
+    </div>
+</div>
+</th:block>
+</body>
+</html>

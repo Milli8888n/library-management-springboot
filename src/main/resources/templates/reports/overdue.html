@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Báo cáo quá hạn</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <span class="font-label-helper text-label-helper text-ink-muted">Báo cáo</span>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium">Quá hạn</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full gap-6">
+    <!-- Header -->
+    <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 font-label-helper text-label-helper text-ink-muted">
+            <span>Báo cáo</span>
+            <span class="text-ink-faint">/</span>
+            <span class="text-ink">Quá hạn</span>
+        </div>
+        <div class="flex items-baseline justify-between gap-4 flex-wrap mt-1">
+            <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Báo cáo sách mượn quá hạn</h1>
+            <a th:href="@{/borrowings(status='OVERDUE')}"
+               class="inline-flex items-center gap-1.5 h-9 px-3 bg-oxblood-bg border border-oxblood-border text-oxblood-text hover:bg-oxblood-bg/60 rounded transition-colors font-label-button text-label-button shadow-sm">
+                <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                <span>Xem danh sách phiếu quá hạn</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Tổng phiếu quá hạn</span>
+                <span class="material-symbols-outlined text-oxblood-text text-[18px]">warning</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2"
+                     th:classappend="${overdueBorrowings.size() > 0} ? 'text-oxblood-text' : 'text-ink'"
+                     th:text="${overdueBorrowings.size()}">0</div>
+                <p class="font-label-helper text-label-helper text-ink-faint">phiếu chưa được xử lý</p>
+            </div>
+        </div>
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Tổng sách quá hạn</span>
+                <span class="material-symbols-outlined text-ink-muted text-[18px]">menu_book</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-ink"
+                     th:text="${totalOverdueBooks ?: 0}">0</div>
+                <p class="font-label-helper text-label-helper text-ink-faint">cuốn chưa hoàn trả</p>
+            </div>
+        </div>
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Thành viên vi phạm</span>
+                <span class="material-symbols-outlined text-ink-muted text-[18px]">group</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-ink"
+                     th:text="${overdueMembers ?: 0}">0</div>
+                <p class="font-label-helper text-label-helper text-ink-faint">thành viên có sách quá hạn</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-paper border border-rule rounded flex flex-col">
+        <div class="bg-linen px-5 py-3 border-b border-rule flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-ink-muted">warning</span>
+                <h2 class="font-label-table-header text-label-table-header text-ink uppercase tracking-wider font-semibold">
+                    DANH SÁCH PHIẾU MƯỢN QUÁ HẠN
+                </h2>
+            </div>
+            <span class="font-mono-code text-label-helper text-ink-muted"
+                  th:text="${overdueBorrowings.size()} + ' phiếu'">0 phiếu</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-linen/50 border-b border-rule font-label-table-header text-label-table-header text-ink-muted">
+                    <th class="py-2.5 px-4 font-medium">Mã phiếu</th>
+                    <th class="py-2.5 px-4 font-medium">Thành viên</th>
+                    <th class="py-2.5 px-4 font-medium">Sách mượn</th>
+                    <th class="py-2.5 px-4 font-medium">Ngày mượn</th>
+                    <th class="py-2.5 px-4 font-medium">Hạn trả</th>
+                    <th class="py-2.5 px-4 font-medium text-right">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-rule font-body-table-cell text-body-table-cell text-ink">
+                <!-- Empty state -->
+                <tr th:if="${overdueBorrowings.empty}">
+                    <td colspan="6" class="py-16 text-center">
+                        <div class="flex flex-col items-center justify-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-parchment flex items-center justify-center border border-rule">
+                                <span class="material-symbols-outlined text-ink-faint text-[28px]">check_circle</span>
+                            </div>
+                            <p class="font-body-default text-body-default text-ink-muted">Không có phiếu mượn nào quá hạn.</p>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Data rows -->
+                <tr th:each="b : ${overdueBorrowings}" class="hover:bg-row-hover transition-colors">
+                    <td class="py-3 px-4 font-mono-code text-mono-code text-primary-container font-semibold"
+                        th:text="'#' + b.id">#1</td>
+                    <td class="py-3 px-4">
+                        <div class="flex flex-col">
+                            <span class="font-medium text-ink" th:text="${b.member?.fullName}">Thành viên</span>
+                            <span class="font-mono-code text-[11px] text-ink-muted" th:text="${b.member?.email}">email</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="font-body-table-cell text-body-table-cell"
+                              th:if="${b.details != null && !b.details.empty}">
+                            <th:block th:each="d, dStat : ${b.details}">
+                                <th:block th:text="${!dStat.first ? ', ' : ''}"/><th:block th:text="${d.book.title}"/>
+                            </th:block>
+                        </span>
+                        <span th:unless="${b.details != null && !b.details.empty}" class="text-ink-muted">—</span>
+                    </td>
+                    <td class="py-3 px-4 font-mono-code text-mono-code text-ink-muted"
+                        th:text="${#temporals.format(b.borrowDate, 'dd/MM/yyyy')}">01/01/2026</td>
+                    <td class="py-3 px-4 font-mono-code text-mono-code text-oxblood-text font-medium"
+                        th:text="${#temporals.format(b.dueDate, 'dd/MM/yyyy')}">15/01/2026</td>
+                    <td class="py-3 px-4 text-right">
+                        <div class="inline-flex items-center gap-2">
+                            <a th:href="@{/borrowings/{id}(id=${b.id})}"
+                               class="font-label-button text-[13px] text-ink-muted hover:text-ink transition-colors">Chi tiết</a>
+                            <a th:href="@{/borrowings/{id}/return(id=${b.id})}"
+                               class="px-2.5 py-1 text-[12px] font-label-button font-medium rounded border border-primary-container text-primary-container hover:bg-primary-container hover:text-on-primary transition-colors">
+                                Trả sách
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bg-linen/40 px-5 py-3 border-t border-rule text-ink-muted font-label-helper text-label-helper"
+             th:text="'Hiển thị ' + ${overdueBorrowings.size()} + ' phiếu quá hạn'">Hiển thị 0 phiếu</div>
+    </div>
+</div>
+</th:block>
+</body>
+</html>
