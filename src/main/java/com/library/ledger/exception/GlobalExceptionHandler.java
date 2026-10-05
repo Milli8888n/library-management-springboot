@@ -16,6 +16,13 @@ public class GlobalExceptionHandler {
         return "error/404";
     }
 
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public String handleNoResourceFound(org.springframework.web.servlet.resource.NoResourceFoundException ex, HttpServletRequest request, Model model) {
+        model.addAttribute("errorMessage", "Không tìm thấy trang yêu cầu: " + request.getRequestURI());
+        model.addAttribute("requestedUri", request.getRequestURI());
+        return "error/404";
+    }
+
     @ExceptionHandler(BusinessRuleException.class)
     public String handleBusinessRuleException(BusinessRuleException ex, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());

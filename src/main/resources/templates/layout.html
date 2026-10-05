@@ -166,11 +166,18 @@
 </head>
 <body class="bg-parchment font-body-default text-body-default text-ink antialiased">
 
-<!-- ===== SIDEBAR (Fixed 240px) ===== -->
-<aside class="fixed left-0 top-0 h-full w-60 bg-sidebar-navy z-50 flex flex-col justify-between border-r border-rule/20 select-none">
-    <div class="flex flex-col">
+<!-- Mobile sidebar overlay backdrop -->
+<div id="sidebar-overlay"
+     class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden"
+     onclick="closeSidebar()"></div>
+
+<!-- ===== SIDEBAR (Fixed 240px, responsive) ===== -->
+<aside id="sidebar"
+       class="fixed left-0 top-0 h-full w-[240px] bg-sidebar-navy z-50 flex flex-col justify-between border-r border-sidebar-active-bg select-none
+              -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+    <div class="flex flex-col flex-1">
         <!-- Brand -->
-        <div class="h-14 px-5 flex items-center border-b border-rule-strong/20 gap-3">
+        <div class="h-14 px-5 flex items-center border-b border-sidebar-active-bg gap-3">
             <span class="material-symbols-outlined text-brass text-[22px]">local_library</span>
             <div class="flex flex-col">
                 <span class="font-headline-h3 text-headline-h3 text-sidebar-text leading-none">Thư Viện Nội Bộ</span>
@@ -179,74 +186,75 @@
         </div>
 
         <!-- Navigation -->
-        <div class="px-3 py-4">
+        <nav class="flex-1 px-0 py-3 space-y-4 overflow-y-auto">
             <!-- Danh mục -->
-            <div class="mb-5">
-                <p class="px-2 mb-1.5 font-label-stamp text-[10px] tracking-widest text-sidebar-muted uppercase font-semibold">Danh Mục</p>
-                <nav class="flex flex-col gap-0.5">
-                    <a th:href="@{/books}"
-                       th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/books')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ''"
-                       class="flex items-center gap-2.5 px-2.5 py-1.5 rounded text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg/60 transition-colors font-label-field text-label-field">
-                        <span class="material-symbols-outlined text-[18px]">menu_book</span>
-                        <span>Sách</span>
-                    </a>
-                    <a th:href="@{/categories}"
-                       th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/categories')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ''"
-                       class="flex items-center gap-2.5 px-2.5 py-1.5 rounded text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg/60 transition-colors font-label-field text-label-field">
-                        <span class="material-symbols-outlined text-[18px]">category</span>
-                        <span>Thể loại</span>
-                    </a>
-                    <a th:href="@{/members}"
-                       th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/members')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ''"
-                       class="flex items-center gap-2.5 px-2.5 py-1.5 rounded text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg/60 transition-colors font-label-field text-label-field">
-                        <span class="material-symbols-outlined text-[18px]">badge</span>
-                        <span>Thành viên</span>
-                    </a>
-                </nav>
+            <div class="space-y-1">
+                <div class="px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Danh mục</div>
+                <a th:href="@{/books}"
+                   th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/books')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ' border-l-[3px] border-transparent'"
+                   class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors font-body-default text-body-default">
+                    <span class="material-symbols-outlined text-[18px]">menu_book</span>
+                    <span>Sách</span>
+                </a>
+                <a th:href="@{/categories}"
+                   th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/categories')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ' border-l-[3px] border-transparent'"
+                   class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors font-body-default text-body-default">
+                    <span class="material-symbols-outlined text-[18px]">category</span>
+                    <span>Thể loại</span>
+                </a>
+                <a th:href="@{/members}"
+                   th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/members')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ' border-l-[3px] border-transparent'"
+                   class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors font-body-default text-body-default">
+                    <span class="material-symbols-outlined text-[18px]">group</span>
+                    <span>Thành viên</span>
+                </a>
             </div>
 
             <!-- Nghiệp vụ -->
-            <div class="mb-5">
-                <p class="px-2 mb-1.5 font-label-stamp text-[10px] tracking-widest text-sidebar-muted uppercase font-semibold">Nghiệp Vụ</p>
-                <nav class="flex flex-col gap-0.5">
-                    <a th:href="@{/borrowings}"
-                       th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/borrowings')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ''"
-                       class="flex items-center gap-2.5 px-2.5 py-1.5 rounded text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg/60 transition-colors font-label-field text-label-field">
-                        <span class="material-symbols-outlined text-[18px]">assignment</span>
-                        <span>Phiếu mượn</span>
-                    </a>
-                </nav>
+            <div class="space-y-1">
+                <div class="px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Nghiệp vụ</div>
+                <a th:href="@{/borrowings}"
+                   th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/borrowings')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ' border-l-[3px] border-transparent'"
+                   class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors font-body-default text-body-default">
+                    <span class="material-symbols-outlined text-[18px]">receipt_long</span>
+                    <span>Phiếu mượn</span>
+                </a>
+                <a th:href="@{/admin/fine-policy}"
+                   sec:authorize="hasRole('ADMIN')"
+                   th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/admin/fine-policy')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ' border-l-[3px] border-transparent'"
+                   class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors font-body-default text-body-default">
+                    <span class="material-symbols-outlined text-[18px]">gavel</span>
+                    <span>Chính sách phạt</span>
+                </a>
             </div>
 
             <!-- Báo cáo -->
-            <div>
-                <p class="px-2 mb-1.5 font-label-stamp text-[10px] tracking-widest text-sidebar-muted uppercase font-semibold">Báo Cáo</p>
-                <nav class="flex flex-col gap-0.5">
-                    <a th:href="@{/reports/overdue}"
-                       th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/reports/overdue')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ''"
-                       class="flex items-center gap-2.5 px-2.5 py-1.5 rounded text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg/60 transition-colors font-label-field text-label-field">
-                        <span class="material-symbols-outlined text-[18px]">schedule</span>
-                        <span>Quá hạn</span>
-                    </a>
-                    <a th:href="@{/reports/top-borrowed}"
-                       th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/reports/top-borrowed')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ''"
-                       class="flex items-center gap-2.5 px-2.5 py-1.5 rounded text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg/60 transition-colors font-label-field text-label-field">
-                        <span class="material-symbols-outlined text-[18px]">trending_up</span>
-                        <span>Sách mượn nhiều</span>
-                    </a>
-                    <a th:href="@{/reports/members}"
-                       th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/reports/members')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ''"
-                       class="flex items-center gap-2.5 px-2.5 py-1.5 rounded text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-active-bg/60 transition-colors font-label-field text-label-field">
-                        <span class="material-symbols-outlined text-[18px]">manage_accounts</span>
-                        <span>Lượt mượn theo thành viên</span>
-                    </a>
-                </nav>
+            <div class="space-y-1">
+                <div class="px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted">Báo cáo</div>
+                <a th:href="@{/reports/overdue}"
+                   th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/reports/overdue')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ' border-l-[3px] border-transparent'"
+                   class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors font-body-default text-body-default">
+                    <span class="material-symbols-outlined text-[18px]">event_busy</span>
+                    <span>Quá hạn</span>
+                </a>
+                <a th:href="@{/reports/top-borrowed}"
+                   th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/reports/top-borrowed')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ' border-l-[3px] border-transparent'"
+                   class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors font-body-default text-body-default">
+                    <span class="material-symbols-outlined text-[18px]">trending_up</span>
+                    <span>Sách mượn nhiều</span>
+                </a>
+                <a th:href="@{/reports/members}"
+                   th:classappend="${currentUri != null and #strings.startsWith(currentUri, '/reports/members')} ? ' bg-sidebar-active-bg text-sidebar-text border-l-[3px] border-brass font-medium' : ' border-l-[3px] border-transparent'"
+                   class="flex items-center h-10 px-4 gap-3 text-sidebar-text/80 hover:bg-sidebar-active-bg hover:text-sidebar-text transition-colors font-body-default text-body-default">
+                    <span class="material-symbols-outlined text-[18px]">leaderboard</span>
+                    <span>Lượt mượn theo thành viên</span>
+                </a>
             </div>
-        </div>
+        </nav>
     </div>
 
     <!-- Sidebar Footer: User info + Logout -->
-    <div class="border-t border-rule-strong/20 p-3 bg-sidebar-navy/60">
+    <div class="border-t border-sidebar-active-bg p-3 bg-sidebar-navy/60">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5 overflow-hidden">
                 <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
@@ -254,8 +262,8 @@
                 </div>
                 <div class="flex flex-col truncate">
                     <span class="font-label-button text-[13px] text-sidebar-text truncate leading-tight" sec:authentication="name">admin</span>
-                    <span class="font-label-helper text-label-helper text-sidebar-muted leading-tight" sec:authorize="hasRole('ADMIN')">Quản trị viên</span>
-                    <span class="font-label-helper text-label-helper text-sidebar-muted leading-tight" sec:authorize="!hasRole('ADMIN')">Thủ thư</span>
+                    <span class="font-label-helper text-[11px] text-sidebar-muted leading-tight" sec:authorize="hasRole('ADMIN')">Quản trị viên</span>
+                    <span class="font-label-helper text-[11px] text-sidebar-muted leading-tight" sec:authorize="!hasRole('ADMIN')">Thủ thư</span>
                 </div>
             </div>
             <a th:href="@{/logout}"
@@ -268,44 +276,63 @@
 </aside>
 
 <!-- ===== MAIN WRAPPER ===== -->
-<div class="pl-60">
+<div class="lg:pl-[240px] transition-all duration-300">
     <!-- Topbar (56px) -->
-    <header class="fixed top-0 left-60 right-0 h-14 bg-paper/95 backdrop-blur-sm z-40 border-b border-rule flex items-center justify-between px-8">
-        <!-- Breadcrumb -->
-        <div class="flex items-center gap-1.5 font-label-table-header text-label-table-header text-ink-muted" layout:fragment="breadcrumb">
-            <span>Hệ thống</span>
-            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
-            <span class="text-ink font-medium">Thư viện</span>
+    <header class="fixed top-0 left-0 lg:left-[240px] right-0 h-14 bg-paper/95 backdrop-blur-sm border-b border-rule z-40 flex items-center justify-between px-4 lg:px-8">
+        <div class="flex items-center gap-3">
+            <!-- Mobile hamburger button -->
+            <button id="hamburger-btn"
+                    class="lg:hidden flex items-center justify-center w-9 h-9 rounded text-ink-muted hover:text-ink hover:bg-linen transition-colors"
+                    onclick="toggleSidebar()" aria-label="Mở menu">
+                <span class="material-symbols-outlined text-[22px]" id="hamburger-icon">menu</span>
+            </button>
+            <!-- Breadcrumb -->
+            <div class="flex items-center gap-1.5 font-label-table-header text-label-table-header text-ink-muted" layout:fragment="breadcrumb">
+                <span>Hệ thống</span>
+                <span class="text-ink-faint text-[11px]">/</span>
+                <span class="text-ink font-medium">Bảng điều khiển</span>
+            </div>
         </div>
-        <!-- Date + User -->
-        <div class="flex items-center gap-4">
-            <div class="flex items-center gap-1.5 px-2.5 py-1 bg-parchment rounded border border-rule font-mono-code text-[12px] text-slate-text">
+
+        <!-- Right: Date pill + User avatar -->
+        <div class="flex items-center gap-3 sm:gap-4">
+            <div class="flex items-center gap-1.5 px-2.5 py-1 bg-parchment rounded border border-rule font-mono-code text-[12px] text-slate-text select-none">
                 <span class="material-symbols-outlined text-[14px] text-ink-muted">calendar_today</span>
                 <span id="topbarCurrentDate"></span>
             </div>
-            <div class="h-4 w-px bg-rule"></div>
-            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+            <div class="h-4 w-px bg-rule hidden sm:block"></div>
+            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 shadow-sm" title="Tài khoản">
                 <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
             </div>
         </div>
     </header>
 
     <!-- Main Content Area -->
-    <main class="relative pt-14 min-h-screen bg-parchment px-8 py-8">
-        <div class="max-w-[1200px] w-full">
+    <main class="relative pt-14 min-h-screen bg-parchment px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        <div class="max-w-[1200px] w-full mx-auto">
 
-            <!-- Flash: Success -->
+            <!-- Flash: Success (Stitch notification banner) -->
             <div th:if="${successMsg}"
-                 class="mb-6 flex items-start gap-3 p-3 bg-moss-bg border-l-[3px] border-moss-text border border-moss-border rounded font-body-default text-body-default text-moss-text">
-                <span class="material-symbols-outlined text-[18px] shrink-0 mt-0.5">check_circle</span>
-                <span th:text="${successMsg}"></span>
+                 class="mb-6 flex items-center justify-between px-4 py-3 rounded bg-moss-bg border border-moss-border border-l-4 border-l-moss-text text-moss-text select-none" role="status">
+                <div class="flex items-center gap-2.5">
+                    <span class="material-symbols-outlined text-[20px] text-moss-text">check_circle</span>
+                    <span class="font-body-default text-body-default font-medium text-ink" th:text="${successMsg}"></span>
+                </div>
+                <button aria-label="Đóng" onclick="this.parentElement.remove()" class="p-1 text-moss-text hover:text-ink transition-colors rounded inline-flex items-center justify-center" type="button">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                </button>
             </div>
 
-            <!-- Flash: Error -->
+            <!-- Flash: Error (Stitch notification banner) -->
             <div th:if="${errorMsg}"
-                 class="mb-6 flex items-start gap-3 p-3 bg-oxblood-bg border-l-[3px] border-oxblood-text border border-oxblood-border rounded font-body-default text-body-default text-oxblood-text">
-                <span class="material-symbols-outlined text-[18px] shrink-0 mt-0.5">error</span>
-                <span th:text="${errorMsg}"></span>
+                 class="mb-6 flex items-center justify-between px-4 py-3 rounded bg-oxblood-bg border border-oxblood-border border-l-4 border-l-oxblood-text text-oxblood-text select-none" role="alert">
+                <div class="flex items-center gap-2.5">
+                    <span class="material-symbols-outlined text-[20px] text-oxblood-text">error</span>
+                    <span class="font-body-default text-body-default font-medium text-ink" th:text="${errorMsg}"></span>
+                </div>
+                <button aria-label="Đóng" onclick="this.parentElement.remove()" class="p-1 text-oxblood-text hover:text-ink transition-colors rounded inline-flex items-center justify-center" type="button">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                </button>
             </div>
 
             <!-- Dynamic page content -->
@@ -317,7 +344,7 @@
 </div>
 
 <script>
-    // Format topbar date in Vietnamese: "Thứ Hai, 05/10/2026"
+    // ── Topbar date ──────────────────────────────────────────────────────────
     (function() {
         const el = document.getElementById('topbarCurrentDate');
         if (el) {
@@ -330,6 +357,41 @@
             el.textContent = `${dayName}, ${d}/${m}/${y}`;
         }
     })();
+
+    // ── Mobile sidebar toggle ────────────────────────────────────────────────
+    function toggleSidebar() {
+        const sidebar  = document.getElementById('sidebar');
+        const overlay  = document.getElementById('sidebar-overlay');
+        const icon     = document.getElementById('hamburger-icon');
+        const isOpen   = !sidebar.classList.contains('-translate-x-full');
+        if (isOpen) {
+            closeSidebar();
+        } else {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            icon.textContent = 'close';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const icon    = document.getElementById('hamburger-icon');
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+        icon.textContent = 'menu';
+        document.body.style.overflow = '';
+    }
+
+    // Close sidebar on lg+ resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth >= 1024) {
+            document.getElementById('sidebar-overlay').classList.add('hidden');
+            document.getElementById('hamburger-icon').textContent = 'menu';
+            document.body.style.overflow = '';
+        }
+    });
 </script>
 <th:block layout:fragment="scripts"></th:block>
 </body>

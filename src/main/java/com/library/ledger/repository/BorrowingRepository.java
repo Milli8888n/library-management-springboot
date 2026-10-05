@@ -60,4 +60,23 @@ public interface BorrowingRepository extends JpaRepository<Borrowing, Long> {
            "GROUP BY m.id, m.fullName, m.email, m.status " +
            "ORDER BY COUNT(b.id) DESC")
     List<Object[]> findBorrowingStatsByMember();
+
+    /** §12.5 — check if member has any unpaid fine across all borrowings */
+    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN TRUE ELSE FALSE END " +
+           "FROM Borrowing b " +
+           "WHERE b.member.id = :memberId AND b.unpaidFineAmount > 0")
+    boolean hasAnyUnpaidFine(@Param("memberId") Long memberId);
+
+    /** §12.5 — check if member has any overdue borrowing not fully returned */
+    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN TRUE ELSE FALSE END " +
+           "FROM Borrowing b " +
+           "WHERE b.member.id = :memberId AND b.status = 'OVERDUE'")
+    boolean hasAnyOverdueUnreturned(@Param("memberId") Long memberId);
+
+    /** §12.6 — count total books currently borrowed (not yet returned) by member */
+    @Query("SELECT COALESCE(SUM(bd.quantity - bd.returnedQuantity), 0) " +
+           "FROM BorrowingDetail bd " +
+           "WHERE bd.borrowing.member.id = :memberId " +
+           "AND bd.borrowing.status != 'RETURNED'")
+    Long countCurrentlyBorrowedBooks(@Param("memberId") Long memberId);
 }

@@ -16,43 +16,43 @@
 <th:block layout:fragment="content">
 <div class="flex flex-col w-full">
     <!-- Page Header -->
-    <header class="flex flex-col gap-1 mb-6">
-        <nav aria-label="Đường dẫn" class="flex items-center gap-1 font-label-helper text-label-helper text-ink-muted select-none">
+    <div class="flex flex-col mb-6">
+        <nav aria-label="Đường dẫn" class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted mb-1.5 select-none">
             <span>Danh mục</span>
             <span class="text-ink-faint">/</span>
             <a th:href="@{/books}" class="hover:text-ink transition-colors">Sách</a>
             <span class="text-ink-faint">/</span>
             <span class="text-ink font-medium">Sửa</span>
         </nav>
-        <div class="flex items-baseline justify-between pt-1">
-            <div>
+        <div class="flex items-baseline justify-between border-b border-rule pb-4 flex-wrap gap-4">
+            <div class="flex flex-col">
                 <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Sửa sách</h1>
                 <p class="font-body-table-cell text-body-table-cell text-ink-muted mt-0.5">
                     <span class="font-mono-code" th:text="'Mã #' + ${bookId}">Mã #1</span>
-                    <span class="text-rule-strong">·</span>
+                    <span class="text-ink-faint mx-1">·</span>
                     <span th:if="${book != null}"
                           th:text="'Đang cho mượn ' + (${book.totalQuantity} - ${book.availableQuantity}) + ' cuốn'">Đang cho mượn 0 cuốn</span>
                 </p>
             </div>
             <div class="flex items-center gap-2" th:if="${book != null}">
                 <span th:if="${book.status?.name() == 'ACTIVE'}"
-                      class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+                      class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[2px] bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
                     <span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
                     <span>Đang hoạt động</span>
                 </span>
                 <span th:if="${book.status?.name() == 'INACTIVE'}"
-                      class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-slate-bg border border-slate-border text-slate-text font-label-badge text-label-badge">
+                      class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[2px] bg-slate-bg border border-slate-border text-slate-text font-label-badge text-label-badge">
                     <span class="w-1.5 h-1.5 rounded-full bg-slate-text"></span>
                     <span>Ngừng cho mượn</span>
                 </span>
                 <span th:if="${book.status?.name() == 'DELETED'}"
-                      class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-oxblood-bg border border-oxblood-border text-oxblood-text font-label-badge text-label-badge">
+                      class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[2px] bg-oxblood-bg border border-oxblood-border text-oxblood-text font-label-badge text-label-badge">
                     <span class="w-1.5 h-1.5 rounded-full bg-oxblood-text"></span>
                     <span>Đã xóa</span>
                 </span>
             </div>
         </div>
-    </header>
+    </div>
 
     <!-- Main Content Form Panel -->
     <div class="w-full">
@@ -74,7 +74,7 @@
                                id="isbn"
                                type="text"
                                required
-                               class="w-full h-10 px-3 bg-paper border border-rule-strong rounded-lg font-mono-code text-mono-code text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
+                               class="w-full h-10 px-3 bg-paper border border-rule-strong rounded font-mono-code text-mono-code text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
                     </div>
                     <p th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
                     <p class="font-label-helper text-label-helper text-ink-muted">ISBN-10 hoặc ISBN-13</p>
@@ -88,7 +88,7 @@
                     <div class="relative">
                         <select th:field="*{status}"
                                 id="status"
-                                class="w-full h-10 px-3 pr-9 bg-paper border border-rule-strong rounded-lg font-body-default text-body-default text-ink appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all cursor-pointer">
+                                class="w-full h-10 px-3 pr-9 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all cursor-pointer">
                             <option th:each="st : ${statuses}"
                                     th:value="${st.name()}"
                                     th:text="${st.displayName}">Đang hoạt động</option>
@@ -108,7 +108,7 @@
                            id="title"
                            type="text"
                            required
-                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded-lg font-body-default text-body-default text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
                     <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
                 </div>
 
@@ -121,7 +121,7 @@
                            id="author"
                            type="text"
                            required
-                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded-lg font-body-default text-body-default text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
                     <p th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
                 </div>
 
@@ -134,7 +134,7 @@
                         <select th:field="*{categoryId}"
                                 id="categoryId"
                                 required
-                                class="w-full h-10 px-3 pr-9 bg-paper border border-rule-strong rounded-lg font-body-default text-body-default text-ink appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all cursor-pointer">
+                                class="w-full h-10 px-3 pr-9 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all cursor-pointer">
                             <option th:each="cat : ${categories}"
                                     th:value="${cat.id}"
                                     th:text="${cat.name}">Công nghệ thông tin</option>
@@ -156,7 +156,7 @@
                            type="number"
                            min="1"
                            required
-                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded-lg font-mono-code text-mono-code text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded font-mono-code text-mono-code text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
                     <p th:if="${#fields.hasErrors('totalQuantity')}" th:errors="*{totalQuantity}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
                 </div>
 
@@ -170,7 +170,7 @@
                            type="number"
                            min="0"
                            required
-                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded-lg font-mono-code text-mono-code text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded font-mono-code text-mono-code text-ink focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all"/>
                     <p th:if="${#fields.hasErrors('availableQuantity')}" th:errors="*{availableQuantity}" class="text-error font-label-helper text-[12px] mt-0.5"></p>
                 </div>
             </div>
@@ -178,11 +178,11 @@
             <!-- Form Actions -->
             <div class="mt-8 pt-5 border-t border-rule flex items-center justify-start gap-3">
                 <button type="submit"
-                        class="h-10 px-6 bg-primary-container text-on-primary font-label-button text-label-button rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper transition-all select-none">
+                        class="h-10 px-6 bg-primary-container text-on-primary font-label-button text-label-button rounded hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper transition-all select-none">
                     Lưu
                 </button>
                 <a th:href="@{/books}"
-                   class="h-10 px-5 bg-paper border border-rule-strong text-ink font-label-button text-label-button rounded-lg hover:bg-slate-bg focus:outline-none transition-colors select-none inline-flex items-center justify-center">
+                   class="h-10 px-5 bg-paper border border-rule-strong text-ink font-label-button text-label-button rounded hover:bg-slate-bg focus:outline-none transition-colors select-none inline-flex items-center justify-center">
                     Hủy
                 </a>
             </div>

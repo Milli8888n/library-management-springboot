@@ -11,6 +11,8 @@ import com.library.ledger.entity.BorrowingDetail;
 import com.library.ledger.enums.BorrowingStatus;
 import com.library.ledger.exception.BusinessRuleException;
 import com.library.ledger.exception.ResourceNotFoundException;
+import com.library.ledger.repository.FinePaymentRepository;
+import com.library.ledger.repository.FineWaiverRepository;
 import com.library.ledger.service.BookService;
 import com.library.ledger.service.BorrowingService;
 import com.library.ledger.service.FineService;
@@ -37,6 +39,8 @@ public class BorrowingController {
     private final MemberService memberService;
     private final BookService bookService;
     private final FineService fineService;
+    private final FinePaymentRepository finePaymentRepository;
+    private final FineWaiverRepository fineWaiverRepository;
 
     @GetMapping
     public String index(Model model,
@@ -109,6 +113,9 @@ public class BorrowingController {
             }
         }
         model.addAttribute("returnForm", returnForm);
+        // §12.8 — Fine payment and waiver history
+        model.addAttribute("finePayments", finePaymentRepository.findByBorrowingIdOrderByPaymentDateAsc(id));
+        model.addAttribute("fineWaivers", fineWaiverRepository.findByBorrowingIdOrderByApprovedDateAsc(id));
         return "borrowings/detail";
     }
 

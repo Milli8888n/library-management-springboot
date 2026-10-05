@@ -82,6 +82,18 @@ public class BorrowingServiceImpl implements BorrowingService {
                     "' hiện đang bị KHÓA, không được phép lập phiếu mượn mới.");
         }
 
+        // §12.5 — Block if member has any unpaid fine
+        if (borrowingRepository.hasAnyUnpaidFine(member.getId())) {
+            throw new BusinessRuleException("Thành viên '" + member.getFullName() +
+                    "' đang có phí phạt chưa thanh toán. Vui lòng thanh toán trước khi mượn sách mới.");
+        }
+
+        // §12.5 — Block if member has any overdue borrowing not yet returned
+        if (borrowingRepository.hasAnyOverdueUnreturned(member.getId())) {
+            throw new BusinessRuleException("Thành viên '" + member.getFullName() +
+                    "' đang có phiếu mượn QUÁ HẠN chưa trả. Vui lòng trả sách trước khi mượn mới.");
+        }
+
         LocalDate borrowDate = form.getBorrowDate() != null ? form.getBorrowDate() : LocalDate.now();
         LocalDate dueDate = form.getDueDate() != null ? form.getDueDate() : borrowDate.plusDays(14);
 
@@ -104,6 +116,16 @@ public class BorrowingServiceImpl implements BorrowingService {
 
         if (bookQuantities.isEmpty()) {
             throw new BusinessRuleException("Danh sách sách mượn không hợp lệ");
+        }
+
+        // §12.6 — Block if new request would exceed 5 books currently borrowed
+        int newBooksRequested = bookQuantities.values().stream().mapToInt(Integer::intValue).sum();
+        Long currentBorrowedCount = borrowingRepository.countCurrentlyBorrowedBooks(member.getId());
+        long current = currentBorrowedCount != null ? currentBorrowedCount : 0L;
+        if (current + newBooksRequested > 5) {
+            throw new BusinessRuleException(String.format(
+                    "Thành viên '%s' đang mượn %d cuốn. Không thể thêm %d cuốn (tối đa 5 cuốn cùng lúc).",
+                    member.getFullName(), current, newBooksRequested));
         }
 
         Borrowing borrowing = Borrowing.builder()

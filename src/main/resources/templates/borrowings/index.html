@@ -17,20 +17,23 @@
 <th:block layout:fragment="content">
 <div class="flex flex-col w-full">
     <!-- Top Breadcrumb & Page Header -->
-    <div class="flex flex-col gap-2 mb-6">
-        <div class="flex items-center gap-1.5 font-label-table-header text-label-table-header text-ink-muted">
+    <div class="flex flex-col mb-6">
+        <nav aria-label="Đường dẫn" class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted mb-1.5 select-none">
             <span>Nghiệp vụ</span>
-            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span class="text-ink-faint text-[11px]">/</span>
             <span class="text-ink font-medium">Phiếu mượn</span>
-        </div>
-        <div class="flex items-end justify-between border-b border-rule pb-4">
+        </nav>
+        <div class="flex items-end justify-between border-b border-rule pb-4 flex-wrap gap-4">
             <div class="flex flex-col">
-                <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Phiếu mượn</h1>
-                <p class="font-body-default text-body-default text-ink-muted mt-1"
-                   th:text="${borrowingPage.totalElements + ' phiếu mượn lưu hành trong kỳ sổ sách'}">0 phiếu mượn</p>
+                <div class="flex items-baseline gap-3">
+                    <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Phiếu mượn</h1>
+                    <span class="font-label-field text-label-field text-ink-muted"
+                          th:text="${borrowingPage.totalElements + ' phiếu mượn'}">0 phiếu mượn</span>
+                </div>
+                <p class="font-body-default text-body-default text-ink-muted mt-1">Sổ theo dõi và lưu chuyển hồ sơ mượn trả tài liệu</p>
             </div>
             <a th:href="@{/borrowings/create}"
-               class="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2">
+               class="inline-flex items-center gap-2 h-10 px-4 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2">
                 <span class="material-symbols-outlined text-[18px]">add</span>
                 <span>Tạo phiếu mượn</span>
             </a>
@@ -132,16 +135,19 @@
                         </div>
                     </td>
                     <td class="py-3 px-4">
-                        <div class="flex flex-col gap-0.5">
-                            <th:block th:if="${b.details != null && !b.details.empty}">
-                                <span class="truncate max-w-[220px] text-ink"
-                                      th:each="d, dStat : ${b.details}"
-                                      th:text="${dStat.first ? '' : ', '} + ${d.book.title}">Tên sách</span>
-                                <span class="font-mono-code text-[11px] text-ink-muted"
-                                      th:text="'Số lượng: ' + ${b.details.size()} + ' cuốn'">1 cuốn</span>
-                            </th:block>
-                            <span th:if="${b.details == null || b.details.empty}" class="text-ink-muted">—</span>
+                        <div class="flex items-center gap-1.5" th:if="${b.details != null && b.details.size() == 1}">
+                            <span class="truncate max-w-[200px] text-ink" th:title="${b.details[0].book?.title}" th:text="${b.details[0].book?.title}">Tên sách</span>
+                            <span class="font-mono-code text-[11px] px-1.5 py-0.5 rounded bg-linen text-ink-muted border border-rule shrink-0"
+                                  th:text="'SL: ' + ${b.details[0].quantity}">SL: 1</span>
                         </div>
+                        <div class="flex flex-col" th:if="${b.details != null && b.details.size() > 1}">
+                            <span class="truncate max-w-[220px] text-ink"
+                                  th:title="${#strings.listJoin(b.details.![book.title], ', ')}"
+                                  th:text="${#strings.listJoin(b.details.![book.title], ', ')}">Tên sách</span>
+                            <span class="font-mono-code text-[11px] text-ink-muted"
+                                  th:text="'Số lượng: ' + ${#aggregates.sum(b.details.![quantity])} + ' cuốn'">Số lượng: 2 cuốn</span>
+                        </div>
+                        <span th:if="${b.details == null || b.details.empty}" class="text-ink-muted">—</span>
                     </td>
                     <!-- Borrow Date -->
                     <td class="py-3 px-4 font-mono-code text-mono-code text-ink-muted"

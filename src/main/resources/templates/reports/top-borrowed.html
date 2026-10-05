@@ -16,23 +16,26 @@
 <th:block layout:fragment="content">
 <div class="flex flex-col w-full gap-6">
     <!-- Header -->
-    <div class="flex flex-col gap-1">
-        <div class="flex items-center gap-2 font-label-helper text-label-helper text-ink-muted">
-            <span>Báo cáo lưu thông</span>
-            <span class="text-ink-faint">/</span>
-            <span class="text-ink">Thống kê mượn sách</span>
-        </div>
-        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 mt-1">
-            <div class="flex items-baseline gap-3 flex-wrap">
-                <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Báo cáo sách mượn nhiều nhất</h1>
+    <div class="flex flex-col mb-6">
+        <nav aria-label="Đường dẫn" class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted mb-1.5 select-none">
+            <span>Báo cáo</span>
+            <span class="text-ink-faint text-[11px]">/</span>
+            <span class="text-ink font-medium">Sách mượn nhiều</span>
+        </nav>
+        <div class="flex items-end justify-between border-b border-rule pb-4 flex-wrap gap-4">
+            <div class="flex flex-col">
+                <div class="flex items-baseline gap-3">
+                    <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Sách mượn nhiều nhất</h1>
+                    <span class="font-label-field text-label-field text-ink-muted"
+                          th:text="${#lists.size(topBooks) + ' tựa sách'}">0 tựa sách</span>
+                </div>
+                <p class="font-body-default text-body-default text-ink-muted mt-1">Thống kê tần suất lưu hành và độ phổ biến của các đầu sách</p>
             </div>
-            <div class="flex items-center gap-2">
-                <a th:href="@{/borrowings}"
-                   class="inline-flex items-center gap-1.5 h-9 px-3 bg-paper border border-rule-strong text-ink hover:bg-linen rounded transition-colors font-label-button text-label-button shadow-sm">
-                    <span class="material-symbols-outlined text-[16px] text-ink-muted">open_in_new</span>
-                    <span>Xem phiếu mượn</span>
-                </a>
-            </div>
+            <a th:href="@{/borrowings}"
+               class="inline-flex items-center gap-1.5 h-10 px-4 bg-paper border border-rule-strong text-ink hover:bg-linen rounded transition-colors font-label-button text-label-button shadow-sm">
+                <span class="material-symbols-outlined text-[18px] text-ink-muted">open_in_new</span>
+                <span>Xem phiếu mượn</span>
+            </a>
         </div>
     </div>
 

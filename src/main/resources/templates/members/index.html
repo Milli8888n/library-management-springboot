@@ -17,17 +17,24 @@
 <th:block layout:fragment="content">
 <div class="flex flex-col w-full">
     <!-- Page Header -->
-    <div class="flex flex-col gap-1 mb-6">
-        <div class="text-[12px] text-ink-muted font-label-helper">Danh mục / Thành viên</div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-baseline gap-3">
-                <h1 class="font-headline-h1 text-[28px] font-semibold text-ink leading-tight">Thành viên</h1>
-                <span class="text-[14px] text-ink-muted" th:text="${memberPage.totalElements + ' thành viên'}">0 thành viên</span>
+    <div class="flex flex-col mb-6">
+        <nav aria-label="Đường dẫn" class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted mb-1.5 select-none">
+            <span>Danh mục</span>
+            <span class="text-ink-faint text-[11px]">/</span>
+            <span class="text-ink font-medium">Thành viên</span>
+        </nav>
+        <div class="flex items-end justify-between border-b border-rule pb-4 flex-wrap gap-4">
+            <div class="flex flex-col">
+                <div class="flex items-baseline gap-3">
+                    <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Thành viên</h1>
+                    <span class="font-label-field text-label-field text-ink-muted" th:text="${memberPage.totalElements + ' thành viên'}">0 thành viên</span>
+                </div>
+                <p class="font-body-default text-body-default text-ink-muted mt-1">Danh sách độc giả và tài khoản sử dụng thư viện</p>
             </div>
             <button sec:authorize="hasRole('ADMIN')"
                     type="button"
                     onclick="openCreateMemberModal()"
-                    class="h-10 px-4 bg-primary-container hover:bg-primary text-white text-[14px] font-medium rounded-[4px] transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm">
+                    class="inline-flex items-center gap-2 h-10 px-4 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper">
                 <span class="material-symbols-outlined text-[18px]">add</span>
                 <span>Thêm thành viên</span>
             </button>

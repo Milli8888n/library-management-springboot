@@ -18,8 +18,9 @@ public class FinePaymentForm {
     @DecimalMin(value = "1", message = "Số tiền thanh toán phải lớn hơn 0")
     private BigDecimal amount;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime paymentDate = LocalDateTime.now();
+    /** Optional — defaults to now() in service if null */
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime paymentDate;
 
     @NotBlank(message = "Hình thức thanh toán không được để trống")
     private String method = "CASH";

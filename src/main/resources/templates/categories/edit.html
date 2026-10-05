@@ -17,12 +17,12 @@
 <div class="flex flex-col w-full">
     <!-- Breadcrumb & Header -->
     <div class="flex flex-col mb-space-xl">
-        <nav class="flex items-center gap-space-xs font-label-helper text-label-helper text-ink-muted select-none">
-            <span class="text-ink-muted">Danh mục</span>
+        <nav class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted select-none">
+            <a th:href="@{/categories}" class="hover:text-ink transition-colors">Danh m&#x1ee5;c</a>
             <span class="text-ink-faint">/</span>
-            <a th:href="@{/categories}" class="hover:text-ink transition-colors">Thể loại</a>
+            <a th:href="@{/categories}" class="hover:text-ink transition-colors">Th&#x1ec3; lo&#x1ea1;i</a>
             <span class="text-ink-faint">/</span>
-            <span class="text-ink font-medium">Sửa</span>
+            <span class="text-ink font-medium">S&#x1eeda;</span>
         </nav>
         <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-space-sm mt-space-xs">
             <div class="flex flex-col">
@@ -109,7 +109,7 @@
             <div class="pt-space-xl border-t border-rule mt-space-sm flex items-center gap-space-md">
                 <button type="submit"
                         id="btn-submit"
-                        class="h-10 px-space-xl bg-primary-container hover:bg-primary text-white font-label-button text-label-button rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper transition-all select-none shadow-none">
+                        class="h-10 px-space-xl bg-primary-container hover:opacity-95 active:opacity-90 text-white font-label-button text-label-button rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper transition-all select-none shadow-none">
                     Lưu
                 </button>
                 <a th:href="@{/categories}"

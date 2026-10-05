@@ -124,6 +124,9 @@ class BorrowingServiceTest {
         form.setItems(List.of(item));
 
         when(memberRepository.findById(1L)).thenReturn(Optional.of(activeMember));
+        when(borrowingRepository.hasAnyUnpaidFine(1L)).thenReturn(false);
+        when(borrowingRepository.hasAnyOverdueUnreturned(1L)).thenReturn(false);
+        when(borrowingRepository.countCurrentlyBorrowedBooks(1L)).thenReturn(0L);
         when(bookRepository.findByIdWithLock(10L)).thenReturn(Optional.of(book1));
         when(borrowingRepository.save(any(Borrowing.class))).thenAnswer(i -> {
             Borrowing b = i.getArgument(0);
@@ -309,4 +312,90 @@ class BorrowingServiceTest {
 
         verify(borrowingRepository, never()).save(any());
     }
+
+    // ─── §12.5 — Block on unpaid fine ────────────────────────────────────────
+
+    @Test
+    @DisplayName("§12.5: Chặn tạo phiếu khi thành viên đang có phí phạt chưa thanh toán")
+    void testCreateBorrowing_BlockedByUnpaidFine() {
+        BorrowingForm form = new BorrowingForm();
+        form.setMemberId(1L);
+        form.setItems(List.of(new BorrowingItemForm(10L, 1)));
+
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(activeMember));
+        when(borrowingRepository.hasAnyUnpaidFine(1L)).thenReturn(true);
+
+        assertThatThrownBy(() -> borrowingService.create(form))
+                .isInstanceOf(BusinessRuleException.class)
+                .hasMessageContaining("phí phạt chưa thanh toán");
+
+        verify(bookRepository, never()).findByIdWithLock(any());
+        verify(borrowingRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("§12.5: Chặn tạo phiếu khi thành viên đang có phiếu quá hạn chưa trả")
+    void testCreateBorrowing_BlockedByOverdueBorrowing() {
+        BorrowingForm form = new BorrowingForm();
+        form.setMemberId(1L);
+        form.setItems(List.of(new BorrowingItemForm(10L, 1)));
+
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(activeMember));
+        when(borrowingRepository.hasAnyUnpaidFine(1L)).thenReturn(false);
+        when(borrowingRepository.hasAnyOverdueUnreturned(1L)).thenReturn(true);
+
+        assertThatThrownBy(() -> borrowingService.create(form))
+                .isInstanceOf(BusinessRuleException.class)
+                .hasMessageContaining("QUÁ HẠN");
+
+        verify(bookRepository, never()).findByIdWithLock(any());
+        verify(borrowingRepository, never()).save(any());
+    }
+
+    // ─── §12.6 — Max 5 books ─────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("§12.6: Chặn tạo phiếu khi vượt quá giới hạn 5 cuốn đang mượn")
+    void testCreateBorrowing_BlockedByMaxBooksLimit() {
+        BorrowingForm form = new BorrowingForm();
+        form.setMemberId(1L);
+        form.setItems(List.of(new BorrowingItemForm(10L, 3)));
+
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(activeMember));
+        when(borrowingRepository.hasAnyUnpaidFine(1L)).thenReturn(false);
+        when(borrowingRepository.hasAnyOverdueUnreturned(1L)).thenReturn(false);
+        when(borrowingRepository.countCurrentlyBorrowedBooks(1L)).thenReturn(4L); // Already 4, requesting 3 → total 7 > 5
+
+        assertThatThrownBy(() -> borrowingService.create(form))
+                .isInstanceOf(BusinessRuleException.class)
+                .hasMessageContaining("tối đa 5 cuốn");
+
+        verify(bookRepository, never()).findByIdWithLock(any());
+        verify(borrowingRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("§12.6: Cho phép mượn khi tổng cuốn không vượt quá 5")
+    void testCreateBorrowing_AllowedWhenTotalWithinLimit() {
+        BorrowingForm form = new BorrowingForm();
+        form.setMemberId(1L);
+        form.setBorrowDate(LocalDate.now());
+        form.setDueDate(LocalDate.now().plusDays(14));
+        form.setItems(List.of(new BorrowingItemForm(10L, 2)));
+
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(activeMember));
+        when(borrowingRepository.hasAnyUnpaidFine(1L)).thenReturn(false);
+        when(borrowingRepository.hasAnyOverdueUnreturned(1L)).thenReturn(false);
+        when(borrowingRepository.countCurrentlyBorrowedBooks(1L)).thenReturn(3L); // 3 + 2 = 5 → exactly limit
+        when(bookRepository.findByIdWithLock(10L)).thenReturn(Optional.of(book1));
+        when(borrowingRepository.save(any(Borrowing.class))).thenAnswer(i -> {
+            Borrowing b = i.getArgument(0);
+            b.setId(700L);
+            return b;
+        });
+
+        Borrowing created = borrowingService.create(form);
+        assertThat(created.getId()).isEqualTo(700L);
+    }
 }
+

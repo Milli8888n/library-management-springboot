@@ -34,7 +34,8 @@
 
     <!-- Main Content: FormPanel -->
     <div class="bg-paper border border-rule rounded-xl p-6 max-w-[760px]">
-        <form th:action="@{/books/create}" th:object="${bookForm}" method="post" class="space-y-5" id="addBookForm">
+        <form th:action="@{/books/create}" th:object="${bookForm}" method="post"
+              id="addBookForm" class="space-y-5">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
             <!-- Row 1: ISBN & Trạng thái -->
@@ -51,7 +52,7 @@
                            placeholder="Ví dụ: 9780132350884"
                            class="h-10 px-3 bg-paper border border-rule-strong rounded text-ink font-mono-code text-mono-code placeholder:text-ink-faint focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
                     <p th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" class="text-error font-label-helper text-[12px] mt-1"></p>
-                    <span class="font-label-helper text-label-helper text-ink-muted mt-1.5">ISBN-10 hoặc ISBN-13</span>
+                    <span class="font-label-helper text-label-helper text-ink-muted mt-1.5">ISBN-10 hoặc ISBN-13, có thể dùng dấu gạch nối</span>
                 </div>
                 <div class="flex flex-col">
                     <label class="font-label-field text-label-field text-ink mb-1.5" for="status">
@@ -112,7 +113,7 @@
                                 id="categoryId"
                                 required
                                 class="w-full h-10 px-3 pr-9 bg-paper border border-rule-strong rounded text-ink font-body-default text-body-default appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors cursor-pointer">
-                            <option value="">-- Chọn thể loại --</option>
+                            <option value="">Chọn thể loại</option>
                             <option th:each="cat : ${categories}"
                                     th:value="${cat.id}"
                                     th:text="${cat.name}">Công nghệ thông tin</option>
@@ -148,9 +149,10 @@
                            id="availableQuantity"
                            type="number"
                            min="0"
-                           placeholder="Mặc định bằng tổng số lượng"
+                           placeholder="Để trống nếu bằng tổng"
                            class="h-10 px-3 bg-paper border border-rule-strong rounded text-ink font-mono-code text-mono-code placeholder:text-ink-faint focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
                     <span class="font-label-helper text-label-helper text-ink-muted mt-1.5">Để trống nếu bằng tổng số lượng</span>
+                    <p th:if="${#fields.hasErrors('availableQuantity')}" th:errors="*{availableQuantity}" class="text-error font-label-helper text-[12px] mt-1"></p>
                 </div>
             </div>
 
@@ -161,28 +163,16 @@
             <div class="flex items-center gap-3 pt-1">
                 <button type="submit"
                         class="h-10 px-5 bg-primary-container text-on-primary rounded font-label-button text-label-button hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper cursor-pointer select-none">
-                    Lưu sách
+                    Lưu
                 </button>
                 <a th:href="@{/books}"
-                   class="inline-flex items-center justify-center h-10 px-5 bg-paper border border-rule-strong text-ink rounded font-label-button text-label-button hover:bg-slate-bg transition-colors focus:outline-none cursor-pointer select-none">
+                   class="h-10 px-5 bg-paper border border-rule-strong text-ink rounded font-label-button text-label-button hover:bg-slate-bg transition-colors focus:outline-none inline-flex items-center select-none">
                     Hủy
                 </a>
             </div>
         </form>
     </div>
 </div>
-
-<script>
-    const totalInput = document.getElementById('totalQuantity');
-    const availInput = document.getElementById('availableQuantity');
-    if (totalInput && availInput) {
-        totalInput.addEventListener('input', () => {
-            if (!availInput.value || parseInt(availInput.value, 10) > parseInt(totalInput.value, 10)) {
-                availInput.placeholder = totalInput.value;
-            }
-        });
-    }
-</script>
 </th:block>
 </body>
 </html>

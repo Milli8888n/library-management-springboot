@@ -16,17 +16,24 @@
 <th:block layout:fragment="content">
 <div class="flex flex-col w-full gap-6">
     <!-- Header -->
-    <div class="flex flex-col gap-1">
-        <div class="flex items-center gap-2 font-label-helper text-label-helper text-ink-muted">
+    <div class="flex flex-col mb-6">
+        <nav aria-label="Đường dẫn" class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted mb-1.5 select-none">
             <span>Báo cáo</span>
-            <span class="text-ink-faint">/</span>
-            <span class="text-ink">Thành viên</span>
-        </div>
-        <div class="flex items-baseline justify-between gap-4 flex-wrap mt-1">
-            <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Thống kê hoạt động thành viên</h1>
+            <span class="text-ink-faint text-[11px]">/</span>
+            <span class="text-ink font-medium">Lượt mượn theo thành viên</span>
+        </nav>
+        <div class="flex items-end justify-between border-b border-rule pb-4 flex-wrap gap-4">
+            <div class="flex flex-col">
+                <div class="flex items-baseline gap-3">
+                    <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Lượt mượn theo thành viên</h1>
+                    <span class="font-label-field text-label-field text-ink-muted"
+                          th:text="${#lists.size(memberStats) + ' thành viên'}">0 thành viên</span>
+                </div>
+                <p class="font-body-default text-body-default text-ink-muted mt-1">Bảng tổng kết số lượt mượn và tỷ lệ chấp hành trả sách</p>
+            </div>
             <a th:href="@{/members}"
-               class="inline-flex items-center gap-1.5 h-9 px-3 bg-paper border border-rule-strong text-ink hover:bg-linen rounded transition-colors font-label-button text-label-button shadow-sm">
-                <span class="material-symbols-outlined text-[16px] text-ink-muted">open_in_new</span>
+               class="inline-flex items-center gap-1.5 h-10 px-4 bg-paper border border-rule-strong text-ink hover:bg-linen rounded transition-colors font-label-button text-label-button shadow-sm">
+                <span class="material-symbols-outlined text-[18px] text-ink-muted">open_in_new</span>
                 <span>Xem danh sách thành viên</span>
             </a>
         </div>

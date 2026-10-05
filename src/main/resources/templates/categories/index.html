@@ -17,27 +17,30 @@
 <th:block layout:fragment="content">
 <div class="flex flex-col w-full">
     <!-- Page Header -->
-    <header class="flex flex-col gap-space-xs mb-space-xl">
-        <nav aria-label="Đường dẫn trang" class="flex items-center gap-space-xs">
-            <span class="font-label-helper text-label-helper text-ink-muted">Danh mục</span>
-            <span class="text-ink-faint font-body-default text-[11px]">/</span>
-            <span class="font-label-helper text-label-helper text-ink">Thể loại</span>
+    <div class="flex flex-col mb-6">
+        <nav aria-label="Đường dẫn trang" class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted mb-1.5 select-none">
+            <span>Danh mục</span>
+            <span class="text-ink-faint text-[11px]">/</span>
+            <span class="text-ink font-medium">Thể loại</span>
         </nav>
-        <div class="flex items-baseline justify-between pt-space-xs">
-            <div class="flex items-baseline gap-space-md">
-                <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Thể loại</h1>
-                <span class="font-label-field text-label-field text-ink-muted"
-                      th:text="${categoryPage.totalElements + ' thể loại'}">0 thể loại</span>
+        <div class="flex items-end justify-between border-b border-rule pb-4 flex-wrap gap-4">
+            <div class="flex flex-col">
+                <div class="flex items-baseline gap-3">
+                    <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Thể loại</h1>
+                    <span class="font-label-field text-label-field text-ink-muted"
+                          th:text="${categoryPage.totalElements + ' thể loại'}">0 thể loại</span>
+                </div>
+                <p class="font-body-default text-body-default text-ink-muted mt-1">Hệ thống phân loại tư liệu và ấn phẩm lưu hành</p>
             </div>
             <button sec:authorize="hasRole('ADMIN')"
                     type="button"
                     onclick="openCreateModal()"
-                    class="inline-flex items-center gap-space-sm h-[40px] px-space-lg bg-primary-container hover:bg-primary text-on-primary rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper">
+                    class="inline-flex items-center gap-2 h-10 px-4 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper">
                 <span class="material-symbols-outlined text-[18px]">add</span>
-                <span class="font-label-button text-label-button font-medium">Thêm thể loại</span>
+                <span>Thêm thể loại</span>
             </button>
         </div>
-    </header>
+    </div>
 
     <!-- Ledger Data Table -->
     <div class="bg-paper border border-rule rounded overflow-hidden">

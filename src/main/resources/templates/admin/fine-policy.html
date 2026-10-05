@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <title>Chính sách phạt</title>
+</head>
+<body>
+
+<th:block layout:fragment="breadcrumb">
+    <span class="font-label-helper text-label-helper text-ink-muted">Hệ thống</span>
+    <span class="text-ink-faint text-[11px]">/</span>
+    <span class="font-label-helper text-label-helper text-ink font-medium">Chính sách phạt</span>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="flex flex-col w-full">
+
+    <!-- Header & Breadcrumb -->
+    <div class="flex flex-col gap-2 mb-6">
+        <nav aria-label="Đường dẫn" class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted mb-1.5 select-none">
+            <span>Hệ thống</span>
+            <span class="text-ink-faint">/</span>
+            <span class="text-ink font-medium">Chính sách phạt</span>
+        </nav>
+        <div class="flex items-end justify-between border-b border-rule pb-4 flex-wrap gap-4">
+            <div class="flex flex-col">
+                <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Chính sách phạt quá hạn</h1>
+                <p class="font-body-default text-body-default text-ink-muted mt-1">
+                    Thiết lập mức phí phạt trễ hạn, thời gian ân hạn và mức trần áp dụng toàn thư viện
+                </p>
+            </div>
+            <button type="button"
+                    onclick="openEditModal()"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2">
+                <span class="material-symbols-outlined text-[18px]">tune</span>
+                <span>Ban hành chính sách mới</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary KPI Cards (Standard across app) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <!-- Daily Fine -->
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded shadow-sm">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Phí phạt / ngày</span>
+                <span class="material-symbols-outlined text-oxblood-text text-[18px]">payments</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-oxblood-text font-mono-code"
+                     th:text="${#numbers.formatDecimal(activePolicy.dailyFineAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">5,000 ₫</div>
+                <p class="font-label-helper text-label-helper text-ink-faint">mỗi cuốn / ngày trễ hạn</p>
+            </div>
+        </div>
+
+        <!-- Grace Days -->
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded shadow-sm">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Thời gian ân hạn</span>
+                <span class="material-symbols-outlined text-ink-muted text-[18px]">hourglass_top</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-ink font-mono-code"
+                     th:text="${activePolicy.graceDays + ' ngày'}">0 ngày</div>
+                <p class="font-label-helper text-label-helper text-ink-faint">miễn phạt trong thời gian này</p>
+            </div>
+        </div>
+
+        <!-- Max Fine Cap -->
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded shadow-sm">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Mức trần tối đa</span>
+                <span class="material-symbols-outlined text-ink-muted text-[18px]">vertical_align_top</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-ink font-mono-code"
+                     th:if="${activePolicy.maxFineAmount != null}"
+                     th:text="${#numbers.formatDecimal(activePolicy.maxFineAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">100,000 ₫</div>
+                <div class="font-headline-h2 text-headline-h2 text-ink"
+                     th:if="${activePolicy.maxFineAmount == null}">Không giới hạn</div>
+                <p class="font-label-helper text-label-helper text-ink-faint">giới hạn phạt trên mỗi đầu sách</p>
+            </div>
+        </div>
+
+        <!-- Effective Date -->
+        <div class="bg-paper border border-rule p-5 flex flex-col justify-between rounded shadow-sm">
+            <div class="flex items-center justify-between pb-3 border-b border-rule">
+                <span class="font-label-table-header text-label-table-header text-ink-muted uppercase tracking-wider">Ngày hiệu lực</span>
+                <span class="material-symbols-outlined text-moss-text text-[18px]">event_available</span>
+            </div>
+            <div class="pt-4 flex flex-col gap-1">
+                <div class="font-headline-h2 text-headline-h2 text-moss-text font-mono-code"
+                     th:text="${#temporals.format(activePolicy.effectiveFrom, 'dd/MM/yyyy')}">01/01/2026</div>
+                <p class="font-label-helper text-label-helper text-moss-text font-medium flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-moss-text inline-block"></span>
+                    Đang áp dụng
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rule Note Banner -->
+    <div class="bg-paper border border-rule rounded p-4 mb-6 flex items-start gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-brass text-[20px] shrink-0 mt-0.5">info</span>
+        <div class="font-body-default text-body-default text-ink-muted text-sm space-y-1">
+            <div class="font-medium text-ink">Quy tắc tính phí phạt (SRS §12):</div>
+            <div>• Số ngày trễ = <code>max(0, ngày_trả - hạn_trả - số_ngày_ân_hạn)</code>. Tiền phạt = <code>số_ngày_trễ × phí_phạt_ngày × số_lượng</code>.</div>
+            <div>• Chính sách được snapshot cố định tại thời điểm độc giả trả sách, đảm bảo không áp dụng hồi tố lên các giao dịch cũ.</div>
+        </div>
+    </div>
+
+    <!-- History Table (Ledger Data Table) -->
+    <div class="bg-paper border border-rule rounded overflow-hidden shadow-sm">
+        <div class="bg-linen px-5 py-3 border-b border-rule flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-ink text-[18px]">history</span>
+                <h2 class="font-headline-h3 text-headline-h3 text-ink">Lịch sử ban hành chính sách</h2>
+            </div>
+            <span class="font-label-helper text-label-helper text-ink-muted"
+                  th:text="${#lists.size(policies)} + ' phiên bản chính sách'">0 phiên bản</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-left">
+                <thead>
+                <tr class="bg-linen/40 border-b border-rule h-11 text-ink-muted font-label-table-header text-label-table-header">
+                    <th class="py-2.5 px-4 font-medium w-[80px]" scope="col">ID</th>
+                    <th class="py-2.5 px-4 font-medium min-w-[150px]" scope="col">Ngày ban hành</th>
+                    <th class="py-2.5 px-4 font-medium min-w-[130px]" scope="col">Ngày áp dụng</th>
+                    <th class="py-2.5 px-4 font-medium text-right min-w-[140px]" scope="col">Phí phạt / ngày</th>
+                    <th class="py-2.5 px-4 font-medium text-right min-w-[140px]" scope="col">Mức trần</th>
+                    <th class="py-2.5 px-4 font-medium text-center min-w-[100px]" scope="col">Ân hạn</th>
+                    <th class="py-2.5 px-4 font-medium text-center min-w-[130px]" scope="col">Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-rule/60">
+                <tr th:each="p : ${policies}" class="h-12 hover:bg-row-hover transition-colors">
+                    <td class="px-4 font-mono-code text-xs text-ink-muted" th:text="${'#' + p.id}">#1</td>
+                    <td class="px-4 font-mono-code text-xs text-ink"
+                        th:text="${#temporals.format(p.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2026 00:00</td>
+                    <td class="px-4 font-mono-code text-xs text-ink font-medium"
+                        th:text="${#temporals.format(p.effectiveFrom, 'dd/MM/yyyy')}">01/01/2026</td>
+                    <td class="px-4 text-right font-mono-code text-xs font-semibold text-oxblood-text"
+                        th:text="${#numbers.formatDecimal(p.dailyFineAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">5,000 ₫</td>
+                    <td class="px-4 text-right font-mono-code text-xs text-ink"
+                        th:text="${p.maxFineAmount != null ? #numbers.formatDecimal(p.maxFineAmount, 0, 'COMMA', 0, 'POINT') + ' ₫' : '—'}">—</td>
+                    <td class="px-4 text-center font-mono-code text-xs text-ink"
+                        th:text="${p.graceDays + ' ngày'}">0 ngày</td>
+                    <td class="px-4 text-center">
+                        <span th:if="${p.active}"
+                              class="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-moss-bg text-moss-text border border-moss-border">
+                            Đang áp dụng
+                        </span>
+                        <span th:unless="${p.active}"
+                              class="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-linen text-ink-muted border border-rule">
+                            Đã thay thế
+                        </span>
+                    </td>
+                </tr>
+                <tr th:if="${policies == null || policies.empty}">
+                    <td colspan="7" class="px-4 py-8 text-center text-ink-muted font-body-default">
+                        Chưa có lịch sử chính sách nào.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ban hành chính sách mới (Standard Dialog across app) -->
+<div id="editPolicyModal"
+     th:classappend="${showEditModal} ? 'flex' : 'hidden'"
+     class="fixed inset-0 z-50 items-center justify-center bg-ink/40 backdrop-blur-sm">
+    <div class="w-full max-w-[560px] bg-paper border border-rule rounded-xl p-6 shadow-xl relative animate-in fade-in duration-200">
+        <div class="flex items-center justify-between pb-4 border-b border-rule mb-5">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[22px] text-brass">tune</span>
+                <h2 class="font-headline-h2 text-headline-h2 text-ink">Ban hành chính sách phạt mới</h2>
+            </div>
+            <button type="button" onclick="closeEditModal()" class="p-1 text-ink-muted hover:text-ink rounded">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+        </div>
+
+        <form th:action="@{/admin/fine-policy}" th:object="${finePolicyForm}" method="post" class="flex flex-col gap-4">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Daily Fine Amount -->
+                <div class="flex flex-col gap-1.5">
+                    <label for="dailyFineAmount" class="font-label-field text-label-field text-ink">
+                        Phí phạt / ngày (VND) <span class="text-error">*</span>
+                    </label>
+                    <input type="number"
+                           id="dailyFineAmount"
+                           th:field="*{dailyFineAmount}"
+                           required min="0" step="500"
+                           placeholder="VD: 5000"
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink placeholder:text-ink-faint focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
+                    <p th:if="${#fields.hasErrors('dailyFineAmount')}" th:errors="*{dailyFineAmount}"
+                       class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                </div>
+
+                <!-- Grace Days -->
+                <div class="flex flex-col gap-1.5">
+                    <label for="graceDays" class="font-label-field text-label-field text-ink">
+                        Số ngày ân hạn <span class="text-error">*</span>
+                    </label>
+                    <input type="number"
+                           id="graceDays"
+                           th:field="*{graceDays}"
+                           required min="0"
+                           placeholder="VD: 0 hoặc 3"
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink placeholder:text-ink-faint focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
+                    <p th:if="${#fields.hasErrors('graceDays')}" th:errors="*{graceDays}"
+                       class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                </div>
+
+                <!-- Max Fine Cap -->
+                <div class="flex flex-col gap-1.5">
+                    <label for="maxFineAmount" class="font-label-field text-label-field text-ink">
+                        Mức trần tối đa (VND)
+                        <span class="text-ink-muted text-xs font-normal">(bỏ trống = không giới hạn)</span>
+                    </label>
+                    <input type="number"
+                           id="maxFineAmount"
+                           th:field="*{maxFineAmount}"
+                           min="0" step="1000"
+                           placeholder="VD: 100000"
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink placeholder:text-ink-faint focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
+                    <p th:if="${#fields.hasErrors('maxFineAmount')}" th:errors="*{maxFineAmount}"
+                       class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                </div>
+
+                <!-- Effective From -->
+                <div class="flex flex-col gap-1.5">
+                    <label for="effectiveFrom" class="font-label-field text-label-field text-ink">
+                        Ngày áp dụng <span class="text-error">*</span>
+                    </label>
+                    <input type="date"
+                           id="effectiveFrom"
+                           th:field="*{effectiveFrom}"
+                           required
+                           class="w-full h-10 px-3 bg-paper border border-rule-strong rounded font-body-default text-body-default text-ink focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
+                    <p th:if="${#fields.hasErrors('effectiveFrom')}" th:errors="*{effectiveFrom}"
+                       class="text-error font-label-helper text-[12px] mt-0.5"></p>
+                </div>
+            </div>
+
+            <div class="p-3 bg-linen/50 border border-rule rounded text-xs text-ink-muted leading-relaxed">
+                Chính sách mới sẽ có hiệu lực ngay sau khi lưu. Các giao dịch hoàn trả sách trước đây không bị ảnh hưởng hồi tố.
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-rule">
+                <button type="button" onclick="closeEditModal()"
+                        class="h-10 px-4 bg-paper border border-rule-strong text-ink font-label-button text-label-button rounded hover:bg-linen/60 transition-colors">
+                    Hủy
+                </button>
+                <button type="submit"
+                        class="inline-flex items-center gap-2 h-10 px-5 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2">
+                    <span class="material-symbols-outlined text-[18px]">save</span>
+                    <span>Lưu chính sách</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openEditModal() {
+        const modal = document.getElementById('editPolicyModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.getElementById('dailyFineAmount').focus();
+    }
+
+    function closeEditModal() {
+        const modal = document.getElementById('editPolicyModal');
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeEditModal();
+        }
+    });
+
+    // Close on clicking backdrop outside modal card
+    document.getElementById('editPolicyModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeEditModal();
+        }
+    });
+</script>
+
+</th:block>
+</body>
+</html>

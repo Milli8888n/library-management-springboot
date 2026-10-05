@@ -16,17 +16,24 @@
 <th:block layout:fragment="content">
 <div class="flex flex-col w-full gap-6">
     <!-- Header -->
-    <div class="flex flex-col gap-1">
-        <div class="flex items-center gap-2 font-label-helper text-label-helper text-ink-muted">
+    <div class="flex flex-col mb-6">
+        <nav aria-label="Đường dẫn" class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted mb-1.5 select-none">
             <span>Báo cáo</span>
-            <span class="text-ink-faint">/</span>
-            <span class="text-ink">Quá hạn</span>
-        </div>
-        <div class="flex items-baseline justify-between gap-4 flex-wrap mt-1">
-            <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Báo cáo sách mượn quá hạn</h1>
+            <span class="text-ink-faint text-[11px]">/</span>
+            <span class="text-ink font-medium">Quá hạn</span>
+        </nav>
+        <div class="flex items-end justify-between border-b border-rule pb-4 flex-wrap gap-4">
+            <div class="flex flex-col">
+                <div class="flex items-baseline gap-3">
+                    <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Báo cáo quá hạn</h1>
+                    <span class="font-label-field text-label-field text-oxblood-text font-medium"
+                          th:text="${#lists.size(overdueBorrowings) + ' phiếu quá hạn'}">0 phiếu quá hạn</span>
+                </div>
+                <p class="font-body-default text-body-default text-ink-muted mt-1">Theo dõi danh sách độc giả và sách chưa hoàn trả đúng kỳ hạn</p>
+            </div>
             <a th:href="@{/borrowings(status='OVERDUE')}"
-               class="inline-flex items-center gap-1.5 h-9 px-3 bg-oxblood-bg border border-oxblood-border text-oxblood-text hover:bg-oxblood-bg/60 rounded transition-colors font-label-button text-label-button shadow-sm">
-                <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+               class="inline-flex items-center gap-1.5 h-10 px-4 bg-oxblood-bg border border-oxblood-border text-oxblood-text hover:bg-oxblood-bg/80 rounded transition-colors font-label-button text-label-button shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">open_in_new</span>
                 <span>Xem danh sách phiếu quá hạn</span>
             </a>
         </div>

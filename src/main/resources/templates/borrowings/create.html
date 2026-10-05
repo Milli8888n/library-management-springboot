@@ -15,10 +15,20 @@
 
 <th:block layout:fragment="content">
 <div class="flex flex-col w-full">
-    <div class="flex flex-col gap-1 mb-6">
-        <div class="font-label-helper text-label-helper text-ink-muted">Nghiệp vụ / Phiếu mượn / Tạo mới</div>
-        <div class="flex items-baseline justify-between">
-            <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Tạo phiếu mượn</h1>
+    <!-- Page Header -->
+    <div class="flex flex-col mb-6">
+        <nav aria-label="Đường dẫn" class="flex items-center gap-1.5 font-label-helper text-label-helper text-ink-muted mb-1.5 select-none">
+            <span>Nghiệp vụ</span>
+            <span class="text-ink-faint text-[11px]">/</span>
+            <a th:href="@{/borrowings}" class="hover:text-ink transition-colors">Phiếu mượn</a>
+            <span class="text-ink-faint text-[11px]">/</span>
+            <span class="text-ink font-medium">Tạo mới</span>
+        </nav>
+        <div class="flex items-end justify-between border-b border-rule pb-4 flex-wrap gap-4">
+            <div class="flex flex-col">
+                <h1 class="font-headline-h1 text-headline-h1 text-ink tracking-tight">Tạo phiếu mượn</h1>
+                <p class="font-body-default text-body-default text-ink-muted mt-1">Lập chứng từ mượn sách cho độc giả với hạn trả tối đa 14 ngày</p>
+            </div>
         </div>
     </div>
 
@@ -33,6 +43,10 @@
                 <section class="bg-paper border border-rule rounded-xl p-6 flex flex-col gap-4">
                     <div class="flex items-center justify-between border-b border-rule pb-3">
                         <h2 class="font-headline-h2 text-headline-h2 text-ink">1. Thành viên</h2>
+                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-moss-bg border border-moss-border text-moss-text font-label-badge text-label-badge">
+                            <span class="w-1.5 h-1.5 rounded-full bg-moss-text"></span>
+                            Đủ điều kiện mượn
+                        </span>
                     </div>
                     <div class="flex flex-col gap-1.5 max-w-[640px]">
                         <label class="font-label-field text-label-field text-ink" for="memberId">
@@ -64,44 +78,66 @@
                         <h2 class="font-headline-h2 text-headline-h2 text-ink">2. Sách mượn</h2>
                         <span class="font-mono-code text-mono-code text-ink-muted">Tối đa 5 cuốn / lượt</span>
                     </div>
-                    <div class="border border-rule rounded overflow-hidden">
-                        <table class="w-full text-left border-collapse">
+                    <div class="border border-rule rounded overflow-x-auto">
+                        <table class="w-full text-left border-collapse" id="line-items-table">
                             <thead>
                             <tr class="bg-linen border-b border-rule font-label-table-header text-label-table-header text-ink-muted">
                                 <th class="py-2.5 px-3 font-medium">Sách</th>
                                 <th class="py-2.5 px-3 font-medium w-36">Số lượng</th>
                                 <th class="py-2.5 px-3 font-medium w-28">Còn lại</th>
-                                <th class="py-2.5 px-2 w-10 text-center"><span class="sr-only">Xóa</span></th>
+                                <th class="py-2.5 px-2 w-10 text-center"><span class="sr-only">Thao tác</span></th>
                             </tr>
                             </thead>
                             <tbody class="divide-y divide-rule font-body-table-cell text-body-table-cell text-ink" id="line-items-body">
                             <tr th:each="item, iStat : *{items}"
-                                class="hover:bg-row-hover transition-colors line-item-row">
+                                class="hover:bg-row-hover transition-colors line-item-row"
+                                data-stock="4">
                                 <td class="py-3 px-3">
                                     <div class="relative">
                                         <select th:field="*{items[__${iStat.index}__].bookId}"
+                                                onchange="updateRowStock(this)"
                                                 class="book-picker w-full h-9 px-2.5 bg-paper border border-rule-strong rounded text-body-table-cell font-body-table-cell text-ink appearance-none focus:outline-none focus:ring-1 focus:ring-primary pr-8">
                                             <option value="">-- Chọn sách --</option>
                                             <option th:each="book : ${books}"
                                                     th:value="${book.id}"
+                                                    th:attr="data-stock=${book.availableQuantity ?: 0}"
                                                     th:text="${book.title + ' · ' + (book.isbn ?: '')}">Sách</option>
                                         </select>
                                         <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none text-[18px]">expand_more</span>
                                     </div>
                                 </td>
                                 <td class="py-3 px-3">
-                                    <input th:field="*{items[__${iStat.index}__].quantity}"
-                                           type="number"
-                                           min="1"
-                                           max="5"
-                                           class="qty-input w-24 h-9 px-3 text-center font-mono-code text-mono-code text-ink bg-paper border border-rule-strong rounded focus:outline-none focus:ring-1 focus:ring-primary"/>
+                                    <div class="flex items-center h-9 border border-rule-strong rounded bg-paper w-32 select-none">
+                                        <button type="button"
+                                                onclick="stepQty(this, -1)"
+                                                class="btn-step-down w-8 h-full flex items-center justify-center text-ink hover:bg-linen active:bg-slate-bg transition-colors"
+                                                title="Giảm một cuốn">
+                                            <span class="material-symbols-outlined text-[16px]">remove</span>
+                                        </button>
+                                        <input th:field="*{items[__${iStat.index}__].quantity}"
+                                               type="number"
+                                               min="1"
+                                               max="5"
+                                               class="qty-input w-full h-full text-center font-mono-code text-mono-code text-ink bg-transparent focus:outline-none border-x border-rule [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                               onchange="recalculateSummary()"/>
+                                        <button type="button"
+                                                onclick="stepQty(this, 1)"
+                                                class="btn-step-up w-8 h-full flex items-center justify-center text-ink hover:bg-linen active:bg-slate-bg transition-colors"
+                                                title="Tăng một cuốn">
+                                            <span class="material-symbols-outlined text-[16px]">add</span>
+                                        </button>
+                                    </div>
                                 </td>
-                                <td class="py-3 px-3 font-mono-code text-mono-code text-ink-muted">—</td>
+                                <td class="py-3 px-3">
+                                    <span class="stock-badge inline-block px-2.5 py-1 rounded bg-linen text-slate-text font-mono-code text-[12px] border border-rule/50">
+                                        Còn —
+                                    </span>
+                                </td>
                                 <td class="py-3 px-2 text-center">
                                     <button type="button"
                                             onclick="removeRow(this)"
-                                            class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors"
-                                            th:if="${iStat.count > 1}">
+                                            class="btn-remove-row text-ink-muted hover:text-oxblood-text p-1 rounded transition-colors"
+                                            title="Xóa dòng sách">
                                         <span class="material-symbols-outlined text-[18px]">delete</span>
                                     </button>
                                 </td>
@@ -109,60 +145,194 @@
                             </tbody>
                         </table>
                     </div>
-                    <button type="button"
-                            onclick="addRow()"
-                            class="self-start inline-flex items-center gap-1.5 px-3 h-9 border border-dashed border-primary-container text-primary-container font-label-button text-label-button rounded hover:bg-blue-tint-bg transition-colors">
-                        <span class="material-symbols-outlined text-[18px]">add</span>
-                        Thêm sách
-                    </button>
+                    <div class="pt-1 flex items-center justify-between">
+                        <button type="button"
+                                onclick="addRow()"
+                                id="btn-add-line"
+                                class="inline-flex items-center gap-1.5 text-primary hover:text-primary-container font-label-button text-label-button py-1.5 px-1 rounded transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">add</span>
+                            <span>Thêm dòng sách</span>
+                        </button>
+                        <span class="font-label-helper text-label-helper text-ink-muted">Quy định mượn tối đa 5 cuốn mỗi lượt</span>
+                    </div>
                     <p class="text-error font-label-helper text-[12px]" th:if="${#fields.hasErrors('items')}">
                         Phiếu mượn phải có ít nhất 1 cuốn sách.
                     </p>
                 </section>
             </div>
 
-            <!-- Right sidebar: Dates & Summary -->
-            <div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
-                <section class="bg-paper border border-rule rounded-xl p-6 flex flex-col gap-4 sticky top-20">
-                    <h2 class="font-headline-h2 text-headline-h2 text-ink border-b border-rule pb-3">3. Thời hạn mượn</h2>
-
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-label-field text-label-field text-ink" for="borrowDate">Ngày mượn</label>
-                        <input th:field="*{borrowDate}"
-                               id="borrowDate"
-                               type="date"
-                               class="h-10 px-3 bg-paper border border-rule-strong rounded font-mono-code text-mono-code text-ink focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
+            <!-- Right sidebar: Dates & Summary Card -->
+            <div class="col-span-12 lg:col-span-4 sticky top-20 flex flex-col gap-6">
+                <div class="bg-paper border border-rule rounded-xl p-6 flex flex-col gap-5">
+                    <div class="flex items-center justify-between border-b border-rule pb-3">
+                        <h2 class="font-headline-h3 text-headline-h3 text-ink">Tóm tắt phiếu</h2>
+                        <span class="font-label-badge text-[11px] font-mono-code px-2 py-0.5 rounded bg-linen text-slate-text border border-rule">
+                            LẬP TRỰC TIẾP
+                        </span>
                     </div>
 
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-label-field text-label-field text-ink" for="dueDate">
-                            Hạn trả <span class="text-oxblood-text">*</span>
-                        </label>
-                        <input th:field="*{dueDate}"
-                               id="dueDate"
-                               type="date"
-                               required
-                               class="h-10 px-3 bg-paper border border-rule-strong rounded font-mono-code text-mono-code text-ink focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"/>
+                    <!-- Date inputs inside summary or above -->
+                    <div class="flex flex-col gap-3 pb-3 border-b border-rule">
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-field text-label-field text-ink" for="borrowDate">Ngày mượn</label>
+                            <input th:field="*{borrowDate}"
+                                   id="borrowDate"
+                                   type="date"
+                                   onchange="updateDates()"
+                                   class="h-9 px-3 bg-paper border border-rule-strong rounded font-mono-code text-[13px] text-ink focus:outline-none focus:border-primary-container transition-colors"/>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-field text-label-field text-ink" for="dueDate">
+                                Hạn trả <span class="text-oxblood-text">*</span>
+                            </label>
+                            <input th:field="*{dueDate}"
+                                   id="dueDate"
+                                   type="date"
+                                   required
+                                   onchange="updateDates()"
+                                   class="h-9 px-3 bg-paper border border-rule-strong rounded font-mono-code text-[13px] text-ink focus:outline-none focus:border-primary-container transition-colors"/>
+                        </div>
                     </div>
 
-                    <div class="pt-4 border-t border-rule mt-2 flex flex-col gap-2">
+                    <!-- Metrics summary -->
+                    <div class="flex flex-col text-body-default font-body-default">
+                        <div class="flex items-center justify-between py-2 border-b border-rule">
+                            <span class="font-label-field text-label-field text-ink-muted w-32">Thời hạn</span>
+                            <span class="font-body-default text-ink font-medium" id="summary-duration">14 ngày</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-rule">
+                            <span class="font-label-field text-label-field text-ink-muted w-32">Số đầu sách</span>
+                            <span class="font-mono-code text-mono-code text-ink font-semibold" id="summary-unique-books">1</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-rule">
+                            <span class="font-label-field text-label-field text-ink-muted w-32">Tổng số cuốn</span>
+                            <span class="font-mono-code text-mono-code text-primary font-semibold text-[15px]" id="summary-total-copies">1</span>
+                        </div>
+                    </div>
+
+                    <!-- Policy alert -->
+                    <div class="p-3 bg-linen/60 rounded border border-rule text-label-helper font-label-helper text-ink-muted flex items-start gap-2">
+                        <span class="material-symbols-outlined text-[16px] text-ink-muted shrink-0 mt-0.5">policy</span>
+                        <span>Phạt trả muộn: 5.000 ₫ × số ngày trễ × số cuốn.</span>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="flex flex-col pt-1">
                         <button type="submit"
-                                class="w-full h-10 bg-primary-container hover:bg-primary text-on-primary font-label-button text-label-button rounded transition-colors shadow-sm">
-                            Xác nhận tạo phiếu
+                                class="w-full h-10 bg-primary hover:bg-primary-container text-on-primary font-label-button text-label-button rounded flex items-center justify-center gap-2 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-paper">
+                            <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                            <span>Tạo phiếu mượn</span>
                         </button>
                         <a th:href="@{/borrowings}"
-                           class="w-full h-10 inline-flex items-center justify-center bg-paper border border-rule-strong text-ink font-label-button text-label-button rounded hover:bg-slate-bg transition-colors">
+                           class="w-full h-10 mt-2 bg-paper hover:bg-linen text-ink border border-rule-strong font-label-button text-label-button rounded flex items-center justify-center transition-colors focus:outline-none">
                             Hủy
                         </a>
                     </div>
-                </section>
+                </div>
             </div>
         </div>
     </form>
+    <!-- Template for adding dynamic rows -->
+    <template id="row-template">
+        <tr class="hover:bg-row-hover transition-colors line-item-row" data-stock="0">
+            <td class="py-3 px-3">
+                <div class="relative">
+                    <select name="items[INDEX].bookId" onchange="updateRowStock(this)" class="book-picker w-full h-9 px-2.5 bg-paper border border-rule-strong rounded text-body-table-cell font-body-table-cell text-ink appearance-none focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+                        <option value="">-- Chọn sách --</option>
+                        <option th:each="book : ${books}"
+                                th:value="${book.id}"
+                                th:attr="data-stock=${book.availableQuantity ?: 0}"
+                                th:text="${book.title + ' · ' + (book.isbn ?: '')}">Sách</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none text-[18px]">expand_more</span>
+                </div>
+            </td>
+            <td class="py-3 px-3">
+                <div class="flex items-center h-9 border border-rule-strong rounded bg-paper w-32 select-none">
+                    <button type="button" onclick="stepQty(this, -1)" class="btn-step-down w-8 h-full flex items-center justify-center text-ink hover:bg-linen active:bg-slate-bg transition-colors" title="Giảm một cuốn">
+                        <span class="material-symbols-outlined text-[16px]">remove</span>
+                    </button>
+                    <input name="items[INDEX].quantity" type="number" min="1" max="5" value="1" onchange="recalculateSummary()"
+                           class="qty-input w-full h-full text-center font-mono-code text-mono-code text-ink bg-transparent focus:outline-none border-x border-rule [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
+                    <button type="button" onclick="stepQty(this, 1)" class="btn-step-up w-8 h-full flex items-center justify-center text-ink hover:bg-linen active:bg-slate-bg transition-colors" title="Tăng một cuốn">
+                        <span class="material-symbols-outlined text-[16px]">add</span>
+                    </button>
+                </div>
+            </td>
+            <td class="py-3 px-3">
+                <span class="stock-badge inline-block px-2.5 py-1 rounded bg-linen text-slate-text font-mono-code text-[12px] border border-rule/50">Còn —</span>
+            </td>
+            <td class="py-3 px-2 text-center">
+                <button type="button" onclick="removeRow(this)" class="btn-remove-row text-ink-muted hover:text-oxblood-text p-1 rounded transition-colors" title="Xóa dòng sách">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                </button>
+            </td>
+        </tr>
+    </template>
 </div>
 
-<script th:inline="javascript">
-    const books = /*[[${books}]]*/ [];
+<script>
+    function recalculateSummary() {
+        const rows = document.querySelectorAll('.line-item-row');
+        let totalCopies = 0;
+        let uniqueCount = 0;
+
+        rows.forEach(row => {
+            const select = row.querySelector('.book-picker');
+            const input = row.querySelector('.qty-input');
+            if (select && select.value) {
+                uniqueCount++;
+            }
+            if (input) {
+                totalCopies += parseInt(input.value, 10) || 0;
+            }
+        });
+
+        const uniqueEl = document.getElementById('summary-unique-books');
+        const totalEl = document.getElementById('summary-total-copies');
+        if (uniqueEl) uniqueEl.textContent = uniqueCount || rows.length;
+        if (totalEl) totalEl.textContent = totalCopies;
+    }
+
+    function stepQty(btn, delta) {
+        const row = btn.closest('tr');
+        const input = row.querySelector('.qty-input');
+        if (!input) return;
+        let val = parseInt(input.value, 10) || 1;
+        const max = parseInt(input.max, 10) || 5;
+        const min = parseInt(input.min, 10) || 1;
+        val = Math.max(min, Math.min(max, val + delta));
+        input.value = val;
+        recalculateSummary();
+    }
+
+    function updateRowStock(select) {
+        const row = select.closest('tr');
+        const badge = row.querySelector('.stock-badge');
+        const opt = select.selectedOptions[0];
+        if (opt && opt.getAttribute('data-stock')) {
+            const stock = opt.getAttribute('data-stock');
+            badge.textContent = 'Còn ' + stock;
+        } else {
+            badge.textContent = 'Còn —';
+        }
+        recalculateSummary();
+    }
+
+    function updateDates() {
+        const bDateVal = document.getElementById('borrowDate').value;
+        const dDateVal = document.getElementById('dueDate').value;
+        if (bDateVal && dDateVal) {
+            const d1 = new Date(bDateVal);
+            const d2 = new Date(dDateVal);
+            const diffTime = d2 - d1;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const durationEl = document.getElementById('summary-duration');
+            if (durationEl) {
+                durationEl.textContent = diffDays > 0 ? (diffDays + ' ngày') : '0 ngày';
+            }
+        }
+    }
 
     function addRow() {
         const tbody = document.getElementById('line-items-body');
@@ -171,43 +341,27 @@
             alert('Tối đa 5 cuốn sách mỗi phiếu mượn.');
             return;
         }
-        const idx = rowCount;
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-row-hover transition-colors line-item-row';
-        let options = '<option value="">-- Chọn sách --</option>';
-        /*[# th:each="book : ${books}" th:with="bId=${book.id}, bTitle=${book.title}, bIsbn=${book.isbn}"]*/
-        options += `<option value="[[${book.id}]]">[[${book.title}]] · [[${book.isbn}]]</option>`;
-        /*[/]*/
-        tr.innerHTML = `
-            <td class="py-3 px-3">
-                <div class="relative">
-                    <select name="items[${idx}].bookId" class="book-picker w-full h-9 px-2.5 bg-paper border border-rule-strong rounded text-body-table-cell font-body-table-cell text-ink appearance-none focus:outline-none focus:ring-1 focus:ring-primary pr-8">
-                        ${options}
-                    </select>
-                    <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none text-[18px]">expand_more</span>
-                </div>
-            </td>
-            <td class="py-3 px-3">
-                <input name="items[${idx}].quantity" type="number" min="1" max="5" value="1"
-                       class="qty-input w-24 h-9 px-3 text-center font-mono-code text-mono-code text-ink bg-paper border border-rule-strong rounded focus:outline-none focus:ring-1 focus:ring-primary"/>
-            </td>
-            <td class="py-3 px-3 font-mono-code text-mono-code text-ink-muted">—</td>
-            <td class="py-3 px-2 text-center">
-                <button type="button" onclick="removeRow(this)" class="w-7 h-7 inline-flex items-center justify-center text-ink-muted hover:text-oxblood-text rounded hover:bg-oxblood-bg transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">delete</span>
-                </button>
-            </td>
-        `;
-        tbody.appendChild(tr);
+        const template = document.getElementById('row-template');
+        const clone = template.content.cloneNode(true);
+        const row = clone.querySelector('tr');
+        row.querySelectorAll('[name]').forEach(el => {
+            el.name = el.name.replace('INDEX', rowCount);
+        });
+        tbody.appendChild(clone);
         renumberRows();
+        recalculateSummary();
     }
 
     function removeRow(btn) {
         const row = btn.closest('tr');
         const tbody = row.parentElement;
-        if (tbody.querySelectorAll('tr').length <= 1) return;
+        if (tbody.querySelectorAll('tr').length <= 1) {
+            alert('Phiếu mượn cần tối thiểu 1 cuốn sách.');
+            return;
+        }
         row.remove();
         renumberRows();
+        recalculateSummary();
     }
 
     function renumberRows() {
@@ -218,6 +372,13 @@
             });
         });
     }
+
+    // Initial stock setup & calculation
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.book-picker').forEach(sel => updateRowStock(sel));
+        recalculateSummary();
+        updateDates();
+    });
 </script>
 </th:block>
 </body>
