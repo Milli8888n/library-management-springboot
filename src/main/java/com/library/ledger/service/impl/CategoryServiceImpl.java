@@ -20,11 +20,37 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final com.library.ledger.mapper.CategoryMapper categoryMapper;
 
     @Override
     @Transactional(readOnly = true)
     public Page<Category> findAll(Pageable pageable) {
         return categoryRepository.findAll(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Category> search(String keyword, Boolean active, Pageable pageable) {
+        String cleanKeyword = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
+        return categoryRepository.search(cleanKeyword, active, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countTotal() {
+        return categoryRepository.count();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countActive() {
+        return categoryRepository.countByActiveTrue();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countInactive() {
+        return categoryRepository.countByActiveFalse();
     }
 
     @Override
@@ -47,12 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw new BusinessRuleException("Tên thể loại '" + trimmedName + "' đã tồn tại trong hệ thống");
         }
 
-        Category category = Category.builder()
-                .name(trimmedName)
-                .description(form.getDescription() != null ? form.getDescription().trim() : null)
-                .active(form.getActive() != null ? form.getActive() : true)
-                .build();
-
+        Category category = categoryMapper.toEntity(form);
         return categoryRepository.save(category);
     }
 
@@ -65,12 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw new BusinessRuleException("Tên thể loại '" + trimmedName + "' đã được sử dụng bởi thể loại khác");
         }
 
-        category.setName(trimmedName);
-        category.setDescription(form.getDescription() != null ? form.getDescription().trim() : null);
-        if (form.getActive() != null) {
-            category.setActive(form.getActive());
-        }
-
+        categoryMapper.updateEntityFromForm(form, category);
         return categoryRepository.save(category);
     }
 

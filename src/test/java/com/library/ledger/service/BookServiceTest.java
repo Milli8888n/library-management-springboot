@@ -5,7 +5,7 @@ import com.library.ledger.entity.Book;
 import com.library.ledger.entity.Category;
 import com.library.ledger.enums.BookStatus;
 import com.library.ledger.exception.BusinessRuleException;
-import com.library.ledger.exception.ResourceNotFoundException;
+import com.library.ledger.mapper.BookMapper;
 import com.library.ledger.repository.BookRepository;
 import com.library.ledger.repository.CategoryRepository;
 import com.library.ledger.service.impl.BookServiceImpl;
@@ -16,12 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +32,9 @@ class BookServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+
+    @Mock
+    private BookMapper bookMapper;
 
     @InjectMocks
     private BookServiceImpl bookService;
@@ -84,8 +82,19 @@ class BookServiceTest {
         form.setAvailableQuantity(10);
         form.setStatus(BookStatus.ACTIVE);
 
+        Book mappedBook = Book.builder()
+                .isbn("978-604-0-12345-6")
+                .title("Clean Architecture")
+                .author("Robert C. Martin")
+                .category(activeCategory)
+                .totalQuantity(10)
+                .availableQuantity(10)
+                .status(BookStatus.ACTIVE)
+                .build();
+
         when(bookRepository.existsByIsbn("978-604-0-12345-6")).thenReturn(false);
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(activeCategory));
+        when(bookMapper.toEntity(eq(form), eq(activeCategory), eq(10))).thenReturn(mappedBook);
         when(bookRepository.save(any(Book.class))).thenAnswer(invocation -> {
             Book b = invocation.getArgument(0);
             b.setId(101L);

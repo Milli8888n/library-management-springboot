@@ -5,6 +5,7 @@ import com.library.ledger.entity.Member;
 import com.library.ledger.enums.MemberStatus;
 import com.library.ledger.exception.BusinessRuleException;
 import com.library.ledger.exception.ResourceNotFoundException;
+import com.library.ledger.mapper.MemberMapper;
 import com.library.ledger.repository.MemberRepository;
 import com.library.ledger.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.List;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberMapper memberMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -49,13 +51,9 @@ public class MemberServiceImpl implements MemberService {
             throw new BusinessRuleException("Địa chỉ email '" + cleanEmail + "' đã được sử dụng");
         }
 
-        Member member = Member.builder()
-                .fullName(form.getFullName().trim())
-                .email(cleanEmail)
-                .phone(form.getPhone() != null && !form.getPhone().trim().isEmpty() ? form.getPhone().trim() : null)
-                .status(form.getStatus() != null ? form.getStatus() : MemberStatus.ACTIVE)
-                .build();
-
+        // Normalise email before mapping
+        form.setEmail(cleanEmail);
+        Member member = memberMapper.toEntity(form);
         return memberRepository.save(member);
     }
 
@@ -68,13 +66,9 @@ public class MemberServiceImpl implements MemberService {
             throw new BusinessRuleException("Địa chỉ email '" + cleanEmail + "' đã được sử dụng bởi thành viên khác");
         }
 
-        member.setFullName(form.getFullName().trim());
-        member.setEmail(cleanEmail);
-        member.setPhone(form.getPhone() != null && !form.getPhone().trim().isEmpty() ? form.getPhone().trim() : null);
-        if (form.getStatus() != null) {
-            member.setStatus(form.getStatus());
-        }
-
+        // Normalise email before mapping
+        form.setEmail(cleanEmail);
+        memberMapper.updateEntityFromForm(form, member);
         return memberRepository.save(member);
     }
 

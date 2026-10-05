@@ -5,6 +5,7 @@ import com.library.ledger.entity.Book;
 import com.library.ledger.enums.BookStatus;
 import com.library.ledger.exception.BusinessRuleException;
 import com.library.ledger.exception.ResourceNotFoundException;
+import com.library.ledger.mapper.BookMapper;
 import com.library.ledger.service.BookService;
 import com.library.ledger.service.CategoryService;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ public class BookController {
 
     private final BookService bookService;
     private final CategoryService categoryService;
+    private final BookMapper bookMapper;
 
     @GetMapping
     public String index(Model model,
@@ -75,14 +77,7 @@ public class BookController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Book book = bookService.findById(id);
-        BookForm form = new BookForm();
-        form.setIsbn(book.getIsbn());
-        form.setTitle(book.getTitle());
-        form.setAuthor(book.getAuthor());
-        form.setCategoryId(book.getCategory().getId());
-        form.setTotalQuantity(book.getTotalQuantity());
-        form.setAvailableQuantity(book.getAvailableQuantity());
-        form.setStatus(book.getStatus());
+        BookForm form = bookMapper.toForm(book);
         model.addAttribute("bookForm", form);
         model.addAttribute("bookId", id);
         model.addAttribute("book", book);

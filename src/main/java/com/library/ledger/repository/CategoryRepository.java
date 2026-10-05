@@ -25,6 +25,15 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Page<Category> findAll(Pageable pageable);
 
+    @Query("SELECT c FROM Category c WHERE " +
+           "(:keyword IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(c.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
+           "(:active IS NULL OR c.active = :active)")
+    Page<Category> search(@Param("keyword") String keyword, @Param("active") Boolean active, Pageable pageable);
+
+    long countByActiveTrue();
+
+    long countByActiveFalse();
+
     @Query("SELECT COUNT(b) FROM Book b WHERE b.category.id = :categoryId AND b.status != 'DELETED'")
     long countActiveBooksByCategoryId(@Param("categoryId") Long categoryId);
 }

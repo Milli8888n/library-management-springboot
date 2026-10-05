@@ -9,6 +9,10 @@ import java.util.List;
 
 public interface CategoryService {
     Page<Category> findAll(Pageable pageable);
+    Page<Category> search(String keyword, Boolean active, Pageable pageable);
+    long countTotal();
+    long countActive();
+    long countInactive();
     List<Category> findActiveCategories();
     Category findById(Long id);
     Category create(CategoryForm form);

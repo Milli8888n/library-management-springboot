@@ -5,6 +5,7 @@ import com.library.ledger.entity.Member;
 import com.library.ledger.enums.MemberStatus;
 import com.library.ledger.exception.BusinessRuleException;
 import com.library.ledger.exception.ResourceNotFoundException;
+import com.library.ledger.mapper.MemberMapper;
 import com.library.ledger.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberMapper memberMapper;
 
     @GetMapping
     public String index(Model model,
@@ -64,11 +66,7 @@ public class MemberController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Member member = memberService.findById(id);
-        MemberForm form = new MemberForm();
-        form.setFullName(member.getFullName());
-        form.setEmail(member.getEmail());
-        form.setPhone(member.getPhone());
-        form.setStatus(member.getStatus());
+        MemberForm form = memberMapper.toForm(member);
         model.addAttribute("memberForm", form);
         model.addAttribute("memberId", id);
         model.addAttribute("member", member);

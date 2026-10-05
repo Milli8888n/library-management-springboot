@@ -42,6 +42,66 @@
         </div>
     </div>
 
+    <!-- Filter & Search Toolbar -->
+    <section class="bg-linen border border-rule rounded-[4px] p-4 mb-6 shadow-sm">
+        <form th:action="@{/categories}" method="get" class="flex flex-wrap items-end justify-between gap-4">
+            <div class="flex flex-wrap items-end gap-6 flex-1 min-w-[320px]">
+                <div class="flex flex-col gap-1 w-72">
+                    <label class="text-[13px] font-medium text-ink" for="search-input">Từ khóa</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted text-[18px] pointer-events-none">search</span>
+                        <input type="text"
+                               id="search-input"
+                               name="keyword"
+                               th:value="${keyword}"
+                               placeholder="Tên thể loại hoặc mô tả..."
+                               class="h-10 pl-9 pr-3 w-full bg-paper border border-rule-strong rounded-[4px] text-[14px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-primary-container"/>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-[13px] font-medium text-ink">Trạng thái</span>
+                    <div class="inline-flex h-10 p-0.5 bg-paper border border-rule rounded-[4px]">
+                        <a th:href="@{/categories(keyword=${keyword})}"
+                           th:classappend="${active == null} ? 'bg-primary-container text-white shadow-sm' : 'text-ink-muted hover:text-ink'"
+                           class="px-3 h-full rounded-[3px] text-[13px] font-medium cursor-pointer transition-colors inline-flex items-center gap-1.5">
+                            <span>Tất cả</span>
+                            <span class="px-1.5 py-0.5 rounded-full text-[11px]"
+                                  th:classappend="${active == null} ? 'bg-white/20 text-white' : 'bg-linen text-ink-muted'"
+                                  th:text="${totalCount ?: categoryPage.totalElements}">0</span>
+                        </a>
+                        <a th:href="@{/categories(keyword=${keyword}, active=true)}"
+                           th:classappend="${active == true} ? 'bg-primary-container text-white shadow-sm' : 'text-ink-muted hover:text-ink'"
+                           class="px-3 h-full rounded-[3px] text-[13px] font-medium cursor-pointer transition-colors inline-flex items-center gap-1.5">
+                            <span>Đang hoạt động</span>
+                            <span class="px-1.5 py-0.5 rounded-full text-[11px]"
+                                  th:classappend="${active == true} ? 'bg-white/20 text-white' : 'bg-linen text-ink-muted'"
+                                  th:text="${activeCount ?: 0}">0</span>
+                        </a>
+                        <a th:href="@{/categories(keyword=${keyword}, active=false)}"
+                           th:classappend="${active == false} ? 'bg-primary-container text-white shadow-sm' : 'text-ink-muted hover:text-ink'"
+                           class="px-3 h-full rounded-[3px] text-[13px] font-medium cursor-pointer transition-colors inline-flex items-center gap-1.5">
+                            <span>Ngừng</span>
+                            <span class="px-1.5 py-0.5 rounded-full text-[11px]"
+                                  th:classappend="${active == false} ? 'bg-white/20 text-white' : 'bg-linen text-ink-muted'"
+                                  th:text="${inactiveCount ?: 0}">0</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 h-10">
+                <button type="submit"
+                        class="h-10 px-4 bg-primary-container hover:bg-primary text-white text-[14px] font-medium rounded-[4px] transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm">
+                    <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+                    <span>Lọc</span>
+                </button>
+                <a th:href="@{/categories}"
+                   class="h-10 px-3 bg-transparent text-primary-container text-[14px] font-medium hover:underline cursor-pointer inline-flex items-center">
+                    Đặt lại
+                </a>
+            </div>
+        </form>
+    </section>
+
     <!-- Ledger Data Table -->
     <div class="bg-paper border border-rule rounded overflow-hidden">
         <div class="overflow-x-auto">
@@ -129,7 +189,7 @@
                 <nav aria-label="Phân trang" class="flex items-center gap-1">
                     <!-- First -->
                     <a th:if="${!categoryPage.first}"
-                       th:href="@{/categories(page=0, size=${categoryPage.size})}"
+                       th:href="@{/categories(page=0, size=${categoryPage.size}, keyword=${keyword}, active=${active})}"
                        class="w-7 h-7 flex items-center justify-center rounded text-ink-muted hover:bg-linen/60 transition-colors"
                        title="Trang đầu">«</a>
                     <span th:if="${categoryPage.first}"
@@ -137,7 +197,7 @@
 
                     <!-- Previous -->
                     <a th:if="${categoryPage.hasPrevious()}"
-                       th:href="@{/categories(page=${categoryPage.number - 1}, size=${categoryPage.size})}"
+                       th:href="@{/categories(page=${categoryPage.number - 1}, size=${categoryPage.size}, keyword=${keyword}, active=${active})}"
                        class="w-7 h-7 flex items-center justify-center rounded text-ink-muted hover:bg-linen/60 transition-colors"
                        title="Trang trước">‹</a>
                     <span th:unless="${categoryPage.hasPrevious()}"
@@ -149,14 +209,14 @@
                            class="w-7 h-7 flex items-center justify-center bg-primary-container text-on-primary font-label-badge text-label-badge rounded font-medium"
                            th:text="${p + 1}">1</a>
                         <a th:unless="${p == categoryPage.number}"
-                           th:href="@{/categories(page=${p}, size=${categoryPage.size})}"
+                           th:href="@{/categories(page=${p}, size=${categoryPage.size}, keyword=${keyword}, active=${active})}"
                            class="w-7 h-7 flex items-center justify-center text-ink font-label-badge text-label-badge rounded hover:bg-linen/60 transition-colors"
                            th:text="${p + 1}">2</a>
                     </th:block>
 
                     <!-- Next -->
                     <a th:if="${categoryPage.hasNext()}"
-                       th:href="@{/categories(page=${categoryPage.number + 1}, size=${categoryPage.size})}"
+                       th:href="@{/categories(page=${categoryPage.number + 1}, size=${categoryPage.size}, keyword=${keyword}, active=${active})}"
                        class="w-7 h-7 flex items-center justify-center rounded text-ink-muted hover:bg-linen/60 transition-colors"
                        title="Trang sau">›</a>
                     <span th:unless="${categoryPage.hasNext()}"
@@ -164,7 +224,7 @@
 
                     <!-- Last -->
                     <a th:if="${!categoryPage.last}"
-                       th:href="@{/categories(page=${categoryPage.totalPages - 1}, size=${categoryPage.size})}"
+                       th:href="@{/categories(page=${categoryPage.totalPages - 1}, size=${categoryPage.size}, keyword=${keyword}, active=${active})}"
                        class="w-7 h-7 flex items-center justify-center rounded text-ink-muted hover:bg-linen/60 transition-colors"
                        title="Trang cuối">»</a>
                     <span th:if="${categoryPage.last}"

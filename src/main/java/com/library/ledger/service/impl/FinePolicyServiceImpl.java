@@ -2,6 +2,7 @@ package com.library.ledger.service.impl;
 
 import com.library.ledger.dto.FinePolicyForm;
 import com.library.ledger.entity.FinePolicy;
+import com.library.ledger.mapper.FinePolicyMapper;
 import com.library.ledger.repository.FinePolicyRepository;
 import com.library.ledger.service.FinePolicyService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 public class FinePolicyServiceImpl implements FinePolicyService {
 
     private final FinePolicyRepository finePolicyRepository;
+    private final FinePolicyMapper finePolicyMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -56,16 +58,8 @@ public class FinePolicyServiceImpl implements FinePolicyService {
             }
         }
 
-        // Create new active policy
-        FinePolicy newPolicy = FinePolicy.builder()
-                .dailyFineAmount(form.getDailyFineAmount())
-                .maxFineAmount(form.getMaxFineAmount())
-                .graceDays(form.getGraceDays() != null ? form.getGraceDays() : 0)
-                .effectiveFrom(form.getEffectiveFrom() != null ? form.getEffectiveFrom() : LocalDate.now())
-                .active(true)
-                .createdAt(LocalDateTime.now())
-                .build();
-
+        // Create new active policy via mapper
+        FinePolicy newPolicy = finePolicyMapper.toEntity(form);
         return finePolicyRepository.save(newPolicy);
     }
 }

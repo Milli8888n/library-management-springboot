@@ -22,15 +22,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final com.library.ledger.mapper.CategoryMapper categoryMapper;
 
     @GetMapping
     public String index(Model model,
+                        @RequestParam(required = false) String keyword,
+                        @RequestParam(required = false) Boolean active,
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size) {
-        Page<Category> categoryPage = categoryService.findAll(
+        Page<Category> categoryPage = categoryService.search(keyword, active,
                 PageRequest.of(page, size, Sort.by("name").ascending()));
         model.addAttribute("categoryPage", categoryPage);
         model.addAttribute("categoryForm", new CategoryForm());
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("active", active);
+        model.addAttribute("totalCount", categoryService.countTotal());
+        model.addAttribute("activeCount", categoryService.countActive());
+        model.addAttribute("inactiveCount", categoryService.countInactive());
         return "categories/index";
     }
 
@@ -40,9 +48,12 @@ public class CategoryController {
                          RedirectAttributes flash,
                          Model model) {
         if (bindingResult.hasErrors()) {
-            Page<Category> categoryPage = categoryService.findAll(PageRequest.of(0, 10, Sort.by("name")));
+            Page<Category> categoryPage = categoryService.search(null, null, PageRequest.of(0, 10, Sort.by("name")));
             model.addAttribute("categoryPage", categoryPage);
             model.addAttribute("showCreateModal", true);
+            model.addAttribute("totalCount", categoryService.countTotal());
+            model.addAttribute("activeCount", categoryService.countActive());
+            model.addAttribute("inactiveCount", categoryService.countInactive());
             return "categories/index";
         }
         try {
@@ -57,10 +68,7 @@ public class CategoryController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Category category = categoryService.findById(id);
-        CategoryForm form = new CategoryForm();
-        form.setName(category.getName());
-        form.setDescription(category.getDescription());
-        form.setActive(category.getActive());
+        CategoryForm form = categoryMapper.toForm(category);
         model.addAttribute("categoryForm", form);
         model.addAttribute("categoryId", id);
         model.addAttribute("category", category);

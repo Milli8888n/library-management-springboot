@@ -9,6 +9,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public String handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
@@ -27,12 +29,18 @@ public class GlobalExceptionHandler {
     public String handleBusinessRuleException(BusinessRuleException ex, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         String referer = request.getHeader("Referer");
-        return "redirect:" + (referer != null ? referer : "/books");
+        if (referer != null && !referer.isBlank()) {
+            return "redirect:" + referer;
+        }
+        return "redirect:/";
     }
 
     @ExceptionHandler(Exception.class)
     public String handleGeneralException(Exception ex, HttpServletRequest request, Model model) {
-        model.addAttribute("errorMessage", ex.getMessage());
+        String errorId = java.util.UUID.randomUUID().toString().substring(0, 8);
+        log.error("Internal server error [errorId={}]: URI={}", errorId, request.getRequestURI(), ex);
+        model.addAttribute("errorId", errorId);
+        model.addAttribute("errorMessage", "Đã xảy ra lỗi hệ thống. Vui lòng liên hệ quản trị viên.");
         model.addAttribute("requestedUri", request.getRequestURI());
         return "error/500";
     }

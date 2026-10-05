@@ -3,7 +3,7 @@ package com.library.ledger.service;
 import com.library.ledger.dto.CategoryForm;
 import com.library.ledger.entity.Category;
 import com.library.ledger.exception.BusinessRuleException;
-import com.library.ledger.exception.ResourceNotFoundException;
+import com.library.ledger.mapper.CategoryMapper;
 import com.library.ledger.repository.CategoryRepository;
 import com.library.ledger.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +26,9 @@ class CategoryServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+
+    @Mock
+    private CategoryMapper categoryMapper;
 
     @InjectMocks
     private CategoryServiceImpl categoryService;
@@ -50,7 +53,14 @@ class CategoryServiceTest {
         form.setDescription("Sách sci-fi");
         form.setActive(true);
 
+        Category mappedCategory = Category.builder()
+                .name("Khoa học viễn tưởng")
+                .description("Sách sci-fi")
+                .active(true)
+                .build();
+
         when(categoryRepository.existsByNameIgnoreCase("Khoa học viễn tưởng")).thenReturn(false);
+        when(categoryMapper.toEntity(form)).thenReturn(mappedCategory);
         when(categoryRepository.save(any(Category.class))).thenAnswer(i -> {
             Category c = i.getArgument(0);
             c.setId(2L);
@@ -114,5 +124,29 @@ class CategoryServiceTest {
 
         assertThat(activeCategory.getActive()).isTrue();
         verify(categoryRepository).save(activeCategory);
+    }
+
+    @Test
+    @DisplayName("Tìm kiếm thể loại với từ khóa và trạng thái")
+    void testSearchCategories() {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, 10);
+        org.springframework.data.domain.Page<Category> page = new org.springframework.data.domain.PageImpl<>(java.util.List.of(activeCategory));
+        when(categoryRepository.search("kinh", true, pageable)).thenReturn(page);
+
+        org.springframework.data.domain.Page<Category> result = categoryService.search("kinh", true, pageable);
+        assertThat(result.getContent()).hasSize(1);
+        verify(categoryRepository).search("kinh", true, pageable);
+    }
+
+    @Test
+    @DisplayName("Đếm số lượng thể loại tổng quan và theo trạng thái")
+    void testCategoryCounts() {
+        when(categoryRepository.count()).thenReturn(6L);
+        when(categoryRepository.countByActiveTrue()).thenReturn(5L);
+        when(categoryRepository.countByActiveFalse()).thenReturn(1L);
+
+        assertThat(categoryService.countTotal()).isEqualTo(6L);
+        assertThat(categoryService.countActive()).isEqualTo(5L);
+        assertThat(categoryService.countInactive()).isEqualTo(1L);
     }
 }

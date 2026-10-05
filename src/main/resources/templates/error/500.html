@@ -20,9 +20,14 @@
         <h1 class="font-headline-h1-mobile text-[24px] leading-8 font-semibold text-ink mb-3">
             Đã xảy ra lỗi hệ thống.
         </h1>
-        <p class="font-body-default text-[14px] leading-relaxed text-ink-muted mb-8">
-            Vui lòng thử lại sau.
+        <p class="font-body-default text-[14px] leading-relaxed text-ink-muted mb-4"
+           th:text="${errorMessage}">
+            Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.
         </p>
+        <p th:if="${errorId != null}" class="font-mono-code text-[12px] text-ink-muted mb-8">
+            Mã tham chiếu: <span class="select-all font-semibold text-oxblood-text" th:text="${errorId}">ERR-12345678</span>
+        </p>
+        <div th:unless="${errorId != null}" class="mb-8"></div>
         <div class="flex justify-center gap-3 items-center">
             <button class="bg-primary-container text-on-primary font-label-button text-label-button font-medium h-10 px-6 rounded hover:opacity-95 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-paper"
                     onclick="window.location.reload()"

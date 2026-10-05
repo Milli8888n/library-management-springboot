@@ -24,6 +24,7 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
+    private final com.library.ledger.mapper.BookMapper bookMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -66,16 +67,7 @@ public class BookServiceImpl implements BookService {
             throw new BusinessRuleException("Số lượng khả dụng không được lớn hơn tổng số lượng hoặc nhỏ hơn 0");
         }
 
-        Book book = Book.builder()
-                .isbn(cleanIsbn)
-                .title(form.getTitle().trim())
-                .author(form.getAuthor().trim())
-                .category(category)
-                .totalQuantity(total)
-                .availableQuantity(available)
-                .status(form.getStatus() != null ? form.getStatus() : BookStatus.ACTIVE)
-                .build();
-
+        Book book = bookMapper.toEntity(form, category, available);
         return bookRepository.save(book);
     }
 
@@ -98,16 +90,7 @@ public class BookServiceImpl implements BookService {
         }
 
         int newAvailable = form.getTotalQuantity() - currentlyBorrowed;
-
-        book.setIsbn(cleanIsbn);
-        book.setTitle(form.getTitle().trim());
-        book.setAuthor(form.getAuthor().trim());
-        book.setCategory(category);
-        book.setTotalQuantity(form.getTotalQuantity());
-        book.setAvailableQuantity(newAvailable);
-        if (form.getStatus() != null) {
-            book.setStatus(form.getStatus());
-        }
+        bookMapper.updateEntityFromForm(form, category, newAvailable, book);
 
         return bookRepository.save(book);
     }

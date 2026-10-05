@@ -4,6 +4,7 @@ import com.library.ledger.dto.MemberForm;
 import com.library.ledger.entity.Member;
 import com.library.ledger.enums.MemberStatus;
 import com.library.ledger.exception.BusinessRuleException;
+import com.library.ledger.mapper.MemberMapper;
 import com.library.ledger.repository.MemberRepository;
 import com.library.ledger.service.impl.MemberServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,9 @@ class MemberServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private MemberMapper memberMapper;
 
     @InjectMocks
     private MemberServiceImpl memberService;
@@ -51,7 +55,15 @@ class MemberServiceTest {
         form.setEmail("cuong.le@library.vn");
         form.setPhone("0912345678");
 
+        Member mappedMember = Member.builder()
+                .fullName("Lê Văn Cường")
+                .email("cuong.le@library.vn")
+                .phone("0912345678")
+                .status(MemberStatus.ACTIVE)
+                .build();
+
         when(memberRepository.existsByEmailIgnoreCase("cuong.le@library.vn")).thenReturn(false);
+        when(memberMapper.toEntity(form)).thenReturn(mappedMember);
         when(memberRepository.save(any(Member.class))).thenAnswer(i -> {
             Member m = i.getArgument(0);
             m.setId(10L);
